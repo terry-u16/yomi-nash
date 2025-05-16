@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import {
   Table,
-  IconButton,
   Flex,
   Input,
   NumberInput,
   Field,
   Button,
 } from "@chakra-ui/react";
-import { MdAdd, MdDelete } from "react-icons/md";
+import {
+  TbColumnInsertRight,
+  TbColumnRemove,
+  TbRowInsertBottom,
+  TbRowRemove,
+} from "react-icons/tb";
 
 export default function PayoffTable() {
   const [rowLabels, setRowLabels] = useState(["中段択", "下段択", "様子見"]);
@@ -33,12 +37,12 @@ export default function PayoffTable() {
   };
 
   const addRow = () => {
-    setRowLabels([...rowLabels, `戦略${rowLabels.length + 1}`]);
+    setRowLabels([...rowLabels, `選択肢${rowLabels.length + 1}`]);
     setMatrix([...matrix, Array(colLabels.length).fill("0")]);
   };
 
   const addCol = () => {
-    setColLabels([...colLabels, `戦略${colLabels.length + 1}`]);
+    setColLabels([...colLabels, `選択肢${colLabels.length + 1}`]);
     setMatrix(matrix.map((row) => [...row, "0"]));
   };
 
@@ -62,40 +66,28 @@ export default function PayoffTable() {
       <Table.Root variant="outline" size="sm">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader w="200px" />
+            <Table.ColumnHeader w="150px" />
             {colLabels.map((label, j) => (
-              <Table.ColumnHeader w="200px" key={`header_${j + 1}`}>
-                <Flex
-                  direction={{ base: "column", md: "row" }}
-                  justify="space-between"
-                >
-                  <Input
-                    variant="outline"
-                    value={label}
-                    onChange={(e) => {
-                      const newLabels = [...colLabels];
-                      newLabels[j] = e.target.value;
-                      setColLabels(newLabels);
-                    }}
-                  />
-                  <IconButton
-                    variant="surface"
-                    aria-label={`delete column ${j + 1}`}
-                    onClick={() => deleteCol(j)}
-                    ml={2}
-                  >
-                    <MdDelete />
-                  </IconButton>
-                </Flex>
+              <Table.ColumnHeader w="150px" key={`header_${j + 1}`}>
+                <Input
+                  variant="outline"
+                  value={label}
+                  onChange={(e) => {
+                    const newLabels = [...colLabels];
+                    newLabels[j] = e.target.value;
+                    setColLabels(newLabels);
+                  }}
+                />
               </Table.ColumnHeader>
             ))}
             <Table.ColumnHeader>
               <Button
-                variant="surface"
+                variant="outline"
+                colorPalette="blue"
                 aria-label="add column"
                 onClick={addCol}
               >
-                <MdAdd /> 列追加
+                <TbColumnInsertRight /> 列追加
               </Button>
             </Table.ColumnHeader>
           </Table.Row>
@@ -117,14 +109,6 @@ export default function PayoffTable() {
                       setRowLabels(newLabels);
                     }}
                   />
-                  <IconButton
-                    variant="surface"
-                    aria-label={`delete row ${i + 1}`}
-                    onClick={() => deleteRow(i)}
-                    ml={2}
-                  >
-                    <MdDelete />
-                  </IconButton>
                 </Flex>
               </Table.Cell>
               {matrix[i].map((val, j) => (
@@ -141,14 +125,41 @@ export default function PayoffTable() {
                   </Field.Root>
                 </Table.Cell>
               ))}
+              <Table.Cell key={`delete_row_${i + 1}`}>
+                <Button
+                  variant="outline"
+                  colorPalette="red"
+                  aria-label="delete row"
+                  onClick={() => deleteRow(i)}
+                >
+                  <TbRowRemove /> 行削除
+                </Button>
+              </Table.Cell>
             </Table.Row>
           ))}
           <Table.Row>
             <Table.Cell>
-              <Button variant="surface" aria-label="add row" onClick={addRow}>
-                <MdAdd /> 行追加
+              <Button
+                variant="outline"
+                colorPalette="blue"
+                aria-label="add row"
+                onClick={addRow}
+              >
+                <TbRowInsertBottom /> 行追加
               </Button>
             </Table.Cell>
+            {colLabels.map((_, j) => (
+              <Table.Cell key={`delete_col_${j + 1}`}>
+                <Button
+                  variant="outline"
+                  colorPalette="red"
+                  aria-label={`delete column ${j + 1}`}
+                  onClick={() => deleteCol(j)}
+                >
+                  <TbColumnRemove /> 列削除
+                </Button>
+              </Table.Cell>
+            ))}
           </Table.Row>
         </Table.Body>
       </Table.Root>
