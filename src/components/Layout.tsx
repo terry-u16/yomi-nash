@@ -1,6 +1,12 @@
-import { Box, Flex, Heading, useBreakpointValue } from "@chakra-ui/react";
-import { Outlet, Link as RouterLink } from "react-router-dom";
-import { Link as ChakraLink } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Stack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import { Header } from "./Header";
+import { Outlet } from "react-router-dom";
 
 export default function Layout() {
   const maxWidth = useBreakpointValue({
@@ -11,27 +17,13 @@ export default function Layout() {
   });
 
   return (
-    <Flex justify="center" px={4}>
-      <Box w="100%" maxW={maxWidth} p={{ base: 2, md: 4 }}>
-        <Flex
-          direction={{ base: "column", md: "row" }}
-          justify="space-between"
-          align={{ base: "start", md: "center" }}
-          mb={4}
-          gap={2}
-        >
-          <Heading size="xl">読み合いナッシュ</Heading>
-          <Flex gap={4} wrap="wrap">
-            <ChakraLink as={RouterLink} to="/">
-              Home
-            </ChakraLink>
-            <ChakraLink as={RouterLink} to="/help">
-              Help
-            </ChakraLink>
-          </Flex>
-        </Flex>
-        <Outlet />
-      </Box>
-    </Flex>
+    <Stack bg="bg.muted" minH="100vh" gap={4}>
+      <Header />
+      <Flex justify="center" px={4}>
+        <Box w="100%" maxW={maxWidth} p={{ base: 2, md: 4 }}>
+          <Outlet />
+        </Box>
+      </Flex>
+    </Stack>
   );
 }
