@@ -1,11 +1,21 @@
 import PayoffTable from "@/components/PayoffTable";
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 
 export default function Home() {
   return (
-    <Stack>
-      <Text>計算画面（仮）</Text>
-      <PayoffTable />
+    <Stack gap={6}>
+      <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
+        <Heading size="xl" mb={4} as="h2">
+          利得行列
+        </Heading>
+        <PayoffTable />
+      </Box>
+      <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
+        <Heading size="xl" mb={4} as="h2">
+          簡易説明
+        </Heading>
+        <Text>簡易説明（いい感じの択の混ぜ方を計算してくれます、など）</Text>
+      </Box>
     </Stack>
   );
 }

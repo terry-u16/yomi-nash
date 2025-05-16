@@ -64,23 +64,24 @@ export default function PayoffTable() {
   return (
     <Table.ScrollArea>
       <Table.Root variant="outline" size="sm">
-        <Table.Header>
+        <Table.Body>
           <Table.Row>
-            <Table.ColumnHeader w="150px" />
+            <Table.Cell w="150px" />
             {colLabels.map((label, j) => (
-              <Table.ColumnHeader w="150px" key={`header_${j + 1}`}>
+              <Table.Cell w="150px" key={`header_${j + 1}`}>
                 <Input
                   variant="outline"
                   value={label}
+                  colorPalette="blue"
                   onChange={(e) => {
                     const newLabels = [...colLabels];
                     newLabels[j] = e.target.value;
                     setColLabels(newLabels);
                   }}
                 />
-              </Table.ColumnHeader>
+              </Table.Cell>
             ))}
-            <Table.ColumnHeader>
+            <Table.Cell>
               <Button
                 variant="outline"
                 colorPalette="blue"
@@ -89,10 +90,8 @@ export default function PayoffTable() {
               >
                 <TbColumnInsertRight /> 列追加
               </Button>
-            </Table.ColumnHeader>
+            </Table.Cell>
           </Table.Row>
-        </Table.Header>
-        <Table.Body>
           {rowLabels.map((label, i) => (
             <Table.Row key={`row_${i + 1}`}>
               <Table.Cell>
@@ -102,6 +101,7 @@ export default function PayoffTable() {
                 >
                   <Input
                     variant="outline"
+                    colorPalette="red"
                     value={label}
                     onChange={(e) => {
                       const newLabels = [...rowLabels];
