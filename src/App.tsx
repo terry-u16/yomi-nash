@@ -1,12 +1,15 @@
-import { Box, Heading, Button } from "@chakra-ui/react";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import Help from "./pages/Help";
 
-function App() {
+export default function App() {
   return (
-    <Box p={8}>
-      <Heading mb={4}>Hello Chakra</Heading>
-      <Button colorScheme="teal">Click me</Button>
-    </Box>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="help" element={<Help />} />
+      </Route>
+    </Routes>
   );
 }
-
-export default App;
