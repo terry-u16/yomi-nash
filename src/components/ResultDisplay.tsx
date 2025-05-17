@@ -108,7 +108,7 @@ export default function ResultDisplay({ result }: Props) {
       <Stack gap={4}>
         <Box>
           <Heading size="md" as="h3" mb={2}>
-            Player 1
+            Player 1 戦略
           </Heading>
           <Box mt={4}>
             <PlayerStat strategy={result.player1Strategy} colorpalette="red" />
@@ -116,7 +116,7 @@ export default function ResultDisplay({ result }: Props) {
         </Box>
         <Box>
           <Heading size="md" as="h3" mb={2}>
-            Player 2
+            Player 2 戦略
           </Heading>
           <PlayerStat strategy={result.player2Strategy} colorpalette="blue" />
         </Box>
