@@ -2,6 +2,7 @@ import { Flex, Heading } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import type React from "react";
+import { TbHelp, TbHome } from "react-icons/tb";
 
 const Header: React.FC = () => {
   return (
@@ -24,10 +25,10 @@ const Header: React.FC = () => {
       </Heading>
       <Flex gap={4} wrap="wrap">
         <ChakraLink as={RouterLink} to="/" color="white">
-          Home
+          <TbHome /> Home
         </ChakraLink>
         <ChakraLink as={RouterLink} to="/help" color="white">
-          Help
+          <TbHelp /> Help
         </ChakraLink>
       </Flex>
     </Flex>
