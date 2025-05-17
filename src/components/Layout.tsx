@@ -1,14 +1,8 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Stack,
-  useBreakpointValue,
-} from "@chakra-ui/react";
-import { Header } from "./Header";
+import { Box, Flex, Stack, useBreakpointValue } from "@chakra-ui/react";
+import Header from "./Header";
 import { Outlet } from "react-router-dom";
 
-export default function Layout() {
+const Layout: React.FC = () => {
   const maxWidth = useBreakpointValue({
     base: "100%",
     sm: "90%",
@@ -26,4 +20,6 @@ export default function Layout() {
       </Flex>
     </Stack>
   );
-}
+};
+
+export default Layout;

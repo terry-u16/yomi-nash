@@ -3,7 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import type React from "react";
 
-export const Header: React.FC = () => {
+const Header: React.FC = () => {
   return (
     <Flex
       direction={{ base: "column", md: "row" }}
@@ -33,3 +33,5 @@ export const Header: React.FC = () => {
     </Flex>
   );
 };
+
+export default Header;

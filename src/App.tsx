@@ -3,7 +3,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Help from "./pages/Help";
 
-export default function App() {
+const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -12,4 +12,6 @@ export default function App() {
       </Route>
     </Routes>
   );
-}
+};
+
+export default App;

@@ -1,7 +1,7 @@
 import PayoffTable from "@/components/PayoffTable";
 import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 
-export default function Home() {
+const Home: React.FC = () => {
   return (
     <Stack gap={6}>
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
@@ -18,4 +18,6 @@ export default function Home() {
       </Box>
     </Stack>
   );
-}
+};
+
+export default Home;

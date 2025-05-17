@@ -14,7 +14,7 @@ import {
   TbRowRemove,
 } from "react-icons/tb";
 
-export default function PayoffTable() {
+const PayoffTable: React.FC = () => {
   const [rowLabels, setRowLabels] = useState(["中段択", "下段択", "様子見"]);
   const [colLabels, setColLabels] = useState([
     "立ちガード",
@@ -165,4 +165,6 @@ export default function PayoffTable() {
       </Table.Root>
     </Table.ScrollArea>
   );
-}
+};
+
+export default PayoffTable;
