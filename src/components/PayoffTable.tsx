@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Table,
   Flex,
@@ -13,52 +13,70 @@ import {
   TbRowInsertBottom,
   TbRowRemove,
 } from "react-icons/tb";
+import type { GameInputUI } from "@/types/game";
+import { isValidNumber } from "@/utils/parseGameInput";
 
-const PayoffTable: React.FC = () => {
-  const [rowLabels, setRowLabels] = useState(["中段択", "下段択", "様子見"]);
-  const [colLabels, setColLabels] = useState([
-    "立ちガード",
-    "しゃがみガード",
-    "無敵技",
-  ]);
-  const [matrix, setMatrix] = useState([
-    ["0", "3860", "-1500"],
-    ["4740", "0", "-1500"],
-    ["0", "0", "6150"],
-  ]);
+interface Props {
+  inputUI: GameInputUI;
+  setInputUI: React.Dispatch<React.SetStateAction<GameInputUI>>;
+}
 
-  const updateCell = (i: number, j: number, val: string) => {
-    setMatrix((prev) => {
-      const next = [...prev];
-      next[i] = [...next[i]];
-      next[i][j] = val;
-      return next;
+const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
+  const { strategyLabels1, strategyLabels2, payoffMatrix } = inputUI;
+
+  const changeCell = (row: number, col: number, value: string) => {
+    setInputUI((prev) => {
+      const newMatrix = [...prev.payoffMatrix.map((r) => [...r])]; // deep copy
+      newMatrix[row][col] = value;
+      return { ...prev, payoffMatrix: newMatrix };
     });
   };
 
+  // player1 add
   const addRow = () => {
-    setRowLabels([...rowLabels, `選択肢${rowLabels.length + 1}`]);
-    setMatrix([...matrix, Array(colLabels.length).fill("0")]);
+    setInputUI((prev) => ({
+      ...prev,
+      strategyLabels1: [
+        ...prev.strategyLabels1,
+        `選択肢${prev.strategyLabels1.length + 1}`,
+      ],
+      payoffMatrix: [
+        ...prev.payoffMatrix,
+        Array(prev.strategyLabels2.length).fill("0"),
+      ],
+    }));
   };
 
+  // player2 add
   const addCol = () => {
-    setColLabels([...colLabels, `選択肢${colLabels.length + 1}`]);
-    setMatrix(matrix.map((row) => [...row, "0"]));
+    setInputUI((prev) => ({
+      ...prev,
+      strategyLabels2: [
+        ...prev.strategyLabels2,
+        `選択肢${prev.strategyLabels2.length + 1}`,
+      ],
+      payoffMatrix: prev.payoffMatrix.map((row) => [...row, "0"]),
+    }));
   };
 
+  // player1 delete
   const deleteRow = (i: number) => {
-    setRowLabels(rowLabels.filter((_, idx) => idx !== i));
-    setMatrix(matrix.filter((_, idx) => idx !== i));
+    setInputUI((prev) => ({
+      ...prev,
+      strategyLabels1: prev.strategyLabels1.filter((_, idx) => idx !== i),
+      payoffMatrix: prev.payoffMatrix.filter((_, idx) => idx !== i),
+    }));
   };
 
+  // player2 delete
   const deleteCol = (j: number) => {
-    setColLabels(colLabels.filter((_, idx) => idx !== j));
-    setMatrix(matrix.map((row) => row.filter((_, idx) => idx !== j)));
-  };
-
-  const isNumber = (val: string) => {
-    const num = parseFloat(val);
-    return !isNaN(num) && isFinite(num);
+    setInputUI((prev) => ({
+      ...prev,
+      strategyLabels2: prev.strategyLabels2.filter((_, idx) => idx !== j),
+      payoffMatrix: prev.payoffMatrix.map((row) =>
+        row.filter((_, idx) => idx !== j)
+      ),
+    }));
   };
 
   return (
@@ -67,16 +85,19 @@ const PayoffTable: React.FC = () => {
         <Table.Body>
           <Table.Row>
             <Table.Cell w="150px" />
-            {colLabels.map((label, j) => (
+            {strategyLabels2.map((label, j) => (
               <Table.Cell w="150px" key={`header_${j + 1}`}>
                 <Input
                   variant="outline"
                   value={label}
                   colorPalette="blue"
                   onChange={(e) => {
-                    const newLabels = [...colLabels];
+                    const newLabels = [...strategyLabels2];
                     newLabels[j] = e.target.value;
-                    setColLabels(newLabels);
+                    setInputUI((prev) => ({
+                      ...prev,
+                      strategyLabels2: newLabels,
+                    }));
                   }}
                 />
               </Table.Cell>
@@ -92,7 +113,7 @@ const PayoffTable: React.FC = () => {
               </Button>
             </Table.Cell>
           </Table.Row>
-          {rowLabels.map((label, i) => (
+          {strategyLabels1.map((label, i) => (
             <Table.Row key={`row_${i + 1}`}>
               <Table.Cell>
                 <Flex
@@ -104,22 +125,25 @@ const PayoffTable: React.FC = () => {
                     colorPalette="red"
                     value={label}
                     onChange={(e) => {
-                      const newLabels = [...rowLabels];
+                      const newLabels = [...strategyLabels1];
                       newLabels[i] = e.target.value;
-                      setRowLabels(newLabels);
+                      setInputUI((prev) => ({
+                        ...prev,
+                        strategyLabels1: newLabels,
+                      }));
                     }}
                   />
                 </Flex>
               </Table.Cell>
-              {matrix[i].map((val, j) => (
+              {payoffMatrix[i].map((val, j) => (
                 <Table.Cell key={`cell_${i + 1}_${j + 1}`}>
-                  <Field.Root invalid={!isNumber(val)}>
+                  <Field.Root invalid={!isValidNumber(val)}>
                     <NumberInput.Root>
                       <NumberInput.Label />
                       <NumberInput.Scrubber />
                       <NumberInput.Input
                         value={val}
-                        onChange={(e) => updateCell(i, j, e.target.value)}
+                        onChange={(e) => changeCell(i, j, e.target.value)}
                       />
                     </NumberInput.Root>
                   </Field.Root>
@@ -148,7 +172,7 @@ const PayoffTable: React.FC = () => {
                 <TbRowInsertBottom /> 行追加
               </Button>
             </Table.Cell>
-            {colLabels.map((_, j) => (
+            {strategyLabels2.map((_, j) => (
               <Table.Cell key={`delete_col_${j + 1}`}>
                 <Button
                   variant="outline"
