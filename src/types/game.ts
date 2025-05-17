@@ -31,3 +31,16 @@ export interface ParseFailure {
 }
 
 export type ParseResult = ParseSuccess | ParseFailure;
+
+export type MixedStrategyEntry = {
+  label: string;
+  probability: number;
+};
+
+export type MixedStrategy = MixedStrategyEntry[];
+
+export interface GameResult {
+  player1Strategy: MixedStrategy;
+  player2Strategy: MixedStrategy;
+  expectedPayoff: number;
+}

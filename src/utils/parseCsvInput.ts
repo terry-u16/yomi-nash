@@ -42,13 +42,13 @@ export function parseCsvInput(csvText: string): CsvParseResult {
   if (!Array.isArray(lines) || lines.length < 2 || lines[0].length < 2) {
     return {
       ok: false,
-      message: "CSVが小さすぎます（最低でも1行1列の利得が必要）",
+      message: "CSVの行数・列数が小さすぎます。最低でもそれぞれ1つ以上の選択肢が必要です。",
     };
   }
 
   const colCount = lines[0].length;
   if (!lines.every((row) => row.length === colCount)) {
-    return { ok: false, message: "すべての行で列数が揃っていません" };
+    return { ok: false, message: "列数が揃っていません" };
   }
 
   const strategyLabels1: string[] = [];

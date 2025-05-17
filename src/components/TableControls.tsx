@@ -47,7 +47,8 @@ export default function TableControls({
         });
       } else {
         toaster.create({
-          title: `CSVの読み込みに失敗しました: ${result.message}`,
+          title: `CSVの読み込みに失敗しました`,
+          description: result.message,
           type: "error",
         });
       }
@@ -68,8 +69,7 @@ export default function TableControls({
     URL.revokeObjectURL(url);
 
     toaster.create({
-      title: "CSVをダウンロードしました",
-      type: "success",
+      title: "CSVをダウンロードしています...",
     });
   };
 
