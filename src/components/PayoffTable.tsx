@@ -15,6 +15,7 @@ import {
 } from "react-icons/tb";
 import type { GameInputUI } from "@/types/game";
 import { isValidNumber } from "@/utils/parseGameInput";
+import { PAYOFF_MAX, PAYOFF_MIN } from "@/utils/clampGameInput";
 
 interface Props {
   inputUI: GameInputUI;
@@ -28,7 +29,10 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
     setInputUI((prev) => {
       const newMatrix = [...prev.payoffMatrix.map((r) => [...r])]; // deep copy
       newMatrix[row][col] = value;
-      return { ...prev, payoffMatrix: newMatrix };
+      const newInput = { ...prev, payoffMatrix: newMatrix };
+      // なぜかclampすると範囲外になったときに表示が壊れる
+      // const clamped = clampGameInputUI(newInput);
+      return newInput;
     });
   };
 
@@ -138,13 +142,15 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
               {payoffMatrix[i].map((val, j) => (
                 <Table.Cell key={`cell_${i + 1}_${j + 1}`}>
                   <Field.Root invalid={!isValidNumber(val)}>
-                    <NumberInput.Root>
-                      <NumberInput.Label />
-                      <NumberInput.Scrubber />
-                      <NumberInput.Input
-                        value={val}
-                        onChange={(e) => changeCell(i, j, e.target.value)}
-                      />
+                    <NumberInput.Root
+                      value={val}
+                      min={PAYOFF_MIN}
+                      max={PAYOFF_MAX}
+                      onValueChange={(e) => {
+                        changeCell(i, j, e.value);
+                      }}
+                    >
+                      <NumberInput.Input />
                     </NumberInput.Root>
                   </Field.Root>
                 </Table.Cell>

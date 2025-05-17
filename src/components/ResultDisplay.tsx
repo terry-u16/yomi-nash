@@ -61,7 +61,7 @@ export default function ResultDisplay({ result }: Props) {
     <Stack mt={8} gap={8}>
       <Box>
         <Heading size="md" as="h3" mb={2}>
-          期待値
+          Player 1 期待値
         </Heading>
         <Stat.Root size="lg">
           <Stat.ValueText>

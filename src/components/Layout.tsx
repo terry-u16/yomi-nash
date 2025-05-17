@@ -17,9 +17,9 @@ const Layout: React.FC = () => {
   const [result, setResult] = useState<GameResult | null>(null);
 
   return (
-    <Stack bg="bg.muted" minH="100vh" gap={4}>
+    <Stack bg="bg.muted" minH="100vh">
       <Header />
-      <Flex justify="center" px={4}>
+      <Flex justify="center" px={4} my={4}>
         <Box w="100%" maxW={maxWidth} p={{ base: 2, md: 4 }}>
           <Outlet context={{ inputUI, setInputUI, result, setResult }} />
         </Box>

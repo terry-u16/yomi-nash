@@ -14,6 +14,7 @@ import {
 } from "react-icons/tb";
 import { parseGameInputUI } from "@/utils/parseGameInput";
 import { presets } from "@/presets";
+import { clampGameInputUI } from "@/utils/clampGameInput";
 
 interface Props {
   inputUI: GameInputUI;
@@ -41,11 +42,13 @@ export default function TableControls({
       if (result.ok) {
         const { strategyLabels1, strategyLabels2, payoffMatrix } = result.data;
 
-        setInputUI({
-          strategyLabels1,
-          strategyLabels2,
-          payoffMatrix,
-        });
+        setInputUI(
+          clampGameInputUI({
+            strategyLabels1,
+            strategyLabels2,
+            payoffMatrix,
+          })
+        );
 
         toaster.create({
           title: "CSVを読み込みました",
