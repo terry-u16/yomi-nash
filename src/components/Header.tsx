@@ -20,7 +20,7 @@ const Header: React.FC = () => {
       zIndex={1000}
     >
       <Heading size="2xl" color="white" as="h1">
-        読み合いナッシュ
+        読み合いナッシュ（仮）
       </Heading>
       <Flex gap={4} wrap="wrap">
         <ChakraLink as={RouterLink} to="/" color="white">

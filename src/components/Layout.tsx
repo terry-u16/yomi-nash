@@ -2,7 +2,7 @@ import { Box, Flex, Stack, useBreakpointValue } from "@chakra-ui/react";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
-import type { GameInputUI } from "@/types/game";
+import type { GameInputUI, GameResult } from "@/types/game";
 
 const Layout: React.FC = () => {
   const maxWidth = useBreakpointValue({
@@ -22,12 +22,14 @@ const Layout: React.FC = () => {
     ],
   });
 
+  const [result, setResult] = useState<GameResult | null>(null);
+
   return (
     <Stack bg="bg.muted" minH="100vh" gap={4}>
       <Header />
       <Flex justify="center" px={4}>
         <Box w="100%" maxW={maxWidth} p={{ base: 2, md: 4 }}>
-          <Outlet context={{ inputUI, setInputUI }} />
+          <Outlet context={{ inputUI, setInputUI, result, setResult }} />
         </Box>
       </Flex>
     </Stack>

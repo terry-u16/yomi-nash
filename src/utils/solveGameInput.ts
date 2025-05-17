@@ -1,4 +1,3 @@
-// utils/solveGameInput.ts
 import type { GameInput } from "../types/game";
 import GLPK, { type LP } from "glpk.js";
 import type { GameResult } from "../types/game";
@@ -25,16 +24,15 @@ interface Bound {
   lb: number;
 }
 
-export function solveGame(input: GameInput): GameResult {
+export async function solveGame(input: GameInput): Promise<GameResult> {
   const A = input.payoffMatrix;
+  const glpk = await GLPK();
 
-  const glpk = GLPK();
-
-  function solveMinV(A: number[][]): {
+  async function solveMinV(A: number[][]): Promise<{
     status: number;
     value: number;
     x: number[];
-  } {
+  }> {
     const N = A.length;
     const M = A[0].length;
 
@@ -44,7 +42,7 @@ export function solveGame(input: GameInput): GameResult {
     // max_i(Σ_j A[i][j] * xj) を最小化する x を求める
     // これは、相手がこちらに対して最小の利得となるような戦略を取ると悲観的に考えることに相当する
     // max_i(Σ_j A[i][j] * xj) を最小化するには、v >= Σ_j A[i][j] * xj の条件下で v を最小化すればよい
-    // 
+    //
     // 各行 i について: v >= Σ_j A[i][j] * xj
     // すなわち、 v - Σ_j A[i][j] * xj >= 0 とする
     for (let i = 0; i < N; i++) {
@@ -85,7 +83,7 @@ export function solveGame(input: GameInput): GameResult {
       bounds,
     };
 
-    const result = glpk.solve(lp, { msglev: glpk.GLP_MSG_OFF });
+    const result = await glpk.solve(lp, { msglev: glpk.GLP_MSG_OFF });
 
     return {
       status: result.result.status,
@@ -108,8 +106,8 @@ export function solveGame(input: GameInput): GameResult {
     return B;
   }
 
-  const player1Sol = solveMinV(transposeAndNegate(A));
-  const player2Sol = solveMinV(A);
+  const player1Sol = await solveMinV(transposeAndNegate(A));
+  const player2Sol = await solveMinV(A);
 
   if (
     player1Sol.status !== glpk.GLP_OPT ||
@@ -133,6 +131,6 @@ export function solveGame(input: GameInput): GameResult {
   return {
     player1Strategy,
     player2Strategy,
-    expectedPayoff: player1Sol.value,
+    expectedPayoff: player2Sol.value,
   };
 }
