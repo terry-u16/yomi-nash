@@ -19,7 +19,7 @@ const Home: React.FC = () => {
     useOutletContext<LayoutContext>();
 
   return (
-    <Stack gap={6}>
+    <Stack gap={4}>
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
         <Heading size="xl" mb={4} as="h2">
           利得行列

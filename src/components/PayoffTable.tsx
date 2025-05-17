@@ -84,7 +84,7 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
       <Table.Root variant="outline" size="sm">
         <Table.Body>
           <Table.Row>
-            <Table.Cell w="150px">Player1 ＼ Player2</Table.Cell>
+            <Table.Cell w="150px">Player 1 ＼ Player 2</Table.Cell>
             {strategyLabels2.map((label, j) => (
               <Table.Cell w="150px" key={`header_${j + 1}`}>
                 <Input

@@ -3,6 +3,7 @@ import Header from "./Header";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import type { GameInputUI, GameResult } from "@/types/game";
+import { presets } from "@/presets";
 
 const Layout: React.FC = () => {
   const maxWidth = useBreakpointValue({
@@ -12,16 +13,7 @@ const Layout: React.FC = () => {
     lg: "960px",
   });
 
-  const [inputUI, setInputUI] = useState<GameInputUI>({
-    strategyLabels1: ["中段", "下段", "様子見"],
-    strategyLabels2: ["立ちガード", "しゃがみガード", "無敵技"],
-    payoffMatrix: [
-      ["0", "3860", "-1500"],
-      ["4740", "0", "-1500"],
-      ["0", "0", "6150"],
-    ],
-  });
-
+  const [inputUI, setInputUI] = useState<GameInputUI>(presets.okizeme.data);
   const [result, setResult] = useState<GameResult | null>(null);
 
   return (

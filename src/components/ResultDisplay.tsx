@@ -75,7 +75,7 @@ export default function ResultDisplay({ result }: Props) {
       </Box>
       <Box mb={6}>
         <Heading size="md" as="h3" mb={2}>
-          Player1
+          Player 1
         </Heading>
         <Box mt={4}>
           <PlayerStat strategy={result.player1Strategy} colorpalette="red" />
@@ -83,7 +83,7 @@ export default function ResultDisplay({ result }: Props) {
       </Box>
       <Box>
         <Heading size="md" as="h3" mb={2}>
-          Player2
+          Player 2
         </Heading>
         <PlayerStat strategy={result.player2Strategy} colorpalette="blue" />
       </Box>
