@@ -8,6 +8,7 @@ import {
   Stack,
   Table,
   useToken,
+  Text,
 } from "@chakra-ui/react";
 import type { GameResult } from "../types/game";
 import type React from "react";
@@ -63,12 +64,12 @@ export default function ResultDisplay({ result }: Props) {
   const { colorMode } = useColorMode();
   const [lightGray, lightRed, lightBlue, darkGray, darkRed, darkBlue] =
     useToken("colors", [
-      "gray.300",
-      "red.300",
-      "blue.300",
+      "gray.400",
+      "red.600",
+      "blue.600",
       "gray.700",
-      "red.700",
-      "blue.700",
+      "red.600",
+      "blue.600",
     ]);
   const [gray, red, blue] =
     colorMode === "light"
@@ -125,7 +126,11 @@ export default function ResultDisplay({ result }: Props) {
           発生確率一覧
         </Heading>
         <Table.ScrollArea>
-          <Table.Root variant="outline" size="sm">
+          <Table.Root
+            variant="outline"
+            size="sm"
+            style={{ tableLayout: "fixed" }}
+          >
             <Table.Header>
               <Table.Row>
                 <Table.ColumnHeader w="150px">
@@ -133,7 +138,7 @@ export default function ResultDisplay({ result }: Props) {
                 </Table.ColumnHeader>
                 {result.player2Strategy.map((entry, j) => (
                   <Table.ColumnHeader w="150px" key={`header_${j + 1}`}>
-                    {entry.label}
+                    <Text truncate>{entry.label}</Text>
                   </Table.ColumnHeader>
                 ))}
               </Table.Row>
@@ -141,7 +146,9 @@ export default function ResultDisplay({ result }: Props) {
             <Table.Body>
               {result.player1Strategy.map((row, i) => (
                 <Table.Row key={`row_${i + 1}`}>
-                  <Table.Cell>{row.label}</Table.Cell>
+                  <Table.Cell>
+                    <Text truncate>{row.label}</Text>
+                  </Table.Cell>
                   {result.player2Strategy.map((col, j) => {
                     const prob = row.probability * col.probability;
                     const percentage = prob * 100;
@@ -168,13 +175,13 @@ export default function ResultDisplay({ result }: Props) {
                                 maxAbsPayoff
                               )}
                               borderRadius="sm"
-                              zIndex={0}
+                              zIndex="base"
                               rounded="none"
                               my={1}
                             />
                             <Box
                               position="relative"
-                              zIndex={1}
+                              zIndex="docked"
                               px={2}
                               fontSize="sm"
                             >
