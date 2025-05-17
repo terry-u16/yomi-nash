@@ -7,9 +7,12 @@ import {
   FormatNumber,
   Stack,
   Table,
+  useToken,
 } from "@chakra-ui/react";
 import type { GameResult } from "../types/game";
 import type React from "react";
+import chroma from "chroma-js";
+import { useColorMode } from "./ui/color-mode";
 
 interface Props {
   result: GameResult | null;
@@ -56,7 +59,33 @@ const PlayerStat: React.FC<PlayerStatProps> = ({
 };
 
 export default function ResultDisplay({ result }: Props) {
+  const { colorMode } = useColorMode();
+  const [lightGray, lightRed, lightBlue, darkGray, darkRed, darkBlue] =
+    useToken("colors", [
+      "gray.300",
+      "red.300",
+      "blue.300",
+      "gray.700",
+      "red.700",
+      "blue.700",
+    ]);
+  const [gray, red, blue] =
+    colorMode === "light"
+      ? [lightGray, lightRed, lightBlue]
+      : [darkGray, darkRed, darkBlue];
+
   if (!result) return null;
+
+  const maxAbsPayoff = Math.max(
+    ...result.payoffMatrix.flat().map((v) => Math.abs(v)),
+    1e-6
+  );
+
+  const payoffToColor = (payoff: number, maxAbs: number): string => {
+    const t = Math.max(-1, Math.min(1, payoff / maxAbs));
+    const scale = chroma.scale([blue, gray, red]).domain([-1, 0, 1]);
+    return scale(t).hex();
+  };
 
   return (
     <Stack my={8} gap={10}>
@@ -112,16 +141,46 @@ export default function ResultDisplay({ result }: Props) {
               {result.player1Strategy.map((row, i) => (
                 <Table.Row key={`row_${i + 1}`}>
                   <Table.Cell>{row.label}</Table.Cell>
-                  {result.player2Strategy.map((col, j) => (
-                    <Table.Cell key={`cell_${i}_${j}`}>
-                      <FormatNumber
-                        value={row.probability * col.probability}
-                        style="percent"
-                        maximumFractionDigits={2}
-                        minimumFractionDigits={2}
-                      />
-                    </Table.Cell>
-                  ))}
+                  {result.player2Strategy.map((col, j) => {
+                    const prob = row.probability * col.probability;
+                    const percentage = prob * 100;
+                    return (
+                      <Table.Cell
+                        key={`cell_${i}_${j}`}
+                        position="relative"
+                        p={0}
+                      >
+                        <Box
+                          position="absolute"
+                          top={0}
+                          bottom={0}
+                          right={0}
+                          width={`${percentage.toFixed(2)}%`}
+                          bg={payoffToColor(
+                            result.payoffMatrix[i][j],
+                            maxAbsPayoff
+                          )}
+                          borderRadius="sm"
+                          zIndex={0}
+                          rounded="none"
+                          my={1}
+                        />
+                        <Box
+                          position="relative"
+                          zIndex={1}
+                          px={2}
+                          fontSize="sm"
+                        >
+                          <FormatNumber
+                            value={row.probability * col.probability}
+                            style="percent"
+                            maximumFractionDigits={2}
+                            minimumFractionDigits={2}
+                          />
+                        </Box>
+                      </Table.Cell>
+                    );
+                  })}
                 </Table.Row>
               ))}
             </Table.Body>

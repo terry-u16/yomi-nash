@@ -131,6 +131,7 @@ export async function solveGame(input: GameInput): Promise<GameResult> {
   return {
     player1Strategy,
     player2Strategy,
+    payoffMatrix: A,
     expectedPayoff: player2Sol.value,
   };
 }
