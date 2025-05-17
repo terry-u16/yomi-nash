@@ -1,4 +1,5 @@
 import PayoffTable from "@/components/PayoffTable";
+import TableControls from "@/components/TableControls";
 import type { GameInputUI } from "@/types/game";
 import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 import { useOutletContext } from "react-router-dom";
@@ -24,6 +25,16 @@ const Home: React.FC = () => {
           簡易説明
         </Heading>
         <Text>簡易説明（いい感じの択の混ぜ方を計算してくれます、など）</Text>
+      </Box>
+      <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
+        <Heading size="xl" mb={4} as="h2">
+          操作パネル
+        </Heading>
+        <TableControls
+          inputUI={inputUI}
+          setInputUI={setInputUI}
+          onCalculate={(_) => {}}
+        />
       </Box>
     </Stack>
   );

@@ -22,7 +22,7 @@ export function parseGameInputUI(input: GameInputUI): ParseResult {
         errors.push({
           row: i,
           col: j,
-          value,
+          value: "数値を入力してください",
         });
       }
     }

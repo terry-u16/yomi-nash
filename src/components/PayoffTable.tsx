@@ -154,6 +154,7 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
                   variant="outline"
                   colorPalette="red"
                   aria-label="delete row"
+                  disabled={strategyLabels1.length <= 1}
                   onClick={() => deleteRow(i)}
                 >
                   <TbRowRemove /> 行削除
@@ -178,6 +179,7 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
                   variant="outline"
                   colorPalette="red"
                   aria-label={`delete column ${j + 1}`}
+                  disabled={strategyLabels2.length <= 1}
                   onClick={() => deleteCol(j)}
                 >
                   <TbColumnRemove /> 列削除
