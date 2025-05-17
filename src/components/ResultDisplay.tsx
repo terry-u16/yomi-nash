@@ -6,6 +6,7 @@ import {
   Progress,
   FormatNumber,
   Stack,
+  Table,
 } from "@chakra-ui/react";
 import type { GameResult } from "../types/game";
 import type React from "react";
@@ -58,7 +59,7 @@ export default function ResultDisplay({ result }: Props) {
   if (!result) return null;
 
   return (
-    <Stack mt={8} gap={8}>
+    <Stack my={8} gap={10}>
       <Box>
         <Heading size="md" as="h3" mb={2}>
           Player 1 期待値
@@ -73,19 +74,59 @@ export default function ResultDisplay({ result }: Props) {
           </Stat.ValueText>
         </Stat.Root>
       </Box>
-      <Box mb={6}>
-        <Heading size="md" as="h3" mb={2}>
-          Player 1
-        </Heading>
-        <Box mt={4}>
-          <PlayerStat strategy={result.player1Strategy} colorpalette="red" />
+      <Stack gap={4}>
+        <Box>
+          <Heading size="md" as="h3" mb={2}>
+            Player 1
+          </Heading>
+          <Box mt={4}>
+            <PlayerStat strategy={result.player1Strategy} colorpalette="red" />
+          </Box>
         </Box>
-      </Box>
+        <Box>
+          <Heading size="md" as="h3" mb={2}>
+            Player 2
+          </Heading>
+          <PlayerStat strategy={result.player2Strategy} colorpalette="blue" />
+        </Box>
+      </Stack>
       <Box>
         <Heading size="md" as="h3" mb={2}>
-          Player 2
+          発生確率一覧
         </Heading>
-        <PlayerStat strategy={result.player2Strategy} colorpalette="blue" />
+        <Table.ScrollArea>
+          <Table.Root variant="outline" size="sm">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader w="150px">
+                  Player 1 ＼ Player 2
+                </Table.ColumnHeader>
+                {result.player2Strategy.map((entry, j) => (
+                  <Table.ColumnHeader w="150px" key={`header_${j + 1}`}>
+                    {entry.label}
+                  </Table.ColumnHeader>
+                ))}
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {result.player1Strategy.map((row, i) => (
+                <Table.Row key={`row_${i + 1}`}>
+                  <Table.Cell>{row.label}</Table.Cell>
+                  {result.player2Strategy.map((col, j) => (
+                    <Table.Cell key={`cell_${i}_${j}`}>
+                      <FormatNumber
+                        value={row.probability * col.probability}
+                        style="percent"
+                        maximumFractionDigits={2}
+                        minimumFractionDigits={2}
+                      />
+                    </Table.Cell>
+                  ))}
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Table.ScrollArea>
       </Box>
     </Stack>
   );
