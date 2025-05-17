@@ -13,6 +13,7 @@ import type { GameResult } from "../types/game";
 import type React from "react";
 import chroma from "chroma-js";
 import { useColorMode } from "./ui/color-mode";
+import { Tooltip } from "@/components/ui/tooltip";
 
 interface Props {
   result: GameResult | null;
@@ -150,34 +151,42 @@ export default function ResultDisplay({ result }: Props) {
                         position="relative"
                         p={0}
                       >
-                        <Box
-                          position="absolute"
-                          top={0}
-                          bottom={0}
-                          right={0}
-                          width={`${percentage.toFixed(2)}%`}
-                          bg={payoffToColor(
-                            result.payoffMatrix[i][j],
-                            maxAbsPayoff
-                          )}
-                          borderRadius="sm"
-                          zIndex={0}
-                          rounded="none"
-                          my={1}
-                        />
-                        <Box
-                          position="relative"
-                          zIndex={1}
-                          px={2}
-                          fontSize="sm"
+                        <Tooltip
+                          content={`${row.label} x ${col.label} : ${result.payoffMatrix[i][j]}`}
+                          openDelay={500}
+                          closeDelay={100}
                         >
-                          <FormatNumber
-                            value={row.probability * col.probability}
-                            style="percent"
-                            maximumFractionDigits={2}
-                            minimumFractionDigits={2}
-                          />
-                        </Box>
+                          <Box>
+                            <Box
+                              position="absolute"
+                              top={0}
+                              bottom={0}
+                              right={0}
+                              width={`${percentage.toFixed(2)}%`}
+                              bg={payoffToColor(
+                                result.payoffMatrix[i][j],
+                                maxAbsPayoff
+                              )}
+                              borderRadius="sm"
+                              zIndex={0}
+                              rounded="none"
+                              my={1}
+                            />
+                            <Box
+                              position="relative"
+                              zIndex={1}
+                              px={2}
+                              fontSize="sm"
+                            >
+                              <FormatNumber
+                                value={row.probability * col.probability}
+                                style="percent"
+                                maximumFractionDigits={2}
+                                minimumFractionDigits={2}
+                              />
+                            </Box>
+                          </Box>
+                        </Tooltip>
                       </Table.Cell>
                     );
                   })}
