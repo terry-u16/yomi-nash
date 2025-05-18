@@ -21,6 +21,15 @@ const glico = {
 };
 
 const okizeme = {
+  strategyLabels1: ["打撃重ね", "様子見"],
+  strategyLabels2: ["ガード", "無敵技"],
+  payoffMatrix: [
+    ["1000", "-1500"],
+    ["0", "5000"],
+  ],
+};
+
+const okizemeHighLow = {
   strategyLabels1: ["中段", "下段", "様子見"],
   strategyLabels2: ["立ちガード", "しゃがみガード", "無敵技"],
   payoffMatrix: [
@@ -33,5 +42,6 @@ const okizeme = {
 export const presets: Record<string, { label: string; data: GameInputUI }> = {
   rps: { label: "じゃんけん", data: rps },
   glico: { label: "グリコじゃんけん", data: glico },
-  okizeme: { label: "起き攻め中下択", data: okizeme },
+  okizeme: { label: "起き攻め打撃重ね", data: okizeme },
+  okizemeHighLow: { label: "起き攻め中下択", data: okizemeHighLow },
 };
