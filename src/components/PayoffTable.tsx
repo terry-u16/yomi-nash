@@ -83,7 +83,7 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
     }));
   };
 
-  const minW = "130px";
+  const minW = "125px";
 
   return (
     <Table.ScrollArea>

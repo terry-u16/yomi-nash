@@ -9,21 +9,81 @@ import {
   Table,
   useToken,
   Text,
+  Badge,
 } from "@chakra-ui/react";
 import type { GameResult } from "../types/game";
 import type React from "react";
 import chroma from "chroma-js";
 import { useColorMode } from "./ui/color-mode";
 import { Tooltip } from "@/components/ui/tooltip";
+import {
+  TbArrowDown,
+  TbArrowDownRight,
+  TbArrowsExchange,
+  TbArrowUp,
+  TbArrowUpRight,
+} from "react-icons/tb";
 
 interface Props {
   result: GameResult | null;
+}
+
+interface ExpectedStatProps {
+  value: number;
+  maxAbsPayoff: number;
 }
 
 interface PlayerStatProps {
   strategy: { label: string; probability: number }[];
   colorpalette?: string;
 }
+
+const ExpectedStat: React.FC<ExpectedStatProps> = ({
+  value,
+  maxAbsPayoff,
+}: ExpectedStatProps) => {
+  const normalizedValue = value / maxAbsPayoff;
+  let colorPalette: string;
+  let badgeText: string;
+  let icon: React.ReactNode;
+
+  if (normalizedValue > 0.15) {
+    colorPalette = "red";
+    badgeText = "有利";
+    icon = <TbArrowUp />;
+  } else if (normalizedValue > 0.02) {
+    colorPalette = "red";
+    badgeText = "微有利";
+    icon = <TbArrowUpRight />;
+  } else if (normalizedValue < -0.15) {
+    colorPalette = "blue";
+    badgeText = "不利";
+    icon = <TbArrowDown />;
+  } else if (normalizedValue < -0.02) {
+    colorPalette = "blue";
+    badgeText = "微不利";
+    icon = <TbArrowDownRight />;
+  } else {
+    colorPalette = "gray";
+    badgeText = "互角";
+    icon = <TbArrowsExchange />;
+  }
+
+  return (
+    <Stat.Root size="lg">
+      <Stat.ValueText>
+        <FormatNumber
+          value={value}
+          maximumFractionDigits={2}
+          minimumFractionDigits={0}
+        />
+      </Stat.ValueText>
+      <Badge colorPalette={colorPalette} variant="plain" px="0">
+        {icon} {badgeText}
+      </Badge>
+    </Stat.Root>
+  );
+};
 
 const PlayerStat: React.FC<PlayerStatProps> = ({
   strategy,
@@ -95,15 +155,10 @@ export default function ResultDisplay({ result }: Props) {
         <Heading size="md" as="h3" mb={2}>
           Player 1 期待値
         </Heading>
-        <Stat.Root size="lg">
-          <Stat.ValueText>
-            <FormatNumber
-              value={result.expectedPayoff}
-              maximumFractionDigits={2}
-              minimumFractionDigits={0}
-            />
-          </Stat.ValueText>
-        </Stat.Root>
+        <ExpectedStat
+          value={result.expectedPayoff}
+          maxAbsPayoff={maxAbsPayoff}
+        />
       </Box>
       <Stack gap={4}>
         <Box>
