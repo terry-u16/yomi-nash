@@ -149,6 +149,23 @@ export default function ResultDisplay({ result }: Props) {
     return scale(t).hex();
   };
 
+  const expectedP1 = result.player1Strategy.map((_, i) => {
+    const expected = result.payoffMatrix[i].reduce(
+      (acc, payoff, j) => acc + payoff * result.player2Strategy[j].probability,
+      0
+    );
+    return Math.round(expected * 100) / 100;
+  });
+
+  const expectedP2 = result.player2Strategy.map((_, j) => {
+    const expected = result.payoffMatrix.reduce(
+      (acc, payoff, i) =>
+        acc + payoff[j] * result.player1Strategy[i].probability,
+      0
+    );
+    return Math.round(expected * 100) / 100;
+  });
+
   return (
     <Stack my={8} gap={10}>
       <Box>
@@ -193,7 +210,13 @@ export default function ResultDisplay({ result }: Props) {
                 </Table.ColumnHeader>
                 {result.player2Strategy.map((entry, j) => (
                   <Table.ColumnHeader w="150px" key={`header_${j + 1}`}>
-                    <Text truncate>{entry.label}</Text>
+                    <Tooltip
+                      content={`選択確率: ${(entry.probability * 100).toFixed(2)}% / 期待値: ${expectedP2[j]}`}
+                      openDelay={500}
+                      closeDelay={500}
+                    >
+                      <Text truncate>{entry.label}</Text>
+                    </Tooltip>
                   </Table.ColumnHeader>
                 ))}
               </Table.Row>
@@ -202,7 +225,13 @@ export default function ResultDisplay({ result }: Props) {
               {result.player1Strategy.map((row, i) => (
                 <Table.Row key={`row_${i + 1}`}>
                   <Table.Cell>
-                    <Text truncate>{row.label}</Text>
+                    <Tooltip
+                      content={`選択確率: ${(row.probability * 100).toFixed(2)}% / 期待値: ${expectedP1[i]}`}
+                      openDelay={500}
+                      closeDelay={500}
+                    >
+                      <Text truncate>{row.label}</Text>
+                    </Tooltip>
                   </Table.Cell>
                   {result.player2Strategy.map((col, j) => {
                     const prob = row.probability * col.probability;
@@ -216,7 +245,7 @@ export default function ResultDisplay({ result }: Props) {
                         <Tooltip
                           content={`${row.label} x ${col.label} : ${result.payoffMatrix[i][j]}`}
                           openDelay={500}
-                          closeDelay={100}
+                          closeDelay={500}
                         >
                           <Box>
                             <Box
