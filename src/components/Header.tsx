@@ -3,6 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import type React from "react";
 import { TbHelp, TbHome } from "react-icons/tb";
+import { ColorModeButton } from "./ui/color-mode";
 
 const Header: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const Header: React.FC = () => {
         <ChakraLink as={RouterLink} to="/help" color="white">
           <TbHelp /> Help
         </ChakraLink>
+        <ColorModeButton color="white" size="xs"/>
       </Flex>
     </Flex>
   );
