@@ -22,7 +22,7 @@ const Home: React.FC = () => {
     <Stack gap={4}>
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
         <Heading size="xl" mb={4} as="h2">
-          利得行列
+          戦略相性表
         </Heading>
         <PayoffTable inputUI={inputUI} setInputUI={setInputUI} />
       </Box>
