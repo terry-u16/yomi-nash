@@ -4,7 +4,7 @@ import {
   Heading,
   Highlight,
   List,
-  Mark,
+  Separator,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -12,7 +12,7 @@ import {
 const Help: React.FC = () => {
   return (
     <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
-      <Stack gap={8}>
+      <Stack gap={6}>
         <Stack gap={2}>
           <Heading size="xl" as="h2">
             このアプリは何？
@@ -41,6 +41,7 @@ const Help: React.FC = () => {
             </Alert.Description>
           </Alert.Root>
         </Stack>
+        <Separator />
         <Stack gap={4}>
           <Heading size="xl" as="h2">
             チュートリアル
@@ -91,8 +92,8 @@ const Help: React.FC = () => {
                   が有利であることを表します。
                 </Text>
                 <Text>
-                  例として、じゃんけんの場合 Player 1 が勝つなら +1 、あいこなら
-                  0 、Player 2 が勝つなら -1
+                  じゃんけんを例に取ると、 Player 1 が勝つなら +1 、あいこなら 0
+                  、Player 2 が勝つなら -1
                   などとするとよいです。サンプルプリセットも参考にしてください。
                 </Text>
               </Alert.Description>
@@ -106,6 +107,84 @@ const Help: React.FC = () => {
                 </Text>
               </Alert.Description>
             </Alert.Root>
+          </Stack>
+        </Stack>
+        <Separator />
+        <Stack gap={4}>
+          <Heading size="xl" as="h2">
+            戦略相性表
+          </Heading>
+          <Text>
+            Player 1 の各選択肢と Player 2 の各選択肢の相性を記入する表です。
+          </Text>
+          <Stack gap={4}>
+            <Stack>
+              <Heading size="md" as="h3">
+                選択肢名
+              </Heading>
+              <Text>
+                表の1行目・1列目のセルです。Player 1 の選択肢は赤、Player 2
+                の選択肢は青で表示されます。好きな名前を付けてください。
+              </Text>
+            </Stack>
+            <Stack>
+              <Heading size="md" as="h3">
+                利得（うれしさ）
+              </Heading>
+              <Text>
+                表の2行目・2列目以降のセルに、Player 1, Player 2
+                がそれぞれある選択肢を採ったときにPlayer 1
+                がどのくらい嬉しいかを表す値を入力します。0 を互角の状態として、
+                プラスの値になればなるほど Player 1
+                が有利・マイナスの値になればなるほど Player 2
+                が有利と考えるとよいです。
+              </Text>
+              <Text>
+                利得の設定方法は比較的自由ですが、いくつか設定例を挙げます。
+              </Text>
+              <List.Root ps={4} as="ol" listStyle="decimal">
+                <List.Item>
+                  Player 1 が勝ったら +1 、負けたら -1 、引き分けなら 0
+                  （じゃんけんなど）
+                </List.Item>
+                <List.Item>
+                  Player 1 が x ダメージを与えたら +x 、 x ダメージを受けたら -x
+                  、ダメージのやり取りがなければ 0 （格ゲーなど）
+                </List.Item>
+                <List.Item>
+                  2.
+                  に加えて、その後の状況の良さ（起き攻め・有利フレーム・画面位置・ゲージ状況など）を加味した値にする
+                </List.Item>
+              </List.Root>
+              <Text>
+                なおこのアプリでは、「Player 1 が得をした分 Player 2
+                が損をする」という設定のゲームを扱います。 Player 1 の利得が x
+                の場合、 Player 2 の利得は -x として解釈されます。
+              </Text>
+              <Alert.Root status="info" mt={2}>
+                <Alert.Indicator />
+                <Alert.Description>
+                  <Text>
+                    「Player 1 が得をした分 Player 2
+                    が損をする」という設定のゲームを、2人ゼロサムゲームと呼びます。
+                  </Text>
+                </Alert.Description>
+              </Alert.Root>
+            </Stack>
+            <Stack>
+              <Heading size="md" as="h3">
+                行・列追加ボタン
+              </Heading>
+              <Text>
+                ボタンを押すと、表の下または右に新しい行・列が追加されます。
+              </Text>
+            </Stack>
+            <Stack>
+              <Heading size="md" as="h3">
+                行・列削除ボタン
+              </Heading>
+              <Text>ボタンを押すと、該当する行・列が削除されます。</Text>
+            </Stack>
           </Stack>
         </Stack>
       </Stack>

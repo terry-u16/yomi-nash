@@ -167,9 +167,9 @@ export default function ResultDisplay({ result }: Props) {
   });
 
   return (
-    <Stack my={8} gap={10}>
+    <Stack mb={6} gap={8}>
       <Box>
-        <Heading size="md" as="h3" mb={2}>
+        <Heading size="lg" as="h3" mb={2}>
           Player 1 期待値
         </Heading>
         <ExpectedStat
@@ -177,24 +177,24 @@ export default function ResultDisplay({ result }: Props) {
           maxAbsPayoff={maxAbsPayoff}
         />
       </Box>
-      <Stack gap={4}>
+      <Stack gap={6}>
         <Box>
-          <Heading size="md" as="h3" mb={2}>
+          <Heading size="lg" as="h3" mb={2}>
             Player 1 戦略
           </Heading>
-          <Box mt={4}>
+          <Box>
             <PlayerStat strategy={result.player1Strategy} colorpalette="red" />
           </Box>
         </Box>
         <Box>
-          <Heading size="md" as="h3" mb={2}>
+          <Heading size="lg" as="h3" mb={2}>
             Player 2 戦略
           </Heading>
           <PlayerStat strategy={result.player2Strategy} colorpalette="blue" />
         </Box>
       </Stack>
       <Box>
-        <Heading size="md" as="h3" mb={2}>
+        <Heading size="lg" as="h3" mb={2}>
           発生確率一覧
         </Heading>
         <Table.ScrollArea>
