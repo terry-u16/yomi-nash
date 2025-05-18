@@ -28,12 +28,6 @@ const Home: React.FC = () => {
       </Box>
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
         <Heading size="xl" mb={4} as="h2">
-          簡易説明
-        </Heading>
-        <Text>なんか書く（いい感じの択の混ぜ方を計算してくれます、など）</Text>
-      </Box>
-      <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
-        <Heading size="xl" mb={4} as="h2">
           操作パネル
         </Heading>
         <TableControls
