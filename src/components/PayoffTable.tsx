@@ -83,18 +83,25 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
     }));
   };
 
+  const minW = "130px";
+
   return (
     <Table.ScrollArea>
       <Table.Root variant="outline" size="sm">
         <Table.Body>
           <Table.Row>
-            <Table.Cell w="150px">Player 1 ＼ Player 2</Table.Cell>
+            <Table.Cell>Player 1 ＼ Player 2</Table.Cell>
             {strategyLabels2.map((label, j) => (
-              <Table.Cell w="150px" key={`header_${j + 1}`}>
+              <Table.Cell key={`header_${j + 1}`}>
                 <Input
+                  w="100%"
+                  minW={minW}
                   variant="outline"
                   value={label}
                   colorPalette="blue"
+                  color="blue.fg"
+                  borderColor="blue.muted"
+                  bg={{ base: "blue.50", _dark: "blue.950" }}
                   onChange={(e) => {
                     const newLabels = [...strategyLabels2];
                     newLabels[j] = e.target.value;
@@ -108,8 +115,8 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
             ))}
             <Table.Cell>
               <Button
-                variant="outline"
-                colorPalette="blue"
+                w="100%"
+                variant="surface"
                 aria-label="add column"
                 onClick={addCol}
               >
@@ -125,8 +132,13 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
                   justify="space-between"
                 >
                   <Input
+                    w="100%"
+                    minW={minW}
                     variant="outline"
                     colorPalette="red"
+                    color="red.fg"
+                    borderColor="red.muted"
+                    bg={{ base: "red.50", _dark: "red.950" }}
                     value={label}
                     onChange={(e) => {
                       const newLabels = [...strategyLabels1];
@@ -143,6 +155,8 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
                 <Table.Cell key={`cell_${i + 1}_${j + 1}`}>
                   <Field.Root invalid={!isValidNumber(val)}>
                     <NumberInput.Root
+                      w="100%"
+                      minW={minW}
                       value={val}
                       min={PAYOFF_MIN}
                       max={PAYOFF_MAX}
@@ -157,8 +171,8 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
               ))}
               <Table.Cell key={`delete_row_${i + 1}`}>
                 <Button
-                  variant="outline"
-                  colorPalette="red"
+                  w="100%"
+                  variant="surface"
                   aria-label="delete row"
                   disabled={strategyLabels1.length <= 1}
                   onClick={() => deleteRow(i)}
@@ -171,8 +185,8 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
           <Table.Row>
             <Table.Cell>
               <Button
-                variant="outline"
-                colorPalette="blue"
+                w="100%"
+                variant="surface"
                 aria-label="add row"
                 onClick={addRow}
               >
@@ -182,8 +196,8 @@ const PayoffTable: React.FC<Props> = ({ inputUI, setInputUI }: Props) => {
             {strategyLabels2.map((_, j) => (
               <Table.Cell key={`delete_col_${j + 1}`}>
                 <Button
-                  variant="outline"
-                  colorPalette="red"
+                  w="100%"
+                  variant="surface"
                   aria-label={`delete column ${j + 1}`}
                   disabled={strategyLabels2.length <= 1}
                   onClick={() => deleteCol(j)}
