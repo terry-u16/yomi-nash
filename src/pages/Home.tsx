@@ -57,7 +57,7 @@ const Home: React.FC = () => {
         <Heading size="xl" mb={4} as="h2">
           計算結果
         </Heading>
-        <ResultDisplay result={result} />
+        <ResultDisplay result={result} setResult={setResult} />
       </Box>
     </Stack>
   );

@@ -1,4 +1,4 @@
-import type { GameInput } from "../types/game";
+import type { GameInput, MixedStrategy, PayoffMatrix } from "../types/game";
 import GLPK, { type LP } from "glpk.js";
 import type { GameResult } from "../types/game";
 
@@ -106,7 +106,8 @@ export async function solveGame(input: GameInput): Promise<GameResult> {
     return B;
   }
 
-  const player1Sol = await solveMinV(transposeAndNegate(A));
+  const ATransposedAndNagate = transposeAndNegate(A);
+  const player1Sol = await solveMinV(ATransposedAndNagate);
   const player2Sol = await solveMinV(A);
 
   if (
@@ -131,7 +132,62 @@ export async function solveGame(input: GameInput): Promise<GameResult> {
   return {
     player1Strategy,
     player2Strategy,
-    payoffMatrix: A,
-    expectedPayoff: player2Sol.value,
+    payoffMatrix12: A,
+    payoffMatrix21: ATransposedAndNagate,
   };
+}
+
+/**
+ * 相手の混合戦略に対して、自分の各純粋戦略（行）を選んだ場合の期待利得を個別に計算する。
+ *
+ * この関数は、自分の混合戦略を最適化する前に、
+ * 各純粋戦略の期待値を可視化・比較する用途に適する。
+ *
+ * 利得行列 matrix は「自分の戦略が行、相手の戦略が列」に対応する形式を前提とする。
+ * opponentStrategy の順序は、matrix の列順と一致している必要がある。
+ *
+ * @param matrix 利得行列（自分の戦略: 行, 相手の戦略: 列）
+ * @param opponentStrategy 相手の混合戦略（順序付きラベルと確率）
+ * @returns 自分の各純粋戦略に対応する期待利得の配列
+ */
+export function evaluatePureStrategies(
+  matrix: PayoffMatrix,
+  opponentStrategy: MixedStrategy
+): number[] {
+  return matrix.map((row) =>
+    row.reduce((sum, value, j) => {
+      const prob = opponentStrategy[j]?.probability ?? 0;
+      return sum + value * prob;
+    }, 0)
+  );
+}
+
+/**
+ * 自分と相手の混合戦略に対して、プレイヤー1の利得期待値（スカラー）を計算する。
+ *
+ * この関数は、2人ゼロサムゲームにおけるプレイヤー1の期待利得を評価するために使用する。
+ * 利得行列 matrix は「自分の戦略が行、相手の戦略が列」に対応する形式を前提とする。
+ * 両戦略の順序は、それぞれ matrix の行・列順と一致している必要がある。
+ *
+ * 期待利得は以下の式で与えられる：
+ *   E = xᵀ A y = Σ_i Σ_j x_i * A_ij * y_j
+ *
+ * @param matrix 利得行列（自分の戦略: 行, 相手の戦略: 列）
+ * @param myStrategy 自分の混合戦略（順序付きラベルと確率）
+ * @param opponentStrategy 相手の混合戦略（順序付きラベルと確率）
+ * @returns プレイヤー1の利得期待値（スカラー）
+ */
+export function evaluateMixedStrategyMatchup(
+  matrix: PayoffMatrix,
+  myStrategy: MixedStrategy,
+  opponentStrategy: MixedStrategy
+): number {
+  return matrix.reduce((sum, row, i) => {
+    const p1 = myStrategy[i]?.probability ?? 0;
+    const rowSum = row.reduce((innerSum, value, j) => {
+      const p2 = opponentStrategy[j]?.probability ?? 0;
+      return innerSum + value * p2;
+    }, 0);
+    return sum + p1 * rowSum;
+  }, 0);
 }

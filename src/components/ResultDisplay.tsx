@@ -10,8 +10,10 @@ import {
   useToken,
   Text,
   Badge,
+  Slider,
+  HStack,
 } from "@chakra-ui/react";
-import type { GameResult } from "../types/game";
+import type { GameResult, MixedStrategy } from "../types/game";
 import type React from "react";
 import chroma from "chroma-js";
 import { useColorMode } from "./ui/color-mode";
@@ -23,9 +25,14 @@ import {
   TbArrowUp,
   TbArrowUpRight,
 } from "react-icons/tb";
+import {
+  evaluateMixedStrategyMatchup,
+  evaluatePureStrategies,
+} from "@/utils/solveGameInput";
 
 interface Props {
   result: GameResult | null;
+  setResult: React.Dispatch<React.SetStateAction<GameResult | null>>;
 }
 
 interface ExpectedStatProps {
@@ -34,8 +41,19 @@ interface ExpectedStatProps {
 }
 
 interface PlayerStatProps {
-  strategy: { label: string; probability: number }[];
+  strategy: MixedStrategy;
+  expectedPayoff: number[];
   colorpalette?: string;
+}
+
+interface StrategySliderProps {
+  strategy: MixedStrategy;
+  colorpalette?: string;
+  setResult: React.Dispatch<React.SetStateAction<GameResult | null>>;
+  generateNewResult: (
+    prev: GameResult,
+    newStrategy: MixedStrategy
+  ) => GameResult;
 }
 
 const ExpectedStat: React.FC<ExpectedStatProps> = ({
@@ -71,22 +89,25 @@ const ExpectedStat: React.FC<ExpectedStatProps> = ({
 
   return (
     <Stat.Root size="lg">
-      <Stat.ValueText>
-        <FormatNumber
-          value={value}
-          maximumFractionDigits={2}
-          minimumFractionDigits={0}
-        />
-      </Stat.ValueText>
-      <Badge colorPalette={colorPalette} variant="plain" px="0">
-        {icon} {badgeText}
-      </Badge>
+      <HStack>
+        <Stat.ValueText>
+          <FormatNumber
+            value={value}
+            maximumFractionDigits={2}
+            minimumFractionDigits={0}
+          />
+        </Stat.ValueText>
+        <Badge colorPalette={colorPalette} py={1}>
+          {icon} {badgeText}
+        </Badge>
+      </HStack>
     </Stat.Root>
   );
 };
 
 const PlayerStat: React.FC<PlayerStatProps> = ({
   strategy,
+  expectedPayoff,
   colorpalette,
 }: PlayerStatProps) => {
   return (
@@ -104,6 +125,18 @@ const PlayerStat: React.FC<PlayerStatProps> = ({
                   style="percent"
                 />
               </Stat.ValueText>
+              <Stat.HelpText mb={2}>
+                期待値:{" "}
+                <FormatNumber
+                  value={(() => {
+                    // -epsが-0と表示されることを避ける
+                    const exp = Math.round(expectedPayoff[idx] * 100) / 100;
+                    return exp === 0 ? 0 : exp;
+                  })()}
+                  maximumFractionDigits={2}
+                  minimumFractionDigits={0}
+                />
+              </Stat.HelpText>
               <Progress.Root
                 value={entry.probability * 100}
                 colorPalette={colorpalette}
@@ -120,7 +153,50 @@ const PlayerStat: React.FC<PlayerStatProps> = ({
   );
 };
 
-export default function ResultDisplay({ result }: Props) {
+const StrategySlider: React.FC<StrategySliderProps> = ({
+  strategy,
+  colorpalette,
+  generateNewResult,
+  setResult,
+}: StrategySliderProps) => {
+  const prefixSum: number[] = [];
+  let sum = 0;
+  for (const entry of strategy) {
+    sum += entry.probability * 100;
+    prefixSum.push(sum);
+  }
+
+  prefixSum.pop();
+
+  return (
+    <Slider.Root
+      value={prefixSum}
+      onValueChange={(e) =>
+        setResult((prev) => {
+          if (!prev) return prev;
+
+          const newProbs = [0, ...e.value, 100];
+          const newStrategy = strategy.map((entry, idx) => ({
+            ...entry,
+            probability: (newProbs[idx + 1] - newProbs[idx]) / 100,
+          }));
+
+          return generateNewResult(prev, newStrategy);
+        })
+      }
+      colorPalette={colorpalette}
+      w="100%"
+    >
+      <Slider.Label>戦略変更</Slider.Label>
+      <Slider.Control>
+        <Slider.Track bg={`${colorpalette}.solid`} />
+        <Slider.Thumbs />
+      </Slider.Control>
+    </Slider.Root>
+  );
+};
+
+export default function ResultDisplay({ result, setResult }: Props) {
   const { colorMode } = useColorMode();
   const [lightGray, lightRed, lightBlue, darkGray, darkRed, darkBlue] =
     useToken("colors", [
@@ -139,7 +215,7 @@ export default function ResultDisplay({ result }: Props) {
   if (!result) return null;
 
   const maxAbsPayoff = Math.max(
-    ...result.payoffMatrix.flat().map((v) => Math.abs(v)),
+    ...result.payoffMatrix12.flat().map((v) => Math.abs(v)),
     1e-6
   );
 
@@ -149,49 +225,81 @@ export default function ResultDisplay({ result }: Props) {
     return scale(t).hex();
   };
 
-  const expectedP1 = result.player1Strategy.map((_, i) => {
-    const expected = result.payoffMatrix[i].reduce(
-      (acc, payoff, j) => acc + payoff * result.player2Strategy[j].probability,
-      0
-    );
-    return Math.round(expected * 100) / 100;
-  });
+  const expectedP1 = evaluateMixedStrategyMatchup(
+    result.payoffMatrix12,
+    result.player1Strategy,
+    result.player2Strategy
+  );
 
-  const expectedP2 = result.player2Strategy.map((_, j) => {
-    const expected = result.payoffMatrix.reduce(
-      (acc, payoff, i) =>
-        acc + payoff[j] * result.player1Strategy[i].probability,
-      0
-    );
-    return Math.round(expected * 100) / 100;
-  });
+  const expectedP1All = evaluatePureStrategies(
+    result.payoffMatrix12,
+    result.player2Strategy
+  );
+
+  const expectedP2All = evaluatePureStrategies(
+    result.payoffMatrix21,
+    result.player1Strategy
+  );
 
   return (
-    <Stack mb={6} gap={8}>
+    <Stack mb={6} gap={10}>
       <Box>
-        <Heading size="lg" as="h3" mb={2}>
+        <Heading size="lg" as="h3" mb={1}>
           Player 1 期待値
         </Heading>
-        <ExpectedStat
-          value={result.expectedPayoff}
-          maxAbsPayoff={maxAbsPayoff}
-        />
+        <ExpectedStat value={expectedP1} maxAbsPayoff={maxAbsPayoff} />
       </Box>
-      <Stack gap={6}>
-        <Box>
-          <Heading size="lg" as="h3" mb={2}>
+      <Stack gap={8}>
+        <Stack>
+          <Heading size="lg" as="h3">
             Player 1 戦略
           </Heading>
           <Box>
-            <PlayerStat strategy={result.player1Strategy} colorpalette="red" />
+            <PlayerStat
+              strategy={result.player1Strategy}
+              expectedPayoff={expectedP1All}
+              colorpalette="red"
+            />
           </Box>
-        </Box>
-        <Box>
+          <Box mt={2}>
+            <StrategySlider
+              strategy={result.player1Strategy}
+              colorpalette="red"
+              setResult={setResult}
+              generateNewResult={(prev, newStrategy) => {
+                return {
+                  ...prev,
+                  player1Strategy: newStrategy,
+                };
+              }}
+            />
+          </Box>
+        </Stack>
+        <Stack>
           <Heading size="lg" as="h3" mb={2}>
             Player 2 戦略
           </Heading>
-          <PlayerStat strategy={result.player2Strategy} colorpalette="blue" />
-        </Box>
+          <Box>
+            <PlayerStat
+              strategy={result.player2Strategy}
+              expectedPayoff={expectedP2All}
+              colorpalette="blue"
+            />
+          </Box>
+          <Box mt={2}>
+            <StrategySlider
+              strategy={result.player2Strategy}
+              colorpalette="blue"
+              setResult={setResult}
+              generateNewResult={(prev, newStrategy) => {
+                return {
+                  ...prev,
+                  player2Strategy: newStrategy,
+                };
+              }}
+            />
+          </Box>
+        </Stack>
       </Stack>
       <Box>
         <Heading size="lg" as="h3" mb={2}>
@@ -210,13 +318,7 @@ export default function ResultDisplay({ result }: Props) {
                 </Table.ColumnHeader>
                 {result.player2Strategy.map((entry, j) => (
                   <Table.ColumnHeader w="150px" key={`header_${j + 1}`}>
-                    <Tooltip
-                      content={`選択確率: ${(entry.probability * 100).toFixed(2)}% / 期待値: ${expectedP2[j]}`}
-                      openDelay={500}
-                      closeDelay={500}
-                    >
-                      <Text truncate>{entry.label}</Text>
-                    </Tooltip>
+                    <Text truncate>{entry.label}</Text>
                   </Table.ColumnHeader>
                 ))}
               </Table.Row>
@@ -225,13 +327,7 @@ export default function ResultDisplay({ result }: Props) {
               {result.player1Strategy.map((row, i) => (
                 <Table.Row key={`row_${i + 1}`}>
                   <Table.Cell>
-                    <Tooltip
-                      content={`選択確率: ${(row.probability * 100).toFixed(2)}% / 期待値: ${expectedP1[i]}`}
-                      openDelay={500}
-                      closeDelay={500}
-                    >
-                      <Text truncate>{row.label}</Text>
-                    </Tooltip>
+                    <Text truncate>{row.label}</Text>
                   </Table.Cell>
                   {result.player2Strategy.map((col, j) => {
                     const prob = row.probability * col.probability;
@@ -243,7 +339,7 @@ export default function ResultDisplay({ result }: Props) {
                         p={0}
                       >
                         <Tooltip
-                          content={`${row.label} x ${col.label} : ${result.payoffMatrix[i][j]}`}
+                          content={`${row.label} x ${col.label} : ${result.payoffMatrix12[i][j]}`}
                           openDelay={500}
                           closeDelay={500}
                         >
@@ -255,7 +351,7 @@ export default function ResultDisplay({ result }: Props) {
                               right={0}
                               width={`${percentage.toFixed(2)}%`}
                               bg={payoffToColor(
-                                result.payoffMatrix[i][j],
+                                result.payoffMatrix12[i][j],
                                 maxAbsPayoff
                               )}
                               borderRadius="sm"
@@ -283,6 +379,11 @@ export default function ResultDisplay({ result }: Props) {
                   })}
                 </Table.Row>
               ))}
+              <Table.Row>
+                <Table.Cell>
+                  <Text truncate>TODO: 合計</Text>
+                </Table.Cell>
+              </Table.Row>
             </Table.Body>
           </Table.Root>
         </Table.ScrollArea>
