@@ -8,7 +8,7 @@ interface Props {
   colorpalette?: string;
 }
 
-const PlayerStat: React.FC<Props> = React.memo(
+const StrategyStat: React.FC<Props> = React.memo(
   ({ strategy, expectedPayoff, colorpalette }: Props) => {
     return (
       <Box w="100%">
@@ -54,4 +54,4 @@ const PlayerStat: React.FC<Props> = React.memo(
   }
 );
 
-export default PlayerStat;
+export default StrategyStat;

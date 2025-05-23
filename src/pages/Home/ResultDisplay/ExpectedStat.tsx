@@ -1,4 +1,11 @@
-import { Badge, FormatNumber, HStack, Stat } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  FormatNumber,
+  Heading,
+  HStack,
+  Stat,
+} from "@chakra-ui/react";
 import {
   TbArrowDown,
   TbArrowDownRight,
@@ -41,20 +48,25 @@ const ExpectedStat: React.FC<Props> = ({ value, maxAbsPayoff }: Props) => {
   }
 
   return (
-    <Stat.Root size="lg">
-      <HStack>
-        <Stat.ValueText>
-          <FormatNumber
-            value={value}
-            maximumFractionDigits={2}
-            minimumFractionDigits={2}
-          />
-        </Stat.ValueText>
-        <Badge colorPalette={colorPalette} py={1}>
-          {icon} {badgeText}
-        </Badge>
-      </HStack>
-    </Stat.Root>
+    <Box>
+      <Heading size="lg" as="h3" mb={1}>
+        Player 1 期待値
+      </Heading>
+      <Stat.Root size="lg">
+        <HStack>
+          <Stat.ValueText>
+            <FormatNumber
+              value={value}
+              maximumFractionDigits={2}
+              minimumFractionDigits={2}
+            />
+          </Stat.ValueText>
+          <Badge colorPalette={colorPalette} py={1}>
+            {icon} {badgeText}
+          </Badge>
+        </HStack>
+      </Stat.Root>
+    </Box>
   );
 };
 
