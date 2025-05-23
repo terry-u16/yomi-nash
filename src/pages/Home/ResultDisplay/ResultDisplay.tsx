@@ -1,199 +1,29 @@
 import {
   Box,
   Heading,
-  Stat,
-  Flex,
-  Progress,
   FormatNumber,
   Stack,
   Table,
   useToken,
   Text,
-  Badge,
-  Slider,
-  HStack,
 } from "@chakra-ui/react";
-import type { GameResult, MixedStrategy } from "../../../types/game";
+import type { GameResult } from "../../../types/game";
 import React, { useMemo } from "react";
 import chroma from "chroma-js";
 import { useColorMode } from "../../../components/ui/color-mode";
 import { Tooltip } from "@/components/ui/tooltip";
 import {
-  TbArrowDown,
-  TbArrowDownRight,
-  TbArrowsExchange,
-  TbArrowUp,
-  TbArrowUpRight,
-} from "react-icons/tb";
-import {
   evaluateMixedStrategyMatchup,
   evaluatePureStrategies,
 } from "@/utils/solveGameInput";
+import ExpectedStat from "./ExpectedStat";
+import PlayerStat from "./PlayerStat";
+import StrategySlider from "./StrategySlider";
 
 interface Props {
   result: GameResult;
   setResult: React.Dispatch<React.SetStateAction<GameResult | null>>;
 }
-
-interface ExpectedStatProps {
-  value: number;
-  maxAbsPayoff: number;
-}
-
-interface PlayerStatProps {
-  strategy: MixedStrategy;
-  expectedPayoff: number[];
-  colorpalette?: string;
-}
-
-interface StrategySliderProps {
-  strategy: MixedStrategy;
-  colorpalette?: string;
-  setResult: React.Dispatch<React.SetStateAction<GameResult | null>>;
-  generateNewResult: (
-    prev: GameResult,
-    newStrategy: MixedStrategy
-  ) => GameResult;
-}
-
-const ExpectedStat: React.FC<ExpectedStatProps> = ({
-  value,
-  maxAbsPayoff,
-}: ExpectedStatProps) => {
-  const normalizedValue = value / maxAbsPayoff;
-  let colorPalette: string;
-  let badgeText: string;
-  let icon: React.ReactNode;
-
-  if (normalizedValue > 0.15) {
-    colorPalette = "red";
-    badgeText = "有利";
-    icon = <TbArrowUp />;
-  } else if (normalizedValue > 0.02) {
-    colorPalette = "red";
-    badgeText = "微有利";
-    icon = <TbArrowUpRight />;
-  } else if (normalizedValue < -0.15) {
-    colorPalette = "blue";
-    badgeText = "不利";
-    icon = <TbArrowDown />;
-  } else if (normalizedValue < -0.02) {
-    colorPalette = "blue";
-    badgeText = "微不利";
-    icon = <TbArrowDownRight />;
-  } else {
-    colorPalette = "gray";
-    badgeText = "互角";
-    icon = <TbArrowsExchange />;
-  }
-
-  return (
-    <Stat.Root size="lg">
-      <HStack>
-        <Stat.ValueText>
-          <FormatNumber
-            value={value}
-            maximumFractionDigits={2}
-            minimumFractionDigits={0}
-          />
-        </Stat.ValueText>
-        <Badge colorPalette={colorPalette} py={1}>
-          {icon} {badgeText}
-        </Badge>
-      </HStack>
-    </Stat.Root>
-  );
-};
-
-const PlayerStat: React.FC<PlayerStatProps> = React.memo(
-  ({ strategy, expectedPayoff, colorpalette }: PlayerStatProps) => {
-    return (
-      <Box w="100%">
-        <Flex wrap="wrap" gap={4}>
-          {strategy.map((entry, idx) => (
-            <Box key={idx} w={{ base: "100%", sm: "30%" }}>
-              <Stat.Root>
-                <Stat.Label>{entry.label}</Stat.Label>
-                <Stat.ValueText>
-                  <FormatNumber
-                    value={entry.probability}
-                    maximumFractionDigits={2}
-                    minimumFractionDigits={2}
-                    style="percent"
-                  />
-                </Stat.ValueText>
-                <Stat.HelpText mb={2}>
-                  期待値:{" "}
-                  <FormatNumber
-                    value={(() => {
-                      // -epsが-0と表示されることを避ける
-                      const exp = Math.round(expectedPayoff[idx] * 100) / 100;
-                      return exp === 0 ? 0 : exp;
-                    })()}
-                    maximumFractionDigits={2}
-                    minimumFractionDigits={0}
-                  />
-                </Stat.HelpText>
-                <Progress.Root
-                  value={entry.probability * 100}
-                  colorPalette={colorpalette}
-                >
-                  <Progress.Track>
-                    <Progress.Range />
-                  </Progress.Track>
-                </Progress.Root>
-              </Stat.Root>
-            </Box>
-          ))}
-        </Flex>
-      </Box>
-    );
-  }
-);
-
-const StrategySlider: React.FC<StrategySliderProps> = ({
-  strategy,
-  colorpalette,
-  generateNewResult,
-  setResult,
-}: StrategySliderProps) => {
-  const prefixSum: number[] = [];
-  let sum = 0;
-  for (const entry of strategy) {
-    sum += entry.probability * 100;
-    prefixSum.push(sum);
-  }
-
-  prefixSum.pop();
-
-  return (
-    <Slider.Root
-      value={prefixSum}
-      onValueChange={(e) =>
-        setResult((prev) => {
-          if (!prev) return prev;
-
-          const newProbs = [0, ...e.value, 100];
-          const newStrategy = strategy.map((entry, idx) => ({
-            ...entry,
-            probability: (newProbs[idx + 1] - newProbs[idx]) / 100,
-          }));
-
-          return generateNewResult(prev, newStrategy);
-        })
-      }
-      colorPalette={colorpalette}
-      w="100%"
-    >
-      <Slider.Label>戦略変更</Slider.Label>
-      <Slider.Control>
-        <Slider.Track bg={`${colorpalette}.solid`} />
-        <Slider.Thumbs />
-      </Slider.Control>
-    </Slider.Root>
-  );
-};
-
 const ResultDisplay: React.FC<Props> = React.memo(
   ({ result, setResult }: Props) => {
     const { colorMode } = useColorMode();
