@@ -14,8 +14,6 @@ interface Props {
 
 const ProbabilityCell: React.FC<Props> = React.memo(
   ({ strategy1, strategy2, payoff, maxAbsPayoff }: Props) => {
-    console.log(strategy1, strategy2, payoff, maxAbsPayoff);
-
     const { colorMode } = useColorMode();
     const [lightGray, lightRed, lightBlue, darkGray, darkRed, darkBlue] =
       useToken("colors", [

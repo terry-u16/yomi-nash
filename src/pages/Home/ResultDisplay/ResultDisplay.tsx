@@ -42,7 +42,17 @@ const ResultDisplay: React.FC<Props> = React.memo(
       [result.payoffMatrix21, result.player1Strategy]
     );
 
-    const generateNewResult1 = useCallback(
+    const strategyGetter1 = useCallback(
+      (prev: GameResult) => prev.player1Strategy,
+      []
+    );
+
+    const strategyGetter2 = useCallback(
+      (prev: GameResult) => prev.player2Strategy,
+      []
+    );
+
+    const strategySetter1 = useCallback(
       (prev: GameResult, newStrategy: MixedStrategy) => {
         return {
           ...prev,
@@ -52,7 +62,7 @@ const ResultDisplay: React.FC<Props> = React.memo(
       []
     );
 
-    const generateNewResult2 = useCallback(
+    const strategySetter2 = useCallback(
       (prev: GameResult, newStrategy: MixedStrategy) => {
         return {
           ...prev,
@@ -76,7 +86,8 @@ const ResultDisplay: React.FC<Props> = React.memo(
               expectedPayoff={expectedP1All}
               colorpalette="red"
               setResult={setResult}
-              generateNewResult={generateNewResult1}
+              strategyGetter={strategyGetter1}
+              strategySetter={strategySetter1}
             />
             <PlayerStrategy
               playerName="Player 2"
@@ -84,7 +95,8 @@ const ResultDisplay: React.FC<Props> = React.memo(
               expectedPayoff={expectedP2All}
               colorpalette="blue"
               setResult={setResult}
-              generateNewResult={generateNewResult2}
+              strategyGetter={strategyGetter2}
+              strategySetter={strategySetter2}
             />
           </Stack>
           <ProbabilityTable result={result} maxAbsPayoff={maxAbsPayoff} />

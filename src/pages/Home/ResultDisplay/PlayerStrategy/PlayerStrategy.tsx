@@ -10,10 +10,8 @@ interface Props {
   expectedPayoff: number[];
   colorpalette?: string;
   setResult: React.Dispatch<React.SetStateAction<GameResult | null>>;
-  generateNewResult: (
-    prev: GameResult,
-    newStrategy: MixedStrategy
-  ) => GameResult;
+  strategyGetter: (prev: GameResult) => MixedStrategy;
+  strategySetter: (prev: GameResult, stragety: MixedStrategy) => GameResult;
 }
 
 const PlayerStrategy: React.FC<Props> = React.memo(
@@ -23,7 +21,8 @@ const PlayerStrategy: React.FC<Props> = React.memo(
     expectedPayoff,
     colorpalette,
     setResult,
-    generateNewResult,
+    strategyGetter,
+    strategySetter,
   }: Props) => {
     return (
       <Stack>
@@ -42,7 +41,8 @@ const PlayerStrategy: React.FC<Props> = React.memo(
             strategy={strategy}
             colorpalette={colorpalette}
             setResult={setResult}
-            generateNewResult={generateNewResult}
+            strategyGetter={strategyGetter}
+            strategySetter={strategySetter}
           />
         </Box>
       </Stack>
