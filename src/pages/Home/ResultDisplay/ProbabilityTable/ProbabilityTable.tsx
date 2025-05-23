@@ -2,6 +2,7 @@ import type { GameResult } from "@/types/game";
 import { Box, Text, Heading, Table } from "@chakra-ui/react";
 import React from "react";
 import ProbabilityCell from "./ProbabilityCell";
+import SumCell from "./SumCell";
 
 interface Props {
   result: GameResult;
@@ -10,6 +11,25 @@ interface Props {
 
 const ProbabilityTable: React.FC<Props> = React.memo(
   ({ result, maxAbsPayoff }: Props) => {
+    const expectedSumRow = result.payoffMatrix12.map((val) =>
+      val.reduce(
+        (acc, v, j) => acc + v * result.player2Strategy[j].probability,
+        0
+      )
+    );
+
+    const expectedSumCol = result.payoffMatrix21.map((val) =>
+      val.reduce(
+        (acc, v, i) => acc - v * result.player1Strategy[i].probability,
+        0
+      )
+    );
+
+    const expectedSum = expectedSumRow.reduce(
+      (acc, v, i) => acc + v * result.player1Strategy[i].probability,
+      0
+    );
+
     return (
       <Box>
         <Heading size="lg" as="h3" mb={2}>
@@ -19,6 +39,7 @@ const ProbabilityTable: React.FC<Props> = React.memo(
           <Table.Root
             variant="outline"
             size="sm"
+            showColumnBorder
             style={{ tableLayout: "fixed" }}
           >
             <Table.Header>
@@ -31,6 +52,7 @@ const ProbabilityTable: React.FC<Props> = React.memo(
                     <Text truncate>{entry.label}</Text>
                   </Table.ColumnHeader>
                 ))}
+                <Table.ColumnHeader w="150px">合計</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -50,12 +72,36 @@ const ProbabilityTable: React.FC<Props> = React.memo(
                       />
                     );
                   })}
+                  <SumCell
+                    prob={result.player1Strategy[i].probability}
+                    label={result.player1Strategy[i].label}
+                    payoff={expectedSumRow[i]}
+                    maxAbsPayoff={maxAbsPayoff}
+                    key={`row_sum_${i}`}
+                  />
                 </Table.Row>
               ))}
               <Table.Row>
                 <Table.Cell>
-                  <Text truncate>TODO: 合計</Text>
+                  <Text truncate>合計</Text>
                 </Table.Cell>
+                {result.player2Strategy.map((col, j) => {
+                  return (
+                    <SumCell
+                      prob={col.probability}
+                      label={col.label}
+                      payoff={expectedSumCol[j]}
+                      maxAbsPayoff={maxAbsPayoff}
+                      key={`col_sum_${j}`}
+                    />
+                  );
+                })}
+                <SumCell
+                  prob={1}
+                  label="合計"
+                  payoff={expectedSum}
+                  maxAbsPayoff={maxAbsPayoff}
+                />
               </Table.Row>
             </Table.Body>
           </Table.Root>

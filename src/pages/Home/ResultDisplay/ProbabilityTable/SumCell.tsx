@@ -1,19 +1,18 @@
 import { useColorMode } from "@/components/ui/color-mode";
 import { Tooltip } from "@/components/ui/tooltip";
-import type { MixedStrategyEntry } from "@/types/game";
 import { Box, FormatNumber, Table, useToken } from "@chakra-ui/react";
 import chroma from "chroma-js";
 import React from "react";
 
 interface Props {
-  strategy1: MixedStrategyEntry;
-  strategy2: MixedStrategyEntry;
+  prob: number;
+  label: string;
   payoff: number;
   maxAbsPayoff: number;
 }
 
-const ProbabilityCell: React.FC<Props> = React.memo(
-  ({ strategy1, strategy2, payoff, maxAbsPayoff }: Props) => {
+const SumCell: React.FC<Props> = React.memo(
+  ({ prob, label, payoff, maxAbsPayoff }: Props) => {
     const { colorMode } = useColorMode();
     const [lightGray, lightRed, lightBlue, darkGray, darkRed, darkBlue] =
       useToken("colors", [
@@ -35,13 +34,12 @@ const ProbabilityCell: React.FC<Props> = React.memo(
       return scale(t).hex();
     };
 
-    const prob = strategy1.probability * strategy2.probability;
     const percentage = prob * 100;
 
     return (
       <Table.Cell position="relative" p={0}>
         <Tooltip
-          content={`${strategy1.label} x ${strategy2.label} : ${Math.round(payoff * 100) / 100}`}
+          content={`${label} 合計 : ${Math.round(payoff * 100) / 100}`}
           openDelay={500}
           closeDelay={500}
         >
@@ -51,7 +49,7 @@ const ProbabilityCell: React.FC<Props> = React.memo(
               top={0}
               bottom={0}
               right={0}
-              width={`${percentage.toFixed(2)}%`}
+              width={`${percentage}%`}
               bg={payoffToColor(payoff, maxAbsPayoff)}
               borderRadius="sm"
               zIndex="base"
@@ -60,7 +58,7 @@ const ProbabilityCell: React.FC<Props> = React.memo(
             />
             <Box position="relative" zIndex="docked" px={2} fontSize="sm">
               <FormatNumber
-                value={strategy1.probability * strategy2.probability}
+                value={prob}
                 style="percent"
                 maximumFractionDigits={2}
                 minimumFractionDigits={2}
@@ -73,4 +71,4 @@ const ProbabilityCell: React.FC<Props> = React.memo(
   }
 );
 
-export default ProbabilityCell;
+export default SumCell;
