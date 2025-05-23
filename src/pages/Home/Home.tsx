@@ -1,6 +1,6 @@
-import PayoffTable from "@/components/PayoffTable";
-import ResultDisplay from "@/components/ResultDisplay";
-import TableControls from "@/components/TableControls";
+import PayoffTable from "@/pages/Home/PayoffTable";
+import ResultDisplay from "@/pages/Home/ResultDisplay";
+import TableControls from "@/pages/Home/TableControls";
 import { toaster } from "@/components/ui/toaster";
 import type { GameInput, GameInputUI, GameResult } from "@/types/game";
 import { solveGame } from "@/utils/solveGameInput";

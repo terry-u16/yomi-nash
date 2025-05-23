@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 import React, { useRef } from "react";
-import type { GameInput, GameInputUI } from "../types/game";
+import type { GameInput, GameInputUI } from "../../types/game";
 import {
   generateCsvFromGameInputUI,
   parseCsvInputFromBinary,

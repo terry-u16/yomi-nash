@@ -13,10 +13,10 @@ import {
   Slider,
   HStack,
 } from "@chakra-ui/react";
-import type { GameResult, MixedStrategy } from "../types/game";
+import type { GameResult, MixedStrategy } from "../../types/game";
 import React, { useMemo } from "react";
 import chroma from "chroma-js";
-import { useColorMode } from "./ui/color-mode";
+import { useColorMode } from "../../components/ui/color-mode";
 import { Tooltip } from "@/components/ui/tooltip";
 import {
   TbArrowDown,
