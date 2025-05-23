@@ -22,16 +22,20 @@ const Header: React.FC = () => {
       zIndex={1000}
     >
       <Heading size="2xl" color="white" as="h1">
-        <ChakraLink as={RouterLink} href="/" color="white">
-          読み合いナッシュ（仮）
+        <ChakraLink asChild color="white">
+          <RouterLink to="/">読み合いナッシュ（仮）</RouterLink>
         </ChakraLink>
       </Heading>
       <Flex gap={4} wrap="wrap">
-        <ChakraLink as={RouterLink} href="/" color="white">
-          <TbHome /> Home
+        <ChakraLink asChild color="white">
+          <RouterLink to="/">
+            <TbHome /> Home
+          </RouterLink>
         </ChakraLink>
-        <ChakraLink as={RouterLink} href="/help" color="white">
-          <TbHelp /> Help
+        <ChakraLink asChild color="white">
+          <RouterLink to="/help">
+            <TbHelp /> Help
+          </RouterLink>
         </ChakraLink>
         <ColorModeButton color="white" size="xs" />
       </Flex>
