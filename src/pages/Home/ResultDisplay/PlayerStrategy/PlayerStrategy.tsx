@@ -1,7 +1,7 @@
 import type { GameResult, MixedStrategy } from "@/types/game";
 import { Box, Heading, Stack } from "@chakra-ui/react";
 import React from "react";
-import StrategyStat from "./StrategyStat";
+import StrategyStatList from "./StrategyStatList";
 import StrategySlider from "./StrategySlider";
 
 interface Props {
@@ -31,7 +31,7 @@ const PlayerStrategy: React.FC<Props> = React.memo(
           {`${playerName} 戦略`}
         </Heading>
         <Box>
-          <StrategyStat
+          <StrategyStatList
             strategy={strategy}
             expectedPayoff={expectedPayoff}
             colorpalette={colorpalette}
