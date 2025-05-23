@@ -42,7 +42,7 @@ const Home: React.FC = () => {
   );
 
   return (
-    <Stack gap={4}>
+    <Stack gap={4} mb={4}>
       <PayoffTable inputUI={inputUI} setInputUI={setInputUI} />
       <TableControls
         inputUI={inputUI}

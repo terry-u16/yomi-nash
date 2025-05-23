@@ -71,7 +71,7 @@ const ResultDisplay: React.FC<Props> = React.memo(
         <Heading size="xl" mb={4} as="h2">
           計算結果
         </Heading>
-        <Stack mb={6} gap={10}>
+        <Stack mb={2} gap={10}>
           <ExpectedStat value={expectedP1} maxAbsPayoff={maxAbsPayoff} />
           <Stack gap={8}>
             <PlayerStrategy

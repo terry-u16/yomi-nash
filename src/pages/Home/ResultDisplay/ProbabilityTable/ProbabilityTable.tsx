@@ -32,7 +32,7 @@ const ProbabilityTable: React.FC<Props> = React.memo(
 
     return (
       <Box>
-        <Heading size="lg" as="h3" mb={2}>
+        <Heading size="lg" as="h3">
           発生確率一覧
         </Heading>
         <Table.ScrollArea>
