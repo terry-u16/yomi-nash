@@ -1,6 +1,6 @@
 import { Box, Heading, Stack } from "@chakra-ui/react";
 import type { GameResult, MixedStrategy } from "../../../types/game";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import {
   evaluateMixedStrategyMatchup,
   evaluatePureStrategies,
@@ -20,26 +20,20 @@ const ResultDisplay: React.FC<Props> = React.memo(
       1e-6
     );
 
-    const expectedP1 = useMemo(
-      () =>
-        evaluateMixedStrategyMatchup(
-          result.payoffMatrix12,
-          result.player1Strategy,
-          result.player2Strategy
-        ),
-      [result.payoffMatrix12, result.player1Strategy, result.player2Strategy]
+    const expectedP1 = evaluateMixedStrategyMatchup(
+      result.payoffMatrix12,
+      result.player1Strategy,
+      result.player2Strategy
     );
 
-    const expectedP1All = useMemo(
-      () =>
-        evaluatePureStrategies(result.payoffMatrix12, result.player2Strategy),
-      [result.payoffMatrix12, result.player2Strategy]
+    const expectedP1All = evaluatePureStrategies(
+      result.payoffMatrix12,
+      result.player2Strategy
     );
 
-    const expectedP2All = useMemo(
-      () =>
-        evaluatePureStrategies(result.payoffMatrix21, result.player1Strategy),
-      [result.payoffMatrix21, result.player1Strategy]
+    const expectedP2All = evaluatePureStrategies(
+      result.payoffMatrix21,
+      result.player1Strategy
     );
 
     const strategyGetter1 = useCallback(
