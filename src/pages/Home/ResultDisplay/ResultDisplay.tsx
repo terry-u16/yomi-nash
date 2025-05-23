@@ -6,7 +6,7 @@ import {
   evaluatePureStrategies,
 } from "@/utils/solveGameInput";
 import ExpectedStat from "./ExpectedStat";
-import ProbabilityTable from "./ProbabilityTable";
+import ProbabilityTable from "./ProbabilityTable/ProbabilityTable";
 import PlayerStrategy from "./PlayerStrategy/PlayerStrategy";
 
 interface Props {
