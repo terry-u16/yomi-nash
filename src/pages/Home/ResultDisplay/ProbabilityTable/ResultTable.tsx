@@ -46,7 +46,7 @@ const ResultTable: React.FC<Props> = React.memo(
             <Table.Header>
               <Table.Row>
                 <Table.ColumnHeader w="150px">
-                  Player 1 ＼ Player 2
+                  Player 1 \ Player 2
                 </Table.ColumnHeader>
                 {result.player2Strategy.map((entry, j) => (
                   <Table.ColumnHeader w="150px" key={`header_${j + 1}`}>

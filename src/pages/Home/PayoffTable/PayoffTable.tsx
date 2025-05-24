@@ -27,7 +27,7 @@ const PayoffTable: React.FC<Props> = React.memo(
           <Table.Root variant="outline" size="sm">
             <Table.Body>
               <Table.Row>
-                <Table.Cell>Player 1 ＼ Player 2</Table.Cell>
+                <Table.Cell>Player 1 \ Player 2</Table.Cell>
                 {strategyLabels2.map((label, j) => (
                   <ColHeaderCell
                     label={label}
