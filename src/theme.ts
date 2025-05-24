@@ -5,9 +5,11 @@ const config = defineConfig({
     tokens: {
       fonts: {
         heading: {
-          value: `'IBM Plex Sans JP',sans-serif`,
+          value: `"IBM Plex Sans JP", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif`,
         },
-        body: { value: `'IBM Plex Sans JP',sans-serif` },
+        body: {
+          value: `"IBM Plex Sans JP", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif`,
+        },
       },
     },
   },
