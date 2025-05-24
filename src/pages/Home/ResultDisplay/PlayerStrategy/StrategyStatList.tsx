@@ -6,11 +6,12 @@ import StrategyStat from "./StrategyStat/StrategyStat";
 interface Props {
   strategy: MixedStrategy;
   expectedPayoff: number[];
+  bestExpectedPayoff: number;
   colorpalette?: string;
 }
 
 const StrategyStatList: React.FC<Props> = React.memo(
-  ({ strategy, expectedPayoff, colorpalette }: Props) => {
+  ({ strategy, bestExpectedPayoff, expectedPayoff, colorpalette }: Props) => {
     return (
       <Box w="100%">
         <Flex wrap="wrap" gap={4}>
@@ -21,6 +22,7 @@ const StrategyStatList: React.FC<Props> = React.memo(
               expectedPayoff={expectedPayoff[idx]}
               colorpalette={colorpalette}
               key={idx}
+              bestExpectedPayoff={bestExpectedPayoff}
             />
           ))}
         </Flex>

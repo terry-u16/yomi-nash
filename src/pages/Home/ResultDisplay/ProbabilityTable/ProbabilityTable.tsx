@@ -3,6 +3,7 @@ import { Box, Text, Heading, Table } from "@chakra-ui/react";
 import React from "react";
 import ProbabilityCell from "./ProbabilityCell";
 import SumCell from "./SumCell";
+import { transposeMatrix } from "@/utils/solveGameInput";
 
 interface Props {
   result: GameResult;
@@ -11,16 +12,16 @@ interface Props {
 
 const ProbabilityTable: React.FC<Props> = React.memo(
   ({ result, maxAbsPayoff }: Props) => {
-    const expectedSumRow = result.payoffMatrix12.map((val) =>
+    const expectedSumRow = result.payoffMatrix.map((val) =>
       val.reduce(
         (acc, v, j) => acc + v * result.player2Strategy[j].probability,
         0
       )
     );
 
-    const expectedSumCol = result.payoffMatrix21.map((val) =>
+    const expectedSumCol = transposeMatrix(result.payoffMatrix).map((val) =>
       val.reduce(
-        (acc, v, i) => acc - v * result.player1Strategy[i].probability,
+        (acc, v, i) => acc + v * result.player1Strategy[i].probability,
         0
       )
     );
@@ -66,7 +67,7 @@ const ProbabilityTable: React.FC<Props> = React.memo(
                       <ProbabilityCell
                         strategy1={row}
                         strategy2={col}
-                        payoff={result.payoffMatrix12[i][j]}
+                        payoff={result.payoffMatrix[i][j]}
                         maxAbsPayoff={maxAbsPayoff}
                         key={`cell_${i}_${j}`}
                       />

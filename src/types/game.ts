@@ -42,6 +42,5 @@ export type MixedStrategy = MixedStrategyEntry[];
 export interface GameResult {
   player1Strategy: MixedStrategy;
   player2Strategy: MixedStrategy;
-  payoffMatrix12: PayoffMatrix;
-  payoffMatrix21: PayoffMatrix;
+  payoffMatrix: PayoffMatrix;
 }

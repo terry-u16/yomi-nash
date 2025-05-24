@@ -132,8 +132,7 @@ export async function solveGame(input: GameInput): Promise<GameResult> {
   return {
     player1Strategy,
     player2Strategy,
-    payoffMatrix12: A,
-    payoffMatrix21: ATransposedAndNagate,
+    payoffMatrix: A,
   };
 }
 
@@ -190,4 +189,18 @@ export function evaluateMixedStrategyMatchup(
     }, 0);
     return sum + p1 * rowSum;
   }, 0);
+}
+
+export function transposeMatrix(matrix: number[][]): number[][] {
+  const N = matrix.length;
+  const M = matrix[0].length;
+  const transposed = Array.from({ length: M }, () => Array(N).fill(0));
+
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < M; j++) {
+      transposed[j][i] = matrix[i][j];
+    }
+  }
+
+  return transposed;
 }
