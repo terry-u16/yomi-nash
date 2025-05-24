@@ -1,8 +1,8 @@
 import type { GameInputUI } from "@/types/game";
 import { isValidNumber } from "./parseGameInput";
 
-export const PAYOFF_MIN = -1e12;
-export const PAYOFF_MAX = 1e12;
+export const PAYOFF_MIN = -1e6;
+export const PAYOFF_MAX = 1e6;
 
 function clampValue(n: number): number {
   return Math.min(Math.max(n, PAYOFF_MIN), PAYOFF_MAX);

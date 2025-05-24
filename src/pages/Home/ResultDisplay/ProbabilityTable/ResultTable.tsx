@@ -1,7 +1,7 @@
 import type { GameResult } from "@/types/game";
 import { Box, Text, Heading, Table } from "@chakra-ui/react";
 import React from "react";
-import ProbabilityCell from "./ProbabilityCell";
+import ResultCell from "./ResultCell";
 import SumCell from "./SumCell";
 import { transposeMatrix } from "@/utils/solveGameInput";
 
@@ -10,7 +10,7 @@ interface Props {
   maxAbsPayoff: number;
 }
 
-const ProbabilityTable: React.FC<Props> = React.memo(
+const ResultTable: React.FC<Props> = React.memo(
   ({ result, maxAbsPayoff }: Props) => {
     const expectedSumRow = result.payoffMatrix.map((val) =>
       val.reduce(
@@ -33,8 +33,8 @@ const ProbabilityTable: React.FC<Props> = React.memo(
 
     return (
       <Box>
-        <Heading size="lg" as="h3">
-          発生確率一覧
+        <Heading size="lg" as="h3" mb={2}>
+          結果一覧表
         </Heading>
         <Table.ScrollArea>
           <Table.Root
@@ -64,7 +64,7 @@ const ProbabilityTable: React.FC<Props> = React.memo(
                   </Table.Cell>
                   {result.player2Strategy.map((col, j) => {
                     return (
-                      <ProbabilityCell
+                      <ResultCell
                         strategy1={row}
                         strategy2={col}
                         payoff={result.payoffMatrix[i][j]}
@@ -75,7 +75,6 @@ const ProbabilityTable: React.FC<Props> = React.memo(
                   })}
                   <SumCell
                     prob={result.player1Strategy[i].probability}
-                    label={result.player1Strategy[i].label}
                     payoff={expectedSumRow[i]}
                     maxAbsPayoff={maxAbsPayoff}
                     key={`row_sum_${i}`}
@@ -90,7 +89,6 @@ const ProbabilityTable: React.FC<Props> = React.memo(
                   return (
                     <SumCell
                       prob={col.probability}
-                      label={col.label}
                       payoff={expectedSumCol[j]}
                       maxAbsPayoff={maxAbsPayoff}
                       key={`col_sum_${j}`}
@@ -99,7 +97,6 @@ const ProbabilityTable: React.FC<Props> = React.memo(
                 })}
                 <SumCell
                   prob={1}
-                  label="合計"
                   payoff={expectedSum}
                   maxAbsPayoff={maxAbsPayoff}
                 />
@@ -112,4 +109,4 @@ const ProbabilityTable: React.FC<Props> = React.memo(
   }
 );
 
-export default ProbabilityTable;
+export default ResultTable;

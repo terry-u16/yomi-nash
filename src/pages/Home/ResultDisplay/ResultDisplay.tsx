@@ -7,7 +7,7 @@ import {
   transposeMatrix,
 } from "@/utils/solveGameInput";
 import ExpectedStat from "./ExpectedStat";
-import ProbabilityTable from "./ProbabilityTable/ProbabilityTable";
+import ResultTable from "./ProbabilityTable/ResultTable";
 import PlayerStrategy from "./PlayerStrategy/PlayerStrategy";
 
 interface Props {
@@ -100,7 +100,7 @@ const ResultDisplay: React.FC<Props> = React.memo(
               strategySetter={strategySetter2}
             />
           </Stack>
-          <ProbabilityTable result={result} maxAbsPayoff={maxAbsPayoff} />
+          <ResultTable result={result} maxAbsPayoff={maxAbsPayoff} />
         </Stack>
       </Box>
     );
