@@ -29,6 +29,8 @@ const StrategySlider: React.FC<Props> = React.memo(
 
     return (
       <Slider.Root
+        size="sm"
+        thumbAlignment="center"
         value={prefixSum}
         onValueChange={(e) =>
           setResult((prev) => {
@@ -56,9 +58,8 @@ const StrategySlider: React.FC<Props> = React.memo(
         colorPalette={colorpalette}
         w="100%"
       >
-        <Slider.Label>戦略変更</Slider.Label>
         <Slider.Control>
-          <Slider.Track bg={`${colorpalette}.solid`} />
+          <Slider.Track bg={`${colorpalette}.subtle`} />
           <Slider.Thumbs />
         </Slider.Control>
       </Slider.Root>
