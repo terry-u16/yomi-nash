@@ -8,6 +8,7 @@ interface Props {
   playerName: string;
   strategy: MixedStrategy;
   expectedPayoff: number[];
+  inverted: boolean;
   colorpalette: string;
   setResult: React.Dispatch<React.SetStateAction<GameResult | null>>;
   strategyGetter: (prev: GameResult) => MixedStrategy;
@@ -19,6 +20,7 @@ const PlayerStrategy: React.FC<Props> = React.memo(
     playerName,
     strategy,
     expectedPayoff,
+    inverted,
     colorpalette,
     setResult,
     strategyGetter,
@@ -39,6 +41,7 @@ const PlayerStrategy: React.FC<Props> = React.memo(
         <ExpectedChart
           strategy={strategy}
           expectedPayoff={expectedPayoff}
+          inverted={inverted}
           colorpalette={colorpalette}
         />
       </Stack>

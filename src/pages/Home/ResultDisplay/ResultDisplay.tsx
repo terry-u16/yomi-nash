@@ -37,10 +37,6 @@ const ResultDisplay: React.FC<Props> = React.memo(
       result.player1Strategy
     );
 
-    const bestExpectedP1 = Math.max(...expectedP1All);
-
-    const bestExpectedP2 = Math.min(...expectedP2All);
-
     const strategyGetter1 = useCallback(
       (prev: GameResult) => prev.player1Strategy,
       []
@@ -83,7 +79,7 @@ const ResultDisplay: React.FC<Props> = React.memo(
               playerName="Player 1"
               strategy={result.player1Strategy}
               expectedPayoff={expectedP1All}
-              bestExpectedPayoff={bestExpectedP1}
+              inverted={false}
               colorpalette="red"
               setResult={setResult}
               strategyGetter={strategyGetter1}
@@ -93,7 +89,7 @@ const ResultDisplay: React.FC<Props> = React.memo(
               playerName="Player 2"
               strategy={result.player2Strategy}
               expectedPayoff={expectedP2All}
-              bestExpectedPayoff={bestExpectedP2}
+              inverted={true}
               colorpalette="blue"
               setResult={setResult}
               strategyGetter={strategyGetter2}
