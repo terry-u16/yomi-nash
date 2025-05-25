@@ -61,17 +61,15 @@ const ResultTable: React.FC<Props> = ({ result, maxAbsPayoff }: Props) => {
                 <Table.Cell>
                   <Text truncate>{row.label}</Text>
                 </Table.Cell>
-                {result.player2Strategy.map((col, j) => {
-                  return (
-                    <ResultCell
-                      strategy1={row}
-                      strategy2={col}
-                      payoff={result.payoffMatrix[i][j]}
-                      maxAbsPayoff={maxAbsPayoff}
-                      key={`cell_${i}_${j}`}
-                    />
-                  );
-                })}
+                {result.player2Strategy.map((col, j) => (
+                  <ResultCell
+                    strategy1={row}
+                    strategy2={col}
+                    payoff={result.payoffMatrix[i][j]}
+                    maxAbsPayoff={maxAbsPayoff}
+                    key={`cell_${i}_${j}`}
+                  />
+                ))}
                 <SumCell
                   prob={result.player1Strategy[i].probability}
                   payoff={expectedSumRow[i]}
@@ -84,16 +82,14 @@ const ResultTable: React.FC<Props> = ({ result, maxAbsPayoff }: Props) => {
               <Table.Cell>
                 <Text truncate>合計</Text>
               </Table.Cell>
-              {result.player2Strategy.map((col, j) => {
-                return (
-                  <SumCell
-                    prob={col.probability}
-                    payoff={expectedSumCol[j]}
-                    maxAbsPayoff={maxAbsPayoff}
-                    key={`col_sum_${j}`}
-                  />
-                );
-              })}
+              {result.player2Strategy.map((col, j) => (
+                <SumCell
+                  prob={col.probability}
+                  payoff={expectedSumCol[j]}
+                  maxAbsPayoff={maxAbsPayoff}
+                  key={`col_sum_${j}`}
+                />
+              ))}
               <SumCell
                 prob={1}
                 payoff={expectedSum}

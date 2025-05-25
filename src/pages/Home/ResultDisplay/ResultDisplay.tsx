@@ -7,7 +7,7 @@ import {
   transposeMatrix,
 } from "@/utils/solveGameInput";
 import ExpectedStat from "./ExpectedStat";
-import ResultTable from "./ProbabilityTable/ResultTable";
+import ResultTable from "./ResultTable/ResultTable";
 import PlayerStrategy from "./PlayerStrategy/PlayerStrategy";
 
 interface Props {
