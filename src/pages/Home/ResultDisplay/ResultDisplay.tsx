@@ -1,4 +1,4 @@
-import { Box, Heading, Stack } from "@chakra-ui/react";
+import { Box, Heading, Separator, Stack } from "@chakra-ui/react";
 import type { GameResult, MixedStrategy } from "../../../types/game";
 import React, { useCallback } from "react";
 import {
@@ -72,30 +72,31 @@ const ResultDisplay: React.FC<Props> = React.memo(
         <Heading size="xl" mb={4} as="h2">
           計算結果
         </Heading>
-        <Stack mb={2} gap={10}>
+        <Stack mb={2} gap={4}>
           <ExpectedStat value={expectedP1} maxAbsPayoff={maxAbsPayoff} />
-          <Stack gap={8}>
-            <PlayerStrategy
-              playerName="Player 1"
-              strategy={result.player1Strategy}
-              expectedPayoff={expectedP1All}
-              inverted={false}
-              colorpalette="red"
-              setResult={setResult}
-              strategyGetter={strategyGetter1}
-              strategySetter={strategySetter1}
-            />
-            <PlayerStrategy
-              playerName="Player 2"
-              strategy={result.player2Strategy}
-              expectedPayoff={expectedP2All}
-              inverted={true}
-              colorpalette="blue"
-              setResult={setResult}
-              strategyGetter={strategyGetter2}
-              strategySetter={strategySetter2}
-            />
-          </Stack>
+          <Separator />
+          <PlayerStrategy
+            playerName="Player 1"
+            strategy={result.player1Strategy}
+            expectedPayoff={expectedP1All}
+            inverted={false}
+            colorpalette="red"
+            setResult={setResult}
+            strategyGetter={strategyGetter1}
+            strategySetter={strategySetter1}
+          />
+          <Separator />
+          <PlayerStrategy
+            playerName="Player 2"
+            strategy={result.player2Strategy}
+            expectedPayoff={expectedP2All}
+            inverted={true}
+            colorpalette="blue"
+            setResult={setResult}
+            strategyGetter={strategyGetter2}
+            strategySetter={strategySetter2}
+          />
+          <Separator />
           <ResultTable result={result} maxAbsPayoff={maxAbsPayoff} />
         </Stack>
       </Box>

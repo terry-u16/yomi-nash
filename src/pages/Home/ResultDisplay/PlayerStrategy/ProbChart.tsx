@@ -45,7 +45,7 @@ const ProbChart: React.FC<Props> = React.memo(
     const scale = getChroma(strategy.length, colors);
     const data = strategy.map((entry, idx) => ({
       name: entry.label,
-      value: entry.probability,
+      value: entry.probability * 100,
       color: scale(idx / Math.max(strategy.length - 1, 1)).hex(),
     }));
     const chart = useChart({ data });
@@ -53,7 +53,7 @@ const ProbChart: React.FC<Props> = React.memo(
     return (
       <Stack>
         <Heading size="sm" as="h4">
-          確率
+          選択割合
         </Heading>
         <StrategySlider
           strategy={strategy}
@@ -64,7 +64,7 @@ const ProbChart: React.FC<Props> = React.memo(
         />
         <BarSegment.Root chart={chart} mb={2}>
           <BarSegment.Content>
-            <BarSegment.Bar gap={0.5} />
+            <BarSegment.Bar gap={0} tooltip />
           </BarSegment.Content>
           <BarSegment.Legend showPercent mt={-1} />
         </BarSegment.Root>

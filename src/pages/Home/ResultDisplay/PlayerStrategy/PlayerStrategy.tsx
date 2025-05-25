@@ -29,7 +29,7 @@ const PlayerStrategy: React.FC<Props> = React.memo(
     const strategyLabels = strategy.map((entry) => entry.label);
 
     return (
-      <Stack>
+      <Stack mb={-4}>
         <Heading size="lg" as="h3">
           {`${playerName} 戦略`}
         </Heading>

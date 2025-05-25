@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Cell,
   LabelList,
+  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
@@ -73,8 +74,7 @@ const ExpectedChart: React.FC<Props> = React.memo(
     const colorScale = getChroma(strategy.length, colors);
     const data = strategy.map((entry, idx) => ({
       name: entry,
-      value:
-        (Math.round(expectedPayoff[idx] * 100) / 100) * (inverted ? -1 : 1),
+      value: Math.round(expectedPayoff[idx] * 100) / 100,
       index: idx,
       color: colorScale(idx / Math.max(strategy.length - 1, 1)).hex(),
     }));
@@ -83,18 +83,22 @@ const ExpectedChart: React.FC<Props> = React.memo(
     });
 
     // 値が負の数のみの場合、自動設定だとY軸の範囲がいい感じにならないので、手動で設定
-    const domainLower = Math.min(...data.map((item) => item.value), 0) * 1.3;
-    const domainUpper = Math.max(...data.map((item) => item.value), 0) * 1.3;
+    const lower = Math.min(...data.map((item) => item.value), 0);
+    const upper = Math.max(...data.map((item) => item.value), 0);
+    const difference = upper - lower;
+    const domainLower = lower < 0 ? lower - difference * 0.2 : lower;
+    const domainUpper = upper > 0 ? upper + difference * 0.2 : upper;
     const scale = scaleLinear().domain([domainLower, domainUpper]).nice();
     const ticks = scale.ticks(5);
-    const domain = scale.domain();
+    const domain = [domainLower, domainUpper];
+    console.log(ticks, domain);
 
     return (
       <Stack>
         <Heading size="sm" as="h4">
           期待値
         </Heading>
-        <Chart.Root maxH="2xs" chart={chart}>
+        <Chart.Root maxH="3xs" chart={chart}>
           <BarChart data={chart.data}>
             <CartesianGrid
               vertical={false}
@@ -104,18 +108,21 @@ const ExpectedChart: React.FC<Props> = React.memo(
             <YAxis
               domain={domain}
               ticks={ticks}
-              tickFormatter={(value) =>
-                (value * (inverted ? -1 : 1)).toString()
+              reversed={inverted}
+              interval={0}
+            />
+            <Tooltip
+              cursor={{ fill: chart.color(`${colorpalette}.subtle`) }}
+              animationDuration={100}
+              content={
+                <Chart.Tooltip hideLabel fitContent nameKey="rawValue" />
               }
             />
-            <Bar dataKey="value" radius={4}>
+            <Bar dataKey="value" radius={2}>
               <LabelList
                 position="top"
                 dataKey={chart.key("value")}
                 offset={8}
-                formatter={(value: number) =>
-                  (value * (inverted ? -1 : 1)).toString()
-                }
               />
               {chart.data.map((item) => (
                 <Cell key={item.index} fill={item.color} />
