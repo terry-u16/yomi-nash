@@ -1,15 +1,13 @@
 import type { GameResult, MixedStrategy } from "@/types/game";
-import { Box, Heading, Stack } from "@chakra-ui/react";
+import { Heading, Stack } from "@chakra-ui/react";
 import React from "react";
-import StrategyStatList from "./StrategyStatList";
-import StrategySlider from "./StrategySlider";
 import ProbChart from "./ProbChart";
+import ExpectedChart from "./ExpectedChart";
 
 interface Props {
   playerName: string;
   strategy: MixedStrategy;
   expectedPayoff: number[];
-  bestExpectedPayoff: number;
   colorpalette: string;
   setResult: React.Dispatch<React.SetStateAction<GameResult | null>>;
   strategyGetter: (prev: GameResult) => MixedStrategy;
@@ -21,7 +19,6 @@ const PlayerStrategy: React.FC<Props> = React.memo(
     playerName,
     strategy,
     expectedPayoff,
-    bestExpectedPayoff,
     colorpalette,
     setResult,
     strategyGetter,
@@ -32,16 +29,18 @@ const PlayerStrategy: React.FC<Props> = React.memo(
         <Heading size="lg" as="h3">
           {`${playerName} 戦略`}
         </Heading>
-        <Box mt={2}>
-          <StrategySlider
-            strategy={strategy}
-            colorpalette={colorpalette}
-            setResult={setResult}
-            strategyGetter={strategyGetter}
-            strategySetter={strategySetter}
-          />
-        </Box>
-        <ProbChart strategy={strategy} colorpalette={colorpalette} />
+        <ProbChart
+          strategy={strategy}
+          colorpalette={colorpalette}
+          setResult={setResult}
+          strategyGetter={strategyGetter}
+          strategySetter={strategySetter}
+        />
+        <ExpectedChart
+          strategy={strategy}
+          expectedPayoff={expectedPayoff}
+          colorpalette={colorpalette}
+        />
       </Stack>
     );
   }

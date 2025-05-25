@@ -1,12 +1,16 @@
-import type { MixedStrategy } from "@/types/game";
-import { useToken } from "@chakra-ui/react";
+import type { GameResult, MixedStrategy } from "@/types/game";
+import { Heading, Stack, useToken } from "@chakra-ui/react";
 import React from "react";
 import { BarSegment, useChart } from "@chakra-ui/charts";
 import chroma from "chroma-js";
+import StrategySlider from "./StrategySlider";
 
 interface Props {
   strategy: MixedStrategy;
   colorpalette: string;
+  setResult: React.Dispatch<React.SetStateAction<GameResult | null>>;
+  strategyGetter: (prev: GameResult) => MixedStrategy;
+  strategySetter: (prev: GameResult, strategy: MixedStrategy) => GameResult;
 }
 
 function getChroma(
@@ -25,7 +29,13 @@ function getChroma(
 }
 
 const ProbChart: React.FC<Props> = React.memo(
-  ({ strategy, colorpalette }: Props) => {
+  ({
+    strategy,
+    colorpalette,
+    setResult,
+    strategyGetter,
+    strategySetter,
+  }: Props) => {
     const colors = useToken("colors", [
       `${colorpalette}.600`,
       `${colorpalette}.500`,
@@ -41,12 +51,24 @@ const ProbChart: React.FC<Props> = React.memo(
     const chart = useChart({ data });
 
     return (
-      <BarSegment.Root chart={chart}>
-        <BarSegment.Content>
-          <BarSegment.Bar gap={0.5} />
-        </BarSegment.Content>
-        <BarSegment.Legend showPercent />
-      </BarSegment.Root>
+      <Stack>
+        <Heading size="sm" as="h4">
+          確率
+        </Heading>
+        <StrategySlider
+          strategy={strategy}
+          colorpalette={colorpalette}
+          setResult={setResult}
+          strategyGetter={strategyGetter}
+          strategySetter={strategySetter}
+        />
+        <BarSegment.Root chart={chart} mb={2}>
+          <BarSegment.Content>
+            <BarSegment.Bar gap={0.5} />
+          </BarSegment.Content>
+          <BarSegment.Legend showPercent mt={-1} />
+        </BarSegment.Root>
+      </Stack>
     );
   }
 );

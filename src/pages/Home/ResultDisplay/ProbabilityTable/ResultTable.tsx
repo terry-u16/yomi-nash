@@ -34,7 +34,7 @@ const ResultTable: React.FC<Props> = React.memo(
     return (
       <Box>
         <Heading size="lg" as="h3" mb={2}>
-          結果一覧表
+          詳細結果表
         </Heading>
         <Table.ScrollArea>
           <Table.Root
