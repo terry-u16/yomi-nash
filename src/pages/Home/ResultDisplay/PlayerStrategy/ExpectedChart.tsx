@@ -91,7 +91,6 @@ const ExpectedChart: React.FC<Props> = React.memo(
     const scale = scaleLinear().domain([domainLower, domainUpper]).nice();
     const ticks = scale.ticks(5);
     const domain = [domainLower, domainUpper];
-    console.log(ticks, domain);
 
     return (
       <Stack>
