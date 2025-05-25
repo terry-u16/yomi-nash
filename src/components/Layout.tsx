@@ -6,7 +6,7 @@ const Layout: React.FC = () => {
   const maxWidth = useBreakpointValue({
     base: "100%",
     sm: "90%",
-    md: "768px",
+    md: "700px",
     lg: "960px",
   });
 
