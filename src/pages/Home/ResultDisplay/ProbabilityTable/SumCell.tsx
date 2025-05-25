@@ -14,7 +14,7 @@ const SumCell: React.FC<Props> = React.memo(
     const { colorMode } = useColorMode();
     const [lightGray, lightRed, lightBlue, darkGray, darkRed, darkBlue] =
       useToken("colors", [
-        "gray.400",
+        "gray.300",
         "red.600",
         "blue.600",
         "gray.700",
