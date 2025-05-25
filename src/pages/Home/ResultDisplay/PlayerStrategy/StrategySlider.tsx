@@ -32,6 +32,7 @@ const StrategySlider: React.FC<Props> = React.memo(
         size="sm"
         thumbAlignment="center"
         value={prefixSum}
+        step={1e-3}
         onValueChange={(e) =>
           setResult((prev) => {
             if (!prev) return prev;
@@ -44,7 +45,7 @@ const StrategySlider: React.FC<Props> = React.memo(
               const newProb = (newProbs[i + 1] - newProbs[i]) / 100;
 
               // 変わったところのみ更新
-              if (Math.abs(oldProb - newProb) >= 1e-6) {
+              if (Math.abs(oldProb - newProb) >= 1e-3) {
                 newStrategy[i] = {
                   ...newStrategy[i],
                   probability: newProb,
