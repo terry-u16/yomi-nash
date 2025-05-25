@@ -1,4 +1,3 @@
-import type { MixedStrategy } from "@/types/game";
 import { Heading, Stack, useToken } from "@chakra-ui/react";
 import React from "react";
 import { Chart, useChart } from "@chakra-ui/charts";
@@ -15,10 +14,32 @@ import {
 import { scaleLinear } from "d3-scale";
 
 interface Props {
-  strategy: MixedStrategy;
+  strategyLabels: string[];
   expectedPayoff: number[];
   inverted: boolean;
   colorpalette: string;
+}
+
+function arePropsEqual(oldProps: Props, newProps: Props): boolean {
+  // 値込みで一致比較
+  const isStrategyLabelsEqual =
+    oldProps.strategyLabels.length === newProps.strategyLabels.length &&
+    oldProps.strategyLabels.every(
+      (oldLabel, i) => oldLabel === newProps.strategyLabels[i]
+    );
+
+  const isExpectedPayoffEqual =
+    oldProps.expectedPayoff.length === newProps.expectedPayoff.length &&
+    oldProps.expectedPayoff.every((oldValue, i) =>
+      Object.is(oldValue, newProps.expectedPayoff[i])
+    );
+
+  return (
+    isStrategyLabelsEqual &&
+    isExpectedPayoffEqual &&
+    Object.is(oldProps.inverted, newProps.inverted) &&
+    Object.is(oldProps.colorpalette, newProps.colorpalette)
+  );
 }
 
 function getChroma(
@@ -37,7 +58,12 @@ function getChroma(
 }
 
 const ExpectedChart: React.FC<Props> = React.memo(
-  ({ strategy, expectedPayoff, inverted, colorpalette }: Props) => {
+  ({
+    strategyLabels: strategy,
+    expectedPayoff,
+    inverted,
+    colorpalette,
+  }: Props) => {
     const colors = useToken("colors", [
       `${colorpalette}.600`,
       `${colorpalette}.500`,
@@ -46,7 +72,7 @@ const ExpectedChart: React.FC<Props> = React.memo(
     ]);
     const colorScale = getChroma(strategy.length, colors);
     const data = strategy.map((entry, idx) => ({
-      name: entry.label,
+      name: entry,
       value:
         (Math.round(expectedPayoff[idx] * 100) / 100) * (inverted ? -1 : 1),
       index: idx,
@@ -76,7 +102,6 @@ const ExpectedChart: React.FC<Props> = React.memo(
             />
             <XAxis tickLine={false} dataKey={chart.key("name")} />
             <YAxis
-              
               domain={domain}
               ticks={ticks}
               tickFormatter={(value) =>
@@ -100,7 +125,8 @@ const ExpectedChart: React.FC<Props> = React.memo(
         </Chart.Root>
       </Stack>
     );
-  }
+  },
+  arePropsEqual
 );
 
 export default ExpectedChart;

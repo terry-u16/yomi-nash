@@ -26,6 +26,8 @@ const PlayerStrategy: React.FC<Props> = React.memo(
     strategyGetter,
     strategySetter,
   }: Props) => {
+    const strategyLabels = strategy.map((entry) => entry.label);
+
     return (
       <Stack>
         <Heading size="lg" as="h3">
@@ -39,7 +41,7 @@ const PlayerStrategy: React.FC<Props> = React.memo(
           strategySetter={strategySetter}
         />
         <ExpectedChart
-          strategy={strategy}
+          strategyLabels={strategyLabels}
           expectedPayoff={expectedPayoff}
           inverted={inverted}
           colorpalette={colorpalette}
