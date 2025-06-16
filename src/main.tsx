@@ -10,7 +10,7 @@ import { ColorModeProvider } from "./components/ui/color-mode.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider value={system}>
-      <ColorModeProvider>
+      <ColorModeProvider defaultTheme="dark">
         <BrowserRouter>
           <Toaster />
           <App />
