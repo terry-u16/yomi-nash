@@ -1,54 +1,57 @@
-# React + TypeScript + Vite
+# yomi-nash
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+2 人ゼロサムゲーム（じゃんけん・格闘ゲームの択・読み合いなど）における混合戦略ナッシュ均衡を、利得表（戦略相性表）から計算して可視化する Web アプリケーションです。
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 概要
 
-## Expanding the ESLint configuration
+任意の 2 人対戦ゼロサムゲームを「行（Player 1 の選択肢）×列（Player 2 の選択肢）」の利得表として入力し、線形計画法（`glpk.js`）を用いて両者の混合戦略ナッシュ均衡および期待値を算出します。結果は選択肢ごとの採用確率、期待利得、簡易チャートとして表示され、どの選択肢をどの程度の割合で混ぜるべきかを定量的に確認できます。
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 主な機能
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+- 戦略相性表（行・列の追加／削除、セル編集）
+- サンプルプリセット読み込み
+- 混合戦略ナッシュ均衡計算
+- 採用確率・期待利得表示
+- 簡易チャート（確率分布 / 期待値）
+
+### 想定ユースケース
+
+- じゃんけん等の単純ゲームにおける最適混合比率の確認
+- 格闘ゲームにおける「無敵技／投げ／様子見」などの択管理
+- 読み合い構造の教材・可視化
+
+## 必要環境
+
+- Node.js
+- pnpm
+
+## セットアップと実行
+
+リポジトリ取得後、依存関係をインストールし開発サーバを起動します。
+
+```bash
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+ブラウザで `http://localhost:5173` を開いてください。
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+## ビルド
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+本番ビルドを作成:
+
+```bash
+pnpm build
 ```
+
+ビルド成果物のローカル確認:
+
+```bash
+pnpm preview
+```
+
+## ライセンス
+
+MIT License
