@@ -1,5 +1,5 @@
 import type { GameInputUI } from "@/types/game";
-import { isValidNumber } from "./parseGameInput";
+import { isValidNumber } from "@/utils/validators/number";
 
 export const PAYOFF_MIN = -1e6;
 export const PAYOFF_MAX = 1e6;

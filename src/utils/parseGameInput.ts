@@ -1,9 +1,5 @@
 import type { GameInputUI, ParseError, ParseResult } from "@/types/game";
-
-export const isValidNumber = (val: string) => {
-  const num = parseFloat(val);
-  return val !== "" && !isNaN(num) && isFinite(num);
-};
+import { isValidNumber } from "@/utils/validators/number";
 
 export function parseGameInputUI(input: GameInputUI): ParseResult {
   const errors: ParseError[] = [];

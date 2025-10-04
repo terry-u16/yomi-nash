@@ -2,7 +2,7 @@
 import Papa from "papaparse";
 import Encoding from "encoding-japanese";
 import type { GameInputUI } from "../types/game";
-import { isValidNumber } from "./parseGameInput";
+import { isValidNumber } from "@/utils/validators/number";
 
 export interface CsvParseSuccess {
   ok: true;

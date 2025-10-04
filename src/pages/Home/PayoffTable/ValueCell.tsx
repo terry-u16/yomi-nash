@@ -1,6 +1,6 @@
 import type { GameInputUI } from "@/types/game";
 import { PAYOFF_MAX, PAYOFF_MIN } from "@/utils/clampGameInput";
-import { isValidNumber } from "@/utils/parseGameInput";
+import { isValidNumber } from "@/utils/validators/number";
 import { Field, NumberInput, Table } from "@chakra-ui/react";
 import React from "react";
 
