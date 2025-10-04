@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { GameInputUI } from "@/types/game";
 import type { Result } from "@/types/result";
+import { decodeShareObject } from "@/utils/shareCodec";
 
 const GameInputUISchema = z.object({
   strategyLabels1: z.array(z.string()).min(1),
@@ -14,9 +15,13 @@ export function parseGameInputUIFromSearchParams(
   const raw = searchParams.get("gameInputUI");
   if (!raw) return null;
 
+  const decoded = decodeShareObject<GameInputUI>(raw);
+  if (!decoded) {
+    return { ok: false, error: "共有された入力データを復元できませんでした" };
+  }
+
   try {
-    const parsed = JSON.parse(raw);
-    const input = GameInputUISchema.parse(parsed);
+    const input = GameInputUISchema.parse(decoded);
 
     // バリデーション：行列のサイズがラベル数と一致
     const rows = input.payoffMatrix.length;
@@ -33,10 +38,8 @@ export function parseGameInputUIFromSearchParams(
     }
 
     return { ok: true, data: input };
-  } catch (e: any) {
-    return {
-      ok: false,
-      error: e?.message ?? "GameInputUIのパースに失敗しました",
-    };
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    return { ok: false, error: message };
   }
 }

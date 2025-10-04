@@ -9,6 +9,7 @@ import { useCallback, useEffect } from "react";
 import { parseGameInputUIFromSearchParams } from "@/lib/parser/parseGameInputUI";
 import { parseGameResultFromSearchParams } from "@/lib/parser/parseGameResult";
 import { useOutletContext } from "react-router-dom";
+// decodeShareObject は直接不要になった（パーサー内部で処理）
 
 interface LayoutContext {
   inputUI: GameInputUI;
@@ -47,37 +48,34 @@ const Home: React.FC = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const inputUIParsed = parseGameInputUIFromSearchParams(searchParams);
-    if (inputUIParsed) {
-      if (inputUIParsed.ok) {
-        setInputUI(inputUIParsed.data);
-        // inputUIを復元できた場合のみresultも試行
-        const resultParsed = parseGameResultFromSearchParams(
-          searchParams,
-          inputUIParsed.data
-        );
-        if (resultParsed) {
-          if (resultParsed.ok) {
-            setResult(resultParsed.data);
-          } else {
-            toaster.create({
-              title: "結果の復元に失敗しました",
-              description: resultParsed.error,
-              type: "warning",
-            });
-          }
-        }
-        toaster.create({
-          title: "共有データを読み込みました",
-          type: "success",
-        });
+    if (!inputUIParsed) return; // パラメータなし
+    if (!inputUIParsed.ok) {
+      toaster.create({
+        title: "入力の復元に失敗しました",
+        type: "error",
+      });
+      return;
+    }
+    setInputUI(inputUIParsed.data);
+
+    const resultParsed = parseGameResultFromSearchParams(
+      searchParams,
+      inputUIParsed.data
+    );
+    if (resultParsed) {
+      if (resultParsed.ok) {
+        setResult(resultParsed.data);
       } else {
         toaster.create({
-          title: "入力の復元に失敗しました",
-          description: inputUIParsed.error,
-          type: "error",
+          title: "結果の復元に失敗しました",
+          type: "warning",
         });
       }
     }
+    toaster.create({
+      title: "共有データを読み込みました",
+      type: "success",
+    });
   }, [setInputUI, setResult]);
 
   return (

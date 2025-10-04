@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { GameResult, GameInputUI } from "@/types/game";
 import type { Result } from "@/types/result";
+import { decodeShareObject } from "@/utils/shareCodec";
 
 const MixedStrategyEntrySchema = z.object({
   label: z.string(),
@@ -20,9 +21,13 @@ export function parseGameResultFromSearchParams(
   const raw = searchParams.get("gameResult");
   if (!raw) return null;
 
+  const decoded = decodeShareObject<GameResult>(raw);
+  if (!decoded) {
+    return { ok: false, error: "共有された結果データを復元できませんでした" };
+  }
+
   try {
-    const parsed = JSON.parse(raw);
-    const result = GameResultSchema.parse(parsed);
+    const result = GameResultSchema.parse(decoded);
 
     // バリデーション：ラベルの一致
     const labels1 = new Set(inputUI.strategyLabels1);
@@ -52,10 +57,8 @@ export function parseGameResultFromSearchParams(
     }
 
     return { ok: true, data: result };
-  } catch (e: any) {
-    return {
-      ok: false,
-      error: e?.message ?? "GameResultのパースに失敗しました",
-    };
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    return { ok: false, error: message };
   }
 }

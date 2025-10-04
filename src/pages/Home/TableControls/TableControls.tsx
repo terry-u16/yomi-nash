@@ -24,6 +24,7 @@ import {
 import { parseGameInputUI } from "@/utils/parseGameInput";
 import { presets } from "@/presets";
 import { clampGameInputUI } from "@/utils/clampGameInput";
+import { encodeShareObject } from "@/utils/shareCodec";
 
 interface Props {
   inputUI: GameInputUI;
@@ -117,11 +118,11 @@ const TableControls = React.memo(
     const handleShare = () => {
       try {
         const params = new URLSearchParams();
-        params.set("gameInputUI", JSON.stringify(inputUI));
+        params.set("gameInputUI", encodeShareObject(inputUI));
         if (result) {
           params.set(
             "gameResult",
-            JSON.stringify({
+            encodeShareObject({
               player1Strategy: result.player1Strategy,
               player2Strategy: result.player2Strategy,
               payoffMatrix: result.payoffMatrix,
