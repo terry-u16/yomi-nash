@@ -4,7 +4,7 @@ import { useState } from "react";
 import { GameInputUISchema } from "@/lib/parser/parseGameInputUI";
 import { GameResultSchema } from "@/lib/parser/parseGameResult";
 import type { GameInputUI, GameResult } from "@/types/game";
-import { presets } from "@/presets";
+import { createDefaultGameInputUI } from "@/presets";
 import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
 import type { ShareEnvelope } from "@/utils/shareCodec";
 
@@ -28,7 +28,7 @@ const Main: React.FC<Props> = ({ maxWidth }: Props) => {
     } catch {
       // ignore
     }
-    return presets.okizeme.data;
+    return createDefaultGameInputUI();
   });
   const [result, setResult] = useState<GameResult | null>(() => {
     try {

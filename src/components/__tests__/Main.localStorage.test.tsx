@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client";
 import { createMockLocalStorage } from "@/test/utils/createMockLocalStorage";
 import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
 import type { GameInputUI, GameResult } from "@/types/game";
-import { presets } from "@/presets";
+import { createDefaultGameInputUI } from "@/presets";
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -106,7 +106,7 @@ describe("Main localStorage restore", () => {
     expect(capturedContexts).toHaveLength(1);
     const context = capturedContexts[0];
 
-    expect(context.inputUI).toEqual(presets.okizeme.data);
+    expect(context.inputUI).toEqual(createDefaultGameInputUI());
     expect(context.result).toBeNull();
   });
 
@@ -123,7 +123,7 @@ describe("Main localStorage restore", () => {
     expect(capturedContexts).toHaveLength(1);
     const context = capturedContexts[0];
 
-    expect(context.inputUI).toEqual(presets.okizeme.data);
+    expect(context.inputUI).toEqual(createDefaultGameInputUI());
     expect(context.result).toBeNull();
   });
 });

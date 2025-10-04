@@ -8,7 +8,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import type { GameInput, GameInputUI, GameResult } from "@/types/game";
 import {
   generateCsvFromGameInputUI,
@@ -23,7 +23,13 @@ import {
   TbShare3,
 } from "react-icons/tb";
 import { parseGameInputUI } from "@/utils/parseGameInput";
-import { presets } from "@/presets";
+import {
+  createDefaultGameInputUI,
+  createPresetSnapshot,
+  presetEntries,
+  presets,
+  type PresetKey,
+} from "@/presets";
 import { clampGameInputUI } from "@/utils/clampGameInput";
 import { createShareUrl } from "@/utils/createShareUrl";
 
@@ -39,7 +45,7 @@ const TableControls = React.memo(
   ({ inputUI, setInputUI, onCalculate, result, onReset }: Props) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       event.target.value = ""; // allow selecting the same file repeatedly
       if (!file) return;
@@ -80,9 +86,9 @@ const TableControls = React.memo(
           type: "error",
         });
       }
-    };
+    }, [setInputUI]);
 
-    const handleDownload = () => {
+    const handleDownload = useCallback(() => {
       const csv = generateCsvFromGameInputUI(inputUI);
       const bom = "\uFEFF"; // UTF-8 BOM
       const blob = new Blob([bom + csv], { type: "text/csv;charset=utf-8" });
@@ -97,9 +103,9 @@ const TableControls = React.memo(
       toaster.create({
         title: "CSVをダウンロードしています...",
       });
-    };
+    }, [inputUI]);
 
-    const handleCalculate = () => {
+    const handleCalculate = useCallback(() => {
       const result = parseGameInputUI(inputUI);
       if (result.ok) {
         onCalculate(result.data);
@@ -112,23 +118,28 @@ const TableControls = React.memo(
           type: "error",
         });
       }
-    };
+    }, [inputUI, onCalculate]);
 
-    const applyPreset = (preset: string) => {
-      const { label, data: gameInput } = presets[preset];
-      setInputUI(gameInput);
+    const applyPreset = useCallback((presetKey: PresetKey) => {
+      const preset = presets[presetKey];
+      if (!preset) {
+        toaster.create({
+          title: "プリセットの読み込みに失敗しました",
+          type: "error",
+        });
+        return;
+      }
+      const snapshot = createPresetSnapshot(presetKey);
+      setInputUI(snapshot);
       toaster.create({
-        title: `プリセット ${label} を適用しました`,
+        title: `プリセット ${preset.label} を適用しました`,
         type: "success",
       });
-    };
+    }, [setInputUI]);
 
-    const handleShare = () => {
+    const handleShare = useCallback(() => {
       try {
-        const shareUrl = createShareUrl(inputUI, {
-          baseUrl: `${window.location.origin}${window.location.pathname}`,
-          result,
-        });
+        const shareUrl = createShareUrl(inputUI, { result });
         const text = encodeURIComponent(
           "ゲーム入力と結果を共有します #yomiNash"
         );
@@ -144,13 +155,13 @@ const TableControls = React.memo(
           type: "error",
         });
       }
-    };
+    }, [inputUI, result]);
 
-    const handleReset = () => {
-      setInputUI(presets.okizeme.data);
+    const handleReset = useCallback(() => {
+      setInputUI(createDefaultGameInputUI());
       onReset?.();
       toaster.create({ title: "リセットしました", type: "success" });
-    };
+    }, [onReset, setInputUI]);
 
     return (
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
@@ -173,7 +184,7 @@ const TableControls = React.memo(
             <Portal>
               <Menu.Positioner>
                 <Menu.Content>
-                  {Object.entries(presets).map(([key, preset]) => (
+                  {presetEntries.map(([key, preset]) => (
                     <Menu.Item
                       key={key}
                       value={key}
