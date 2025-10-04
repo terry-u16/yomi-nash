@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 import React, { useRef } from "react";
-import type { GameInput, GameInputUI } from "../../../types/game";
+import type { GameInput, GameInputUI, GameResult } from "../../../types/game";
 import {
   generateCsvFromGameInputUI,
   parseCsvInputFromBinary,
@@ -19,6 +19,7 @@ import {
   TbCalculator,
   TbFileDownload,
   TbFileUpload,
+  TbShare3,
 } from "react-icons/tb";
 import { parseGameInputUI } from "@/utils/parseGameInput";
 import { presets } from "@/presets";
@@ -28,10 +29,11 @@ interface Props {
   inputUI: GameInputUI;
   setInputUI: React.Dispatch<React.SetStateAction<GameInputUI>>;
   onCalculate: (parsed: GameInput) => void;
+  result?: GameResult | null;
 }
 
 const TableControls = React.memo(
-  ({ inputUI, setInputUI, onCalculate }: Props) => {
+  ({ inputUI, setInputUI, onCalculate, result }: Props) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +114,39 @@ const TableControls = React.memo(
       });
     };
 
+    const handleShare = () => {
+      try {
+        const params = new URLSearchParams();
+        params.set("gameInputUI", JSON.stringify(inputUI));
+        if (result) {
+          params.set(
+            "gameResult",
+            JSON.stringify({
+              player1Strategy: result.player1Strategy,
+              player2Strategy: result.player2Strategy,
+              payoffMatrix: result.payoffMatrix,
+            })
+          );
+        }
+        const base = `${window.location.origin}${window.location.pathname}`;
+        const shareUrl = `${base}?${params.toString()}`;
+        const text = encodeURIComponent(
+          "ゲーム入力と結果を共有します #yomiNash"
+        );
+        const intent = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(
+          shareUrl
+        )}`;
+        window.open(intent, "_blank", "noopener,noreferrer");
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        toaster.create({
+          title: "シェアURL生成に失敗しました",
+          description: message,
+          type: "error",
+        });
+      }
+    };
+
     return (
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
         <Heading size="xl" mb={4} as="h2">
@@ -158,6 +193,9 @@ const TableControls = React.memo(
           </Menu.Root>
           <Button colorPalette="blue" onClick={handleCalculate}>
             <TbCalculator /> 計算
+          </Button>
+          <Button variant="surface" onClick={handleShare}>
+            <TbShare3 /> シェア
           </Button>
         </Flex>
       </Box>
