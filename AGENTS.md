@@ -22,4 +22,4 @@ Vitest with the jsdom environment drives unit tests (`vitest.config.ts`). Follow
 Recent history shows short, imperative subject lines (e.g., `Add tests`, `共有URLを圧縮`). Keep messages under 72 characters and focus on “what” + “why`. Squash noisy work-in-progress commits locally. For pull requests, include: 1) a concise summary of behaviour changes, 2) linked issues or tickets, 3) screenshots or recordings for UI tweaks, and 4) a checklist of `pnpm lint` and `pnpm test` runs. Flag any follow-up tasks so reviewers can plan maintenance.
 
 ## Communication Preferences
-リファクタリング方針や疑問点を共有するときは、Pull Requestの説明やコメントを日本語で記載してください。テキストベースのレビュー応答も原則として日本語で返答し、必要に応じて英語の補足を併記します。
+リファクタリング方針や疑問点を共有するときは、Pull Requestの説明やコメントを日本語で記載してください。テキストベースの応答も原則として日本語で返答してください。
