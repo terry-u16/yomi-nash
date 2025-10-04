@@ -29,7 +29,7 @@ import {
   presetEntries,
   presets,
   type PresetKey,
-} from "@/presets";
+} from "@/lib/presets";
 import { clampGameInputUI } from "@/utils/clampGameInput";
 import { createShareUrl } from "@/utils/createShareUrl";
 

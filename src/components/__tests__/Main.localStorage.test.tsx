@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client";
 import { createMockLocalStorage } from "@/test/utils/createMockLocalStorage";
 import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
 import type { GameInputUI, GameResult } from "@/types/game";
-import { createDefaultGameInputUI } from "@/presets";
+import { createDefaultGameInputUI } from "@/lib/presets";
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 

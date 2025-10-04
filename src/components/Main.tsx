@@ -4,7 +4,7 @@ import { useState } from "react";
 import { GameInputUISchema } from "@/lib/parser/parseGameInputUI";
 import { GameResultSchema } from "@/lib/parser/parseGameResult";
 import type { GameInputUI, GameResult } from "@/types/game";
-import { createDefaultGameInputUI } from "@/presets";
+import { createDefaultGameInputUI } from "@/lib/presets";
 import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
 import type { ShareEnvelope } from "@/utils/shareCodec";
 
