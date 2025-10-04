@@ -2,32 +2,39 @@ import { z } from "zod";
 import type { GameResult, GameInputUI } from "@/types/game";
 import type { Result } from "@/types/result";
 import { decodeShareObject } from "@/utils/shareCodec";
+import { DATA_SCHEMA_VERSION } from "@/constants/storage";
 
 const MixedStrategyEntrySchema = z.object({
   label: z.string(),
   probability: z.number().min(0).max(1),
 });
 
-const GameResultSchema = z.object({
+export const GameResultSchema = z.object({
   player1Strategy: z.array(MixedStrategyEntrySchema),
   player2Strategy: z.array(MixedStrategyEntrySchema),
   payoffMatrix: z.array(z.array(z.number())),
 });
 
-export function parseGameResultFromSearchParams(
-  searchParams: URLSearchParams,
+export function decodeGameResult(
+  raw: string | null,
   inputUI: GameInputUI
 ): Result<GameResult> | null {
-  const raw = searchParams.get("gameResult");
   if (!raw) return null;
 
-  const decoded = decodeShareObject<GameResult>(raw);
-  if (!decoded) {
+  const envelope = decodeShareObject<GameResult>(raw);
+  if (!envelope) {
     return { ok: false, error: "共有された結果データを復元できませんでした" };
   }
 
+  if (envelope.version !== DATA_SCHEMA_VERSION) {
+    return {
+      ok: false,
+      error: "共有データのバージョンが現在のアプリと一致していません",
+    };
+  }
+
   try {
-    const result = GameResultSchema.parse(decoded);
+    const result = GameResultSchema.parse(envelope.payload);
 
     // バリデーション：ラベルの一致
     const labels1 = new Set(inputUI.strategyLabels1);

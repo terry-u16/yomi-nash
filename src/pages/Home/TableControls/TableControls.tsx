@@ -19,22 +19,25 @@ import {
   TbCalculator,
   TbFileDownload,
   TbFileUpload,
+  TbRestore,
   TbShare3,
 } from "react-icons/tb";
 import { parseGameInputUI } from "@/utils/parseGameInput";
 import { presets } from "@/presets";
 import { clampGameInputUI } from "@/utils/clampGameInput";
 import { encodeShareObject } from "@/utils/shareCodec";
+import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
 
 interface Props {
   inputUI: GameInputUI;
   setInputUI: React.Dispatch<React.SetStateAction<GameInputUI>>;
   onCalculate: (parsed: GameInput) => void;
   result?: GameResult | null;
+  onReset?: () => void; // 親で result を消したいのでコールバック
 }
 
 const TableControls = React.memo(
-  ({ inputUI, setInputUI, onCalculate, result }: Props) => {
+  ({ inputUI, setInputUI, onCalculate, result, onReset }: Props) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +121,8 @@ const TableControls = React.memo(
     const handleShare = () => {
       try {
         const params = new URLSearchParams();
-        params.set("gameInputUI", encodeShareObject(inputUI));
+        params.set("schemaVersion", String(DATA_SCHEMA_VERSION));
+        params.set("gameInput", encodeShareObject(inputUI));
         if (result) {
           params.set(
             "gameResult",
@@ -148,27 +152,35 @@ const TableControls = React.memo(
       }
     };
 
+    const handleReset = () => {
+      setInputUI(presets.okizeme.data);
+      onReset?.();
+      try {
+        localStorage.removeItem(STORAGE_KEYS.result);
+        localStorage.setItem(
+          STORAGE_KEYS.inputUI,
+          JSON.stringify({
+            version: DATA_SCHEMA_VERSION,
+            payload: presets.okizeme.data,
+          })
+        );
+      } catch {
+        // localStorage利用不可（プライベートモードなど）の場合は無視
+      }
+      toaster.create({ title: "リセットしました", type: "success" });
+    };
+
     return (
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
         <Heading size="xl" mb={4} as="h2">
           操作パネル
         </Heading>
         <Flex gap={4} direction="row" wrap="wrap">
-          <Button
-            variant="surface"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <TbFileUpload /> CSVアップロード
+          <Button colorPalette="blue" onClick={handleCalculate}>
+            <TbCalculator /> 計算
           </Button>
-          <Input
-            type="file"
-            accept=".csv"
-            hidden
-            ref={fileInputRef}
-            onChange={handleUpload}
-          />
-          <Button variant="surface" onClick={handleDownload}>
-            <TbFileDownload /> CSVダウンロード
+          <Button variant="surface" onClick={handleShare}>
+            <TbShare3 /> シェア
           </Button>
           <Menu.Root>
             <Menu.Trigger asChild>
@@ -192,11 +204,24 @@ const TableControls = React.memo(
               </Menu.Positioner>
             </Portal>
           </Menu.Root>
-          <Button colorPalette="blue" onClick={handleCalculate}>
-            <TbCalculator /> 計算
+          <Button
+            variant="surface"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <TbFileUpload /> CSVアップロード
           </Button>
-          <Button variant="surface" onClick={handleShare}>
-            <TbShare3 /> シェア
+          <Input
+            type="file"
+            accept=".csv"
+            hidden
+            ref={fileInputRef}
+            onChange={handleUpload}
+          />
+          <Button variant="surface" onClick={handleDownload}>
+            <TbFileDownload /> CSVダウンロード
+          </Button>
+          <Button variant="outline" colorPalette="red" onClick={handleReset}>
+            <TbRestore /> リセット
           </Button>
         </Flex>
       </Box>
