@@ -9,8 +9,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:watch": "vitest --watch"
+    "test": "vitest run",
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "@chakra-ui/charts": "^3.19.1",
