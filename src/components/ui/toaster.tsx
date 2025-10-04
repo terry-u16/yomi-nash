@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Toaster as ChakraToaster,
   Portal,
@@ -9,6 +7,7 @@ import {
   createToaster,
 } from "@chakra-ui/react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const toaster = createToaster({
   placement: "bottom-end",
   pauseOnPageIdle: true,
