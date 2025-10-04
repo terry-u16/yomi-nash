@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
 import React, { useRef } from "react";
-import type { GameInput, GameInputUI, GameResult } from "../../../types/game";
+import type { GameInput, GameInputUI, GameResult } from "@/types/game";
 import {
   generateCsvFromGameInputUI,
   parseCsvInputFromBinary,
@@ -25,13 +25,12 @@ import {
 import { parseGameInputUI } from "@/utils/parseGameInput";
 import { presets } from "@/presets";
 import { clampGameInputUI } from "@/utils/clampGameInput";
-import { encodeShareObject } from "@/utils/shareCodec";
-import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
+import { createShareUrl } from "@/utils/createShareUrl";
 
 interface Props {
   inputUI: GameInputUI;
   setInputUI: React.Dispatch<React.SetStateAction<GameInputUI>>;
-  onCalculate: (parsed: GameInput) => void;
+  onCalculate: (parsed: GameInput) => void | Promise<void>;
   result?: GameResult | null;
   onReset?: () => void; // 親で result を消したいのでコールバック
 }
@@ -40,19 +39,19 @@ const TableControls = React.memo(
   ({ inputUI, setInputUI, onCalculate, result, onReset }: Props) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      e.target.value = ""; // reset the input value to allow re-uploading the same file
+    const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      event.target.value = ""; // allow selecting the same file repeatedly
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        const binary = new Uint8Array(reader.result as ArrayBuffer);
-        const result = parseCsvInputFromBinary(binary);
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const binary = new Uint8Array(arrayBuffer);
+        const parseResult = parseCsvInputFromBinary(binary);
 
-        if (result.ok) {
+        if (parseResult.ok) {
           const { strategyLabels1, strategyLabels2, payoffMatrix } =
-            result.data;
+            parseResult.data;
 
           setInputUI(
             clampGameInputUI({
@@ -68,13 +67,19 @@ const TableControls = React.memo(
           });
         } else {
           toaster.create({
-            title: `CSVの読み込みに失敗しました`,
-            description: result.message,
+            title: "CSVの読み込みに失敗しました",
+            description: parseResult.message,
             type: "error",
           });
         }
-      };
-      reader.readAsArrayBuffer(file);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        toaster.create({
+          title: "CSVの読み込みに失敗しました",
+          description: message,
+          type: "error",
+        });
+      }
     };
 
     const handleDownload = () => {
@@ -120,21 +125,10 @@ const TableControls = React.memo(
 
     const handleShare = () => {
       try {
-        const params = new URLSearchParams();
-        params.set("schemaVersion", String(DATA_SCHEMA_VERSION));
-        params.set("gameInput", encodeShareObject(inputUI));
-        if (result) {
-          params.set(
-            "gameResult",
-            encodeShareObject({
-              player1Strategy: result.player1Strategy,
-              player2Strategy: result.player2Strategy,
-              payoffMatrix: result.payoffMatrix,
-            })
-          );
-        }
-        const base = `${window.location.origin}${window.location.pathname}`;
-        const shareUrl = `${base}?${params.toString()}`;
+        const shareUrl = createShareUrl(inputUI, {
+          baseUrl: `${window.location.origin}${window.location.pathname}`,
+          result,
+        });
         const text = encodeURIComponent(
           "ゲーム入力と結果を共有します #yomiNash"
         );
@@ -155,18 +149,6 @@ const TableControls = React.memo(
     const handleReset = () => {
       setInputUI(presets.okizeme.data);
       onReset?.();
-      try {
-        localStorage.removeItem(STORAGE_KEYS.result);
-        localStorage.setItem(
-          STORAGE_KEYS.inputUI,
-          JSON.stringify({
-            version: DATA_SCHEMA_VERSION,
-            payload: presets.okizeme.data,
-          })
-        );
-      } catch {
-        // localStorage利用不可（プライベートモードなど）の場合は無視
-      }
       toaster.create({ title: "リセットしました", type: "success" });
     };
 

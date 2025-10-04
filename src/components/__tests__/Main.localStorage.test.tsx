@@ -1,12 +1,14 @@
 import type { ReactNode } from "react";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import { createRoot } from "react-dom/client";
 
 import { createMockLocalStorage } from "@/test/utils/createMockLocalStorage";
 import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
 import type { GameInputUI, GameResult } from "@/types/game";
 import { presets } from "@/presets";
+
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 type MainOutletContext = {
   inputUI: GameInputUI;
@@ -72,7 +74,9 @@ describe("Main localStorage restore", () => {
       root.render(<Main maxWidth="lg" />);
     });
 
-    root.unmount();
+    act(() => {
+      root.unmount();
+    });
     container.remove();
   };
 

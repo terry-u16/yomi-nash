@@ -22,24 +22,25 @@ const Home: React.FC = () => {
   const { inputUI, setInputUI, result, setResult } =
     useOutletContext<LayoutContext>();
 
-  const onCalcualte = useCallback(
-    (parsed: GameInput) => {
-      solveGame(parsed)
-        .then((result) => {
-          setResult(result);
-          toaster.create({
-            title: "計算が完了しました",
-            type: "success",
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-          toaster.create({
-            title: "計算に失敗しました",
-            description: err,
-            type: "error",
-          });
+  const handleCalculate = useCallback(
+    async (parsed: GameInput) => {
+      try {
+        const solved = await solveGame(parsed);
+        setResult(solved);
+        toaster.create({
+          title: "計算が完了しました",
+          type: "success",
         });
+      } catch (error) {
+        console.error(error);
+        const description =
+          error instanceof Error ? error.message : String(error);
+        toaster.create({
+          title: "計算に失敗しました",
+          description,
+          type: "error",
+        });
+      }
     },
     [setResult]
   );
@@ -112,7 +113,7 @@ const Home: React.FC = () => {
       <TableControls
         inputUI={inputUI}
         setInputUI={setInputUI}
-        onCalculate={onCalcualte}
+        onCalculate={handleCalculate}
         result={result}
         onReset={() => setResult(null)}
       />
