@@ -1,11 +1,13 @@
 import {
   Box,
   Button,
+  Dialog,
+  Flex,
+  Heading,
   Input,
   Menu,
   Portal,
-  Flex,
-  Heading,
+  Text,
 } from "@chakra-ui/react";
 import React from "react";
 import type { GameInput, GameInputUI, GameResult } from "@/types/game";
@@ -96,9 +98,38 @@ const TableControls = React.memo(
           <Button variant="surface" onClick={handleDownload}>
             <TbFileDownload /> CSVダウンロード
           </Button>
-          <Button variant="outline" colorPalette="red" onClick={handleReset}>
-            <TbRestore /> リセット
-          </Button>
+          <Dialog.Root>
+            <Dialog.Trigger asChild>
+              <Button variant="outline" colorPalette="red">
+                <TbRestore /> リセット
+              </Button>
+            </Dialog.Trigger>
+            <Portal>
+              <Dialog.Backdrop />
+              <Dialog.Positioner>
+                <Dialog.Content>
+                  <Dialog.Header>
+                    <Dialog.Title>リセット確認</Dialog.Title>
+                  </Dialog.Header>
+                  <Dialog.Body>
+                    <Text>
+                      入力内容と計算結果を初期化します。よろしいですか？
+                    </Text>
+                  </Dialog.Body>
+                  <Dialog.Footer>
+                    <Dialog.ActionTrigger asChild>
+                      <Button variant="outline">キャンセル</Button>
+                    </Dialog.ActionTrigger>
+                    <Dialog.ActionTrigger asChild>
+                      <Button colorPalette="red" onClick={handleReset}>
+                        リセット
+                      </Button>
+                    </Dialog.ActionTrigger>
+                  </Dialog.Footer>
+                </Dialog.Content>
+              </Dialog.Positioner>
+            </Portal>
+          </Dialog.Root>
         </Flex>
       </Box>
     );
