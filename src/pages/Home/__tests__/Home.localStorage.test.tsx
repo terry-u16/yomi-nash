@@ -16,7 +16,9 @@ type LayoutContext = {
   setResult: Dispatch<SetStateAction<GameResult | null>>;
 };
 
-const mockOutletContext = vi.fn<[], LayoutContext>(() => {
+type LayoutContextGetter = () => LayoutContext;
+
+const mockOutletContext = vi.fn<LayoutContextGetter>(() => {
   throw new Error("mockOutletContext not configured");
 });
 const toasterCreate = vi.fn();
@@ -47,7 +49,7 @@ vi.mock("react-router-dom", async () => {
   );
   return {
     ...actual,
-    useOutletContext: () => mockOutletContext(),
+    useOutletContext: <T,>() => mockOutletContext() as unknown as T,
   };
 });
 
@@ -85,7 +87,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  delete (window as Record<string, unknown>).localStorage;
+  Reflect.deleteProperty(window, "localStorage");
   vi.unstubAllGlobals();
 });
 

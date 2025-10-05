@@ -48,7 +48,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  delete (window as Record<string, unknown>).localStorage;
+  Reflect.deleteProperty(window, "localStorage");
   vi.unstubAllGlobals();
 });
 

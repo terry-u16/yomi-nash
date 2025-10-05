@@ -1,17 +1,15 @@
 import { vi } from "vitest";
 
-type ViMockedFn<Args extends unknown[], Return> = ReturnType<
-  typeof vi.fn<Args, Return>
->;
+type ViMockedFn = ReturnType<typeof vi.fn>;
 
 export type MockLocalStorage = Storage & {
   store: Map<string, string>;
   snapshot: () => Record<string, string>;
-  clear: ViMockedFn<[], void>;
-  getItem: ViMockedFn<[string], string | null>;
-  key: ViMockedFn<[number], string | null>;
-  removeItem: ViMockedFn<[string], void>;
-  setItem: ViMockedFn<[string, string], void>;
+  clear: ViMockedFn;
+  getItem: ViMockedFn;
+  key: ViMockedFn;
+  removeItem: ViMockedFn;
+  setItem: ViMockedFn;
 };
 
 export const createMockLocalStorage = (): MockLocalStorage => {
@@ -38,7 +36,7 @@ export const createMockLocalStorage = (): MockLocalStorage => {
       store.set(key, value);
     }),
     store,
-    snapshot: () => Object.fromEntries(store),
+    snapshot: () => Object.fromEntries(store) as Record<string, string>,
   } satisfies Partial<MockLocalStorage>;
 
   return mock as MockLocalStorage;

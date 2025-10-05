@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { persistToStorage } from "@/lib/persistence/persistToStorage";
 import { createMockLocalStorage } from "@/test/utils/createMockLocalStorage";
 import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
