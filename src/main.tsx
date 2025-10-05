@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { system } from "./theme.ts";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ColorModeProvider } from "./components/ui/color-mode.tsx";
+import "./lib/i18n";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

@@ -2,6 +2,7 @@ import type { GameInputUI } from "@/types/game";
 import { Button, Table } from "@chakra-ui/react";
 import React from "react";
 import { TbRowRemove } from "react-icons/tb";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   row: number;
@@ -11,6 +12,7 @@ interface Props {
 
 const DeleteRowCell: React.FC<Props> = React.memo(
   ({ row, disabled, setInputUI }: Props) => {
+    const { t } = useTranslation();
     const deleteRow = (i: number) => {
       setInputUI((prev) => ({
         ...prev,
@@ -24,11 +26,11 @@ const DeleteRowCell: React.FC<Props> = React.memo(
         <Button
           w="100%"
           variant="surface"
-          aria-label="delete row"
+          aria-label={t("home.payoffTable.deleteRow")}
           disabled={disabled}
           onClick={() => deleteRow(row)}
         >
-          <TbRowRemove /> 行削除
+          <TbRowRemove /> {t("home.payoffTable.deleteRow")}
         </Button>
       </Table.Cell>
     );

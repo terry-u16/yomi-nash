@@ -5,10 +5,11 @@ import { toaster } from "@/components/ui/toaster";
 import type { GameInput, GameInputUI, GameResult } from "@/types/game";
 import { solveGame } from "@/utils/solveGameInput";
 import { Stack } from "@chakra-ui/react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { restoreFromLocation } from "@/lib/persistence/restoreFromLocation";
 import { persistToStorage } from "@/lib/persistence/persistToStorage";
 import { useOutletContext } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface LayoutContext {
   inputUI: GameInputUI;
@@ -20,6 +21,7 @@ interface LayoutContext {
 const Home: React.FC = () => {
   const { inputUI, setInputUI, result, setResult } =
     useOutletContext<LayoutContext>();
+  const { t } = useTranslation();
 
   const handleCalculate = useCallback(
     async (parsed: GameInput) => {
@@ -27,7 +29,7 @@ const Home: React.FC = () => {
         const solved = await solveGame(parsed);
         setResult(solved);
         toaster.create({
-          title: "計算が完了しました",
+          title: t("home.toasts.calcSuccess"),
           type: "success",
         });
       } catch (error) {
@@ -35,30 +37,34 @@ const Home: React.FC = () => {
         const description =
           error instanceof Error ? error.message : String(error);
         toaster.create({
-          title: "計算に失敗しました",
+          title: t("home.toasts.calcError"),
           description,
           type: "error",
         });
       }
     },
-    [setResult]
+    [setResult, t]
   );
 
   // 初回マウント時にURL から復元（localStorage は Main 初期化で処理済み）
+  const isInitializedRef = useRef(false);
   useEffect(() => {
+    if (isInitializedRef.current) return;
+    isInitializedRef.current = true;
+
     const outcome = restoreFromLocation(window.location.search);
 
     switch (outcome.status) {
       case "schema-version-mismatch": {
         toaster.create({
-          title: "共有データのバージョンが古いため読み込めません",
+          title: t("home.toasts.restore.schemaMismatch"),
           type: "error",
         });
         return;
       }
       case "input-error": {
         toaster.create({
-          title: "入力の復元に失敗しました",
+          title: t("home.toasts.restore.inputError"),
           description: outcome.message,
           type: "error",
         });
@@ -71,13 +77,13 @@ const Home: React.FC = () => {
         }
         if (outcome.resultErrorMessage) {
           toaster.create({
-            title: "結果の復元に失敗しました",
+            title: t("home.toasts.restore.resultError"),
             description: outcome.resultErrorMessage,
             type: "warning",
           });
         }
         toaster.create({
-          title: "共有データを読み込みました",
+          title: t("home.toasts.restore.loaded"),
           type: "success",
         });
         return;
@@ -89,7 +95,7 @@ const Home: React.FC = () => {
         return;
       }
     }
-  }, [setInputUI, setResult]);
+  }, [setInputUI, setResult, t]);
 
   // 変更があればlocalStorageへ保存
   useEffect(() => {

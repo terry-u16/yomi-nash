@@ -10,6 +10,7 @@ import DeleteRowCell from "./DeleteRowCell";
 import DeleteColCell from "./DeleteColCell";
 import { toaster } from "@/components/ui/toaster";
 import { TbArrowsUpLeft } from "react-icons/tb";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   inputUI: GameInputUI;
@@ -19,6 +20,7 @@ interface Props {
 const PayoffTable: React.FC<Props> = React.memo(
   ({ inputUI, setInputUI }: Props) => {
     const { strategyLabels1, strategyLabels2, payoffMatrix } = inputUI;
+    const { t } = useTranslation();
 
     const handleTranspose = React.useCallback(() => {
       setInputUI((prev) => {
@@ -49,21 +51,26 @@ const PayoffTable: React.FC<Props> = React.memo(
       });
 
       toaster.create({
-        title: "Player 1とPlayer 2を入れ替えました",
+        title: t("home.payoffTable.transposeToast"),
         type: "success",
       });
-    }, [setInputUI]);
+    }, [setInputUI, t]);
 
     return (
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
         <Heading size="xl" mb={4} as="h2">
-          戦略相性表
+          {t("home.payoffTable.heading")}
         </Heading>
         <Table.ScrollArea>
           <Table.Root variant="outline" size="sm">
             <Table.Body>
               <Table.Row>
-                <Table.Cell>Player 1 \ Player 2</Table.Cell>
+                <Table.Cell>
+                  {t("home.payoffTable.playerHeader", {
+                    player1: t("common.player1"),
+                    player2: t("common.player2"),
+                  })}
+                </Table.Cell>
                 {strategyLabels2.map((label, j) => (
                   <ColHeaderCell
                     label={label}
@@ -110,8 +117,13 @@ const PayoffTable: React.FC<Props> = React.memo(
                   />
                 ))}
                 <Table.Cell>
-                  <Button w="100%" variant="surface" onClick={handleTranspose}>
-                    <TbArrowsUpLeft /> 行列入替
+                  <Button
+                    w="100%"
+                    variant="surface"
+                    onClick={handleTranspose}
+                    aria-label={t("home.payoffTable.transposeButton")}
+                  >
+                    <TbArrowsUpLeft /> {t("home.payoffTable.transposeButton")}
                   </Button>
                 </Table.Cell>
               </Table.Row>

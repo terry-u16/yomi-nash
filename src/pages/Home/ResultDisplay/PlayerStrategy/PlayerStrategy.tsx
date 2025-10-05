@@ -3,6 +3,7 @@ import { Heading, Stack } from "@chakra-ui/react";
 import React from "react";
 import ProbChart from "./ProbChart";
 import ExpectedChart from "./ExpectedChart";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   playerName: string;
@@ -26,12 +27,13 @@ const PlayerStrategy: React.FC<Props> = React.memo(
     strategyGetter,
     strategySetter,
   }: Props) => {
+    const { t } = useTranslation();
     const strategyLabels = strategy.map((entry) => entry.label);
 
     return (
       <Stack mb={-4}>
         <Heading size="lg" as="h3">
-          {`${playerName} 戦略`}
+          {t("home.resultDisplay.playerStrategy", { player: playerName })}
         </Heading>
         <ProbChart
           strategy={strategy}

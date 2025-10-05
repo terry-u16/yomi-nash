@@ -21,6 +21,7 @@ import {
 } from "react-icons/tb";
 import { presetEntries } from "@/lib/presets";
 import { useTableControls } from "./useTableControls";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   inputUI: GameInputUI;
@@ -32,6 +33,7 @@ interface Props {
 
 const TableControls = React.memo(
   ({ inputUI, setInputUI, onCalculate, result, onReset }: Props) => {
+    const { t } = useTranslation();
     const {
       fileInputRef,
       handleUpload,
@@ -51,19 +53,19 @@ const TableControls = React.memo(
     return (
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
         <Heading size="xl" mb={4} as="h2">
-          操作パネル
+          {t("home.tableControls.heading")}
         </Heading>
         <Flex gap={4} direction="row" wrap="wrap">
           <Button colorPalette="blue" onClick={handleCalculate}>
-            <TbCalculator /> 計算
+            <TbCalculator /> {t("home.tableControls.calculate")}
           </Button>
           <Button variant="surface" onClick={handleShare}>
-            <TbShare3 /> シェア
+            <TbShare3 /> {t("home.tableControls.share")}
           </Button>
           <Menu.Root>
             <Menu.Trigger asChild>
               <Button variant="surface">
-                <TbAdjustments /> サンプルプリセット
+                <TbAdjustments /> {t("home.tableControls.presets")}
               </Button>
             </Menu.Trigger>
             <Portal>
@@ -75,7 +77,7 @@ const TableControls = React.memo(
                       value={key}
                       onClick={() => applyPreset(key)}
                     >
-                      {preset.label}
+                      {t(`presets.${key}.label`, { defaultValue: preset.label })}
                     </Menu.Item>
                   ))}
                 </Menu.Content>
@@ -86,7 +88,7 @@ const TableControls = React.memo(
             variant="surface"
             onClick={() => fileInputRef.current?.click()}
           >
-            <TbFileUpload /> CSVアップロード
+            <TbFileUpload /> {t("home.tableControls.upload")}
           </Button>
           <Input
             type="file"
@@ -96,12 +98,12 @@ const TableControls = React.memo(
             onChange={handleUpload}
           />
           <Button variant="surface" onClick={handleDownload}>
-            <TbFileDownload /> CSVダウンロード
+            <TbFileDownload /> {t("home.tableControls.download")}
           </Button>
           <Dialog.Root>
             <Dialog.Trigger asChild>
               <Button variant="outline" colorPalette="red">
-                <TbRestore /> リセット
+                <TbRestore /> {t("home.tableControls.reset")}
               </Button>
             </Dialog.Trigger>
             <Portal>
@@ -109,20 +111,18 @@ const TableControls = React.memo(
               <Dialog.Positioner>
                 <Dialog.Content>
                   <Dialog.Header>
-                    <Dialog.Title>リセット確認</Dialog.Title>
+                    <Dialog.Title>{t("home.tableControls.dialogTitle")}</Dialog.Title>
                   </Dialog.Header>
                   <Dialog.Body>
-                    <Text>
-                      入力内容と計算結果を初期化します。よろしいですか？
-                    </Text>
+                    <Text>{t("home.tableControls.dialogBody")}</Text>
                   </Dialog.Body>
                   <Dialog.Footer>
                     <Dialog.ActionTrigger asChild>
-                      <Button variant="outline">キャンセル</Button>
+                      <Button variant="outline">{t("common.cancel")}</Button>
                     </Dialog.ActionTrigger>
                     <Dialog.ActionTrigger asChild>
                       <Button colorPalette="red" onClick={handleReset}>
-                        リセット
+                        {t("home.tableControls.confirmReset")}
                       </Button>
                     </Dialog.ActionTrigger>
                   </Dialog.Footer>

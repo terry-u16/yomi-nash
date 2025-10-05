@@ -4,6 +4,7 @@ import React from "react";
 import { BarSegment, useChart } from "@chakra-ui/charts";
 import chroma from "chroma-js";
 import StrategySlider from "./StrategySlider";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   strategy: MixedStrategy;
@@ -36,6 +37,7 @@ const ProbChart: React.FC<Props> = React.memo(
     strategyGetter,
     strategySetter,
   }: Props) => {
+    const { t } = useTranslation();
     const colors = useToken("colors", [
       `${colorpalette}.600`,
       `${colorpalette}.500`,
@@ -53,7 +55,7 @@ const ProbChart: React.FC<Props> = React.memo(
     return (
       <Stack>
         <Heading size="sm" as="h4">
-          選択割合
+          {t("home.resultDisplay.probabilityHeading")}
         </Heading>
         <StrategySlider
           strategy={strategy}

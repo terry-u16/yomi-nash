@@ -4,6 +4,7 @@ import React from "react";
 import ResultCell from "./ResultCell";
 import SumCell from "./SumCell";
 import { transposeMatrix } from "@/utils/solveGameInput";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   result: GameResult;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const ResultTable: React.FC<Props> = ({ result, maxAbsPayoff }: Props) => {
+  const { t } = useTranslation();
   const expectedSumRow = result.payoffMatrix.map((val) =>
     val.reduce(
       (acc, v, j) => acc + v * result.player2Strategy[j].probability,
@@ -33,7 +35,7 @@ const ResultTable: React.FC<Props> = ({ result, maxAbsPayoff }: Props) => {
   return (
     <Box>
       <Heading size="lg" as="h3" mb={2}>
-        詳細結果表
+        {t("home.resultDisplay.detailHeading")}
       </Heading>
       <Table.ScrollArea>
         <Table.Root
@@ -45,14 +47,19 @@ const ResultTable: React.FC<Props> = ({ result, maxAbsPayoff }: Props) => {
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader w="150px">
-                Player 1 \ Player 2
+                {t("home.resultDisplay.playerHeader", {
+                  player1: t("common.player1"),
+                  player2: t("common.player2"),
+                })}
               </Table.ColumnHeader>
               {result.player2Strategy.map((entry, j) => (
                 <Table.ColumnHeader w="150px" key={`header_${j + 1}`}>
                   <Text truncate>{entry.label}</Text>
                 </Table.ColumnHeader>
               ))}
-              <Table.ColumnHeader w="150px">合計</Table.ColumnHeader>
+              <Table.ColumnHeader w="150px">
+                {t("common.total")}
+              </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -80,7 +87,7 @@ const ResultTable: React.FC<Props> = ({ result, maxAbsPayoff }: Props) => {
             ))}
             <Table.Row>
               <Table.Cell>
-                <Text truncate>合計</Text>
+                <Text truncate>{t("common.total")}</Text>
               </Table.Cell>
               {result.player2Strategy.map((col, j) => (
                 <SumCell

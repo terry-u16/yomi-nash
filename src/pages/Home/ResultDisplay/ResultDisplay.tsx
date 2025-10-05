@@ -9,6 +9,7 @@ import {
 import ExpectedStat from "./ExpectedStat";
 import ResultTable from "./ResultTable/ResultTable";
 import PlayerStrategy from "./PlayerStrategy/PlayerStrategy";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   result: GameResult;
@@ -16,6 +17,9 @@ interface Props {
 }
 const ResultDisplay: React.FC<Props> = React.memo(
   ({ result, setResult }: Props) => {
+    const { t } = useTranslation();
+    const player1Label = t("common.player1");
+    const player2Label = t("common.player2");
     const maxAbsPayoff = Math.max(
       ...result.payoffMatrix.flat().map((v) => Math.abs(v)),
       1e-6
@@ -70,15 +74,19 @@ const ResultDisplay: React.FC<Props> = React.memo(
     return (
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
         <Heading size="xl" mb={4} as="h2">
-          計算結果
+          {t("home.resultDisplay.heading")}
         </Heading>
         <Stack mb={2} gap={4}>
-          <ExpectedStat value={expectedP1} maxAbsPayoff={maxAbsPayoff} />
+          <ExpectedStat
+            value={expectedP1}
+            maxAbsPayoff={maxAbsPayoff}
+            playerLabel={player1Label}
+          />
           <Separator />
           <Stack gap={4} direction={{ base: "column", md: "row" }}>
             <Box flex={1}>
               <PlayerStrategy
-                playerName="Player 1"
+                playerName={player1Label}
                 strategy={result.player1Strategy}
                 expectedPayoff={expectedP1All}
                 inverted={false}
@@ -90,7 +98,7 @@ const ResultDisplay: React.FC<Props> = React.memo(
             </Box>
             <Box flex={1}>
               <PlayerStrategy
-                playerName="Player 2"
+                playerName={player2Label}
                 strategy={result.player2Strategy}
                 expectedPayoff={expectedP2All}
                 inverted={true}

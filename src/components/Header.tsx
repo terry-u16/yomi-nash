@@ -1,11 +1,26 @@
-import { Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading, Menu, Portal } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import type React from "react";
-import { TbBook, TbHelp, TbHome } from "react-icons/tb";
+import { TbBook, TbCheck, TbChevronDown, TbHelp, TbHome, TbLanguage } from "react-icons/tb";
 import { ColorModeButton } from "./ui/color-mode";
+import { useTranslation } from "react-i18next";
+import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
 
 const Header: React.FC = () => {
+  const { t, i18n } = useTranslation();
+  const resolvedLanguage = i18n.resolvedLanguage ?? i18n.language;
+  const currentLanguage: SupportedLanguage =
+    supportedLanguages.find((language) =>
+      resolvedLanguage?.toLowerCase().startsWith(language)
+    ) ?? "ja";
+
+  const handleLanguageChange = (value: string) => {
+    if (value && value !== i18n.language) {
+      void i18n.changeLanguage(value);
+    }
+  };
+
   return (
     <Flex
       direction={{ base: "column", md: "row" }}
@@ -23,26 +38,60 @@ const Header: React.FC = () => {
     >
       <Heading size="2xl" color="white" as="h1">
         <ChakraLink asChild color="white">
-          <RouterLink to="/">読み合いナッシュ</RouterLink>
+          <RouterLink to="/">{t("common.appName")}</RouterLink>
         </ChakraLink>
       </Heading>
-      <Flex gap={4} wrap="wrap">
+      <Flex gap={4} wrap="wrap" align="center">
         <ChakraLink asChild color="white">
           <RouterLink to="/">
-            <TbHome /> Home
+            <TbHome /> {t("header.nav.home")}
           </RouterLink>
         </ChakraLink>
         <ChakraLink asChild color="white">
           <RouterLink to="/help">
-            <TbHelp /> Help
+            <TbHelp /> {t("header.nav.help")}
           </RouterLink>
         </ChakraLink>
         <ChakraLink asChild color="white">
           <RouterLink to="/theory">
-            <TbBook /> Theory
+            <TbBook /> {t("header.nav.theory")}
           </RouterLink>
         </ChakraLink>
         <ColorModeButton color="white" size="xs" />
+        <Menu.Root>
+          <Menu.Trigger asChild>
+            <Button
+              size="sm"
+              variant="surface"
+              leftIcon={<TbLanguage />}
+              rightIcon={<TbChevronDown />}
+              color="white"
+              bg="whiteAlpha.300"
+              _hover={{ bg: "whiteAlpha.400" }}
+              _active={{ bg: "whiteAlpha.500" }}
+            >
+              {t(`language.${currentLanguage}`)}
+            </Button>
+          </Menu.Trigger>
+          <Portal>
+            <Menu.Positioner>
+              <Menu.Content minW="48">
+                {supportedLanguages.map((language) => (
+                  <Menu.Item
+                    key={language}
+                    value={language}
+                    onClick={() => handleLanguageChange(language)}
+                  >
+                    <Flex align="center" gap={2}>
+                      {language === currentLanguage ? <TbCheck /> : null}
+                      {t(`language.${language}`)}
+                    </Flex>
+                  </Menu.Item>
+                ))}
+              </Menu.Content>
+            </Menu.Positioner>
+          </Portal>
+        </Menu.Root>
       </Flex>
     </Flex>
   );

@@ -13,44 +13,58 @@ import {
   TbArrowUp,
   TbArrowUpRight,
 } from "react-icons/tb";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   value: number;
   maxAbsPayoff: number;
+  playerLabel: string;
 }
 
-const ExpectedStat: React.FC<Props> = ({ value, maxAbsPayoff }: Props) => {
+const ExpectedStat: React.FC<Props> = ({
+  value,
+  maxAbsPayoff,
+  playerLabel,
+}: Props) => {
+  const { t } = useTranslation();
   const normalizedValue = value / maxAbsPayoff;
   let colorPalette: string;
-  let badgeText: string;
+  let badgeKey:
+    | "advantage"
+    | "slightAdvantage"
+    | "disadvantage"
+    | "slightDisadvantage"
+    | "even";
   let icon: React.ReactNode;
 
   if (normalizedValue > 0.15) {
     colorPalette = "red";
-    badgeText = "有利";
+    badgeKey = "advantage";
     icon = <TbArrowUp />;
   } else if (normalizedValue > 0.02) {
     colorPalette = "red";
-    badgeText = "微有利";
+    badgeKey = "slightAdvantage";
     icon = <TbArrowUpRight />;
   } else if (normalizedValue < -0.15) {
     colorPalette = "blue";
-    badgeText = "不利";
+    badgeKey = "disadvantage";
     icon = <TbArrowDown />;
   } else if (normalizedValue < -0.02) {
     colorPalette = "blue";
-    badgeText = "微不利";
+    badgeKey = "slightDisadvantage";
     icon = <TbArrowDownRight />;
   } else {
     colorPalette = "gray";
-    badgeText = "互角";
+    badgeKey = "even";
     icon = <TbArrowsExchange />;
   }
+
+  const badgeText = t(`home.resultDisplay.badge.${badgeKey}`);
 
   return (
     <Box>
       <Heading size="lg" as="h3" mb={1}>
-        Player 1 期待値
+        {t("home.resultDisplay.expectedValueHeading", { player: playerLabel })}
       </Heading>
       <Stat.Root size="lg">
         <HStack>

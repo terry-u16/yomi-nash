@@ -13,6 +13,7 @@ import {
   YAxis,
 } from "recharts";
 import { scaleLinear } from "d3-scale";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   strategyLabels: string[];
@@ -65,6 +66,7 @@ const ExpectedChart: React.FC<Props> = React.memo(
     inverted,
     colorpalette,
   }: Props) => {
+    const { t } = useTranslation();
     const colors = useToken("colors", [
       `${colorpalette}.600`,
       `${colorpalette}.500`,
@@ -95,7 +97,7 @@ const ExpectedChart: React.FC<Props> = React.memo(
     return (
       <Stack>
         <Heading size="sm" as="h4">
-          期待値
+          {t("home.resultDisplay.expectedHeading")}
         </Heading>
         <Chart.Root maxH="3xs" chart={chart}>
           <BarChart data={chart.data}>

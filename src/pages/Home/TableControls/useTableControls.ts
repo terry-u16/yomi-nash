@@ -15,6 +15,7 @@ import {
   generateCsvFromGameInputUI,
   parseCsvInputFromBinary,
 } from "@/utils/parseCsvInput";
+import { useTranslation } from "react-i18next";
 
 interface UseTableControlsParams {
   inputUI: GameInputUI;
@@ -31,6 +32,7 @@ export const useTableControls = ({
   result,
   onReset,
 }: UseTableControlsParams) => {
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
@@ -55,12 +57,12 @@ export const useTableControls = ({
         );
 
         toaster.create({
-          title: "CSVを読み込みました",
+          title: t("home.tableControls.csvLoadSuccess"),
           type: "success",
         });
       } else {
         toaster.create({
-          title: "CSVの読み込みに失敗しました",
+          title: t("home.tableControls.csvLoadError"),
           description: parseResult.message,
           type: "error",
         });
@@ -68,12 +70,12 @@ export const useTableControls = ({
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       toaster.create({
-        title: "CSVの読み込みに失敗しました",
+        title: t("home.tableControls.csvLoadError"),
         description: message,
         type: "error",
       });
     }
-  }, [setInputUI]);
+  }, [setInputUI, t]);
 
   const handleDownload = useCallback(() => {
     const csv = generateCsvFromGameInputUI(inputUI);
@@ -88,9 +90,9 @@ export const useTableControls = ({
     URL.revokeObjectURL(url);
 
     toaster.create({
-      title: "CSVをダウンロードしています...",
+      title: t("home.tableControls.csvDownloading"),
     });
-  }, [inputUI]);
+  }, [inputUI, t]);
 
   const handleCalculate = useCallback(() => {
     const result = parseGameInputUI(inputUI);
@@ -98,20 +100,25 @@ export const useTableControls = ({
       onCalculate(result.data);
     } else {
       toaster.create({
-        title: "入力にエラーがあります",
+        title: t("home.tableControls.inputError"),
         description: result.errors
-          .map((err) => `(${err.row + 1}行 ${err.col + 1}列)`)
+          .map((err) =>
+            t("home.tableControls.inputErrorPosition", {
+              row: err.row + 1,
+              col: err.col + 1,
+            })
+          )
           .join(", "),
         type: "error",
       });
     }
-  }, [inputUI, onCalculate]);
+  }, [inputUI, onCalculate, t]);
 
   const applyPreset = useCallback((presetKey: PresetKey) => {
     const preset = presets[presetKey];
     if (!preset) {
       toaster.create({
-        title: "プリセットの読み込みに失敗しました",
+        title: t("home.tableControls.presetError"),
         type: "error",
       });
       return;
@@ -119,15 +126,17 @@ export const useTableControls = ({
     const snapshot = createPresetSnapshot(presetKey);
     setInputUI(snapshot);
     toaster.create({
-      title: `プリセット ${preset.label} を適用しました`,
+      title: t("home.tableControls.presetApplied", {
+        label: t(`presets.${presetKey}.label`, { defaultValue: preset.label }),
+      }),
       type: "success",
     });
-  }, [setInputUI]);
+  }, [setInputUI, t]);
 
   const handleShare = useCallback(() => {
     try {
       const shareUrl = createShareUrl(inputUI, { result });
-      const text = encodeURIComponent("ゲーム入力と結果を共有します #yomiNash");
+      const text = encodeURIComponent(t("home.tableControls.shareTweet"));
       const intent = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(
         shareUrl
       )}`;
@@ -135,18 +144,18 @@ export const useTableControls = ({
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
       toaster.create({
-        title: "シェアURL生成に失敗しました",
+        title: t("home.tableControls.shareError"),
         description: message,
         type: "error",
       });
     }
-  }, [inputUI, result]);
+  }, [inputUI, result, t]);
 
   const handleReset = useCallback(() => {
     setInputUI(createDefaultGameInputUI());
     onReset?.();
-    toaster.create({ title: "リセットしました", type: "success" });
-  }, [onReset, setInputUI]);
+    toaster.create({ title: t("home.tableControls.resetSuccess"), type: "success" });
+  }, [onReset, setInputUI, t]);
 
   return {
     fileInputRef,
