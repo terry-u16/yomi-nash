@@ -3,11 +3,13 @@ import {
   Box,
   Heading,
   Highlight,
+  Link,
   List,
   Separator,
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { TbExternalLink } from "react-icons/tb";
 
 const Help: React.FC = () => {
   return (
@@ -194,7 +196,8 @@ const Help: React.FC = () => {
                 行・列入れ替えボタン
               </Heading>
               <Text>
-                表の右下にある入替ボタンを押すと、Player 1 と Player 2 の視点を入れ替えます。
+                表の右下にある入替ボタンを押すと、Player 1 と Player 2
+                の視点を入れ替えます。
               </Text>
             </Stack>
           </Stack>
@@ -224,11 +227,10 @@ const Help: React.FC = () => {
               CSVダウンロード: 今の表をCSVファイルとして保存します。
             </List.Item>
             <List.Item>
-              行列転置: 表の右下にあるボタンから、行と列を入れ替えて利得の符号を反転します。後攻視点でのバランス確認に役立ちます。
+              行列転置:
+              表の右下にあるボタンから、行と列を入れ替えて利得の符号を反転します。後攻視点でのバランス確認に役立ちます。
             </List.Item>
-            <List.Item>
-              リセット: 入力内容を初期状態に戻します。
-            </List.Item>
+            <List.Item>リセット: 入力内容を初期状態に戻します。</List.Item>
           </List.Root>
         </Stack>
         <Separator />
@@ -244,7 +246,9 @@ const Help: React.FC = () => {
               Player 1 期待値
             </Heading>
             <Text>
-              この数字は Player 1 が平均してどれくらい得をしそうかを表します。プラスなら Player 1 有利、マイナスなら Player 2 有利です。
+              この数字は Player 1
+              が平均してどれくらい得をしそうかを表します。プラスなら Player 1
+              有利、マイナスなら Player 2 有利です。
             </Text>
           </Stack>
           <Stack>
@@ -267,6 +271,19 @@ const Help: React.FC = () => {
             </Text>
           </Stack>
         </Stack>
+        <Separator />
+        <Text>
+          お気付きの点やご要望があれば
+          <Link
+            href="https://github.com/terry-u16/yomi-nash"
+            colorPalette="blue"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub <TbExternalLink />
+          </Link>
+          の Issues でお知らせください。
+        </Text>
       </Stack>
     </Box>
   );
