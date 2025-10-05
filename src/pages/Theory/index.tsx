@@ -10,6 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { TbExternalLink } from "react-icons/tb";
+import { InlineMath } from "react-katex";
 
 const Theory: React.FC = () => {
   return (
@@ -123,7 +124,61 @@ const Theory: React.FC = () => {
         <Separator />
         <Stack gap={4}>
           <Heading size="lg" as="h3">
-            4. もっと学びたい方へ
+            4. 混合戦略ナッシュ均衡をどう解くか
+          </Heading>
+          <Text>
+            このアプリが扱う 2 人ゼロサムゲームでは、プレイヤー 1 の利得行列
+            <InlineMath math="A" /> を入力として処理します。 行はプレイヤー 1
+            の純粋戦略、列はプレイヤー 2 の純粋戦略に対応し、成分
+            <InlineMath math="A_{ij}" /> が「プレイヤー 1 が{" "}
+            <InlineMath math="i" /> を選び、プレイヤー 2 が{" "}
+            <InlineMath math="j" /> を選んだときの利得（プレイヤー 1
+            視点）」を表します。 この設定のもとでプレイヤー 2
+            が取り得る利得の最大値 <InlineMath math="\max_j" /> を最小化する
+            minimax 問題を解くことで、混合戦略ナッシュ均衡を求めます。
+            直感的には「こちらがある混合戦略を採用したときに、相手はその戦略に最も刺さる反応（こちらの期待損失を最大化する手）を選ぶ」と悲観的に想定し、その最悪ケースの期待損失を最小化する確率分布を探すという minimax 的な発想です。
+          </Text>
+          <Text>
+            プレイヤー 1 の混合戦略は確率ベクトル{" "}
+            <InlineMath math="x = (x_1, \dots, x_M)^{\top}" />{" "}
+            として表し、各成分が純粋戦略を選ぶ確率を示します。 目的は{" "}
+            <InlineMath math="\max_i (\sum_j A_{ij} x_j)" />{" "}
+            を最小化することなので、max 演算を直接扱う代わりに補助変数{" "}
+            <InlineMath math="v" /> を導入し、全ての行 <InlineMath math="i" />{" "}
+            について <InlineMath math="v \ge \sum_j A_{ij} x_j" />{" "}
+            という制約を課すと、
+            <InlineMath math="v" /> を最小化する問題に書き換えられます。
+            <InlineMath math="x" /> は確率ベクトルなので{" "}
+            <InlineMath math="x_j \ge 0" /> と
+            <InlineMath math="\sum_j x_j = 1" />{" "}
+            という確率制約を併せて課し、その制約付き線形計画問題を{" "}
+            <code>glpk.js</code> のソルバーに渡して 最適な混合戦略{" "}
+            <InlineMath math="x" /> と均衡値 <InlineMath math="v" />{" "}
+            を数値的に計算しています。
+          </Text>
+          <Text>
+            プレイヤー 2 側は利得行列を転置して符号を反転させた{" "}
+            <InlineMath math="-A^{\top}" />{" "}
+            を用いて同じ形式の問題に落とし込み、同様に線形計画問題として解きます。
+            こうして得た 2
+            つの戦略が互いの最適反応となる点、すなわち混合戦略ナッシュ均衡が最終的な出力です。
+          </Text>
+          <Alert.Root status="info">
+            <Alert.Indicator />
+            <Alert.Description>
+              <Text>
+                ここで紹介した minimax による定式化は、各組み合わせの利得が常に
+                <InlineMath math="(A_{ij}, -A_{ij})" /> のように総和ゼロになる 2
+                人ゼロサムゲームを前提としています。
+                非ゼロサムや複数人ゲームでは別の手法が必要になる点に注意してください。
+              </Text>
+            </Alert.Description>
+          </Alert.Root>
+        </Stack>
+        <Separator />
+        <Stack gap={4}>
+          <Heading size="lg" as="h3">
+            5. もっと学びたい方へ
           </Heading>
           <Text>
             混合戦略ナッシュ均衡の理論背景をより体系的に学びたい方は、以下の資料が参考になります。

@@ -7,6 +7,7 @@ import { system } from "./theme.ts";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ColorModeProvider } from "./components/ui/color-mode.tsx";
 import "./lib/i18n";
+import "katex/dist/katex.min.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
