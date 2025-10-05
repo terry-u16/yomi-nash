@@ -77,7 +77,7 @@ const TableControls = React.memo(
                       value={key}
                       onClick={() => applyPreset(key)}
                     >
-                      {t(`presets.${key}.label`, { defaultValue: preset.label })}
+                      {t(preset.labelKey)}
                     </Menu.Item>
                   ))}
                 </Menu.Content>
@@ -111,7 +111,9 @@ const TableControls = React.memo(
               <Dialog.Positioner>
                 <Dialog.Content>
                   <Dialog.Header>
-                    <Dialog.Title>{t("home.tableControls.dialogTitle")}</Dialog.Title>
+                    <Dialog.Title>
+                      {t("home.tableControls.dialogTitle")}
+                    </Dialog.Title>
                   </Dialog.Header>
                   <Dialog.Body>
                     <Text>{t("home.tableControls.dialogBody")}</Text>

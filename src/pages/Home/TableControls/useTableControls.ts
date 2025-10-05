@@ -127,7 +127,7 @@ export const useTableControls = ({
     setInputUI(snapshot);
     toaster.create({
       title: t("home.tableControls.presetApplied", {
-        label: t(`presets.${presetKey}.label`, { defaultValue: preset.label }),
+        label: t(preset.labelKey),
       }),
       type: "success",
     });

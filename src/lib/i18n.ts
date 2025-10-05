@@ -35,10 +35,56 @@ const resources = {
         languageLabel: "表示言語",
       },
       presets: {
-        rps: { label: "じゃんけん" },
-        glico: { label: "グリコじゃんけん" },
-        okizeme: { label: "起き攻め打撃重ね" },
-        okizemeHighLow: { label: "起き攻め中下択" },
+        rps: {
+          label: "じゃんけん",
+          strategyLabels1: {
+            rock: "グー",
+            scissors: "チョキ",
+            paper: "パー",
+          },
+          strategyLabels2: {
+            rock: "グー",
+            scissors: "チョキ",
+            paper: "パー",
+          },
+        },
+        glico: {
+          label: "グリコじゃんけん",
+          strategyLabels1: {
+            glico: "グリコ",
+            chocolate: "チョコレート",
+            pineapple: "パイナップル",
+          },
+          strategyLabels2: {
+            glico: "グリコ",
+            chocolate: "チョコレート",
+            pineapple: "パイナップル",
+          },
+        },
+        okizeme: {
+          label: "起き攻め打撃重ね",
+          strategyLabels1: {
+            meaty: "打撃重ね",
+            wait: "様子見",
+          },
+          strategyLabels2: {
+            guard: "ガード",
+            reversal: "無敵技",
+          },
+        },
+        okizemeHighLow: {
+          label: "起き攻め中下択",
+          strategyLabels1: {
+            overhead: "中段",
+            low: "下段",
+            wait: "様子見",
+          },
+          strategyLabels2: {
+            standGuard: "立ちガード",
+            crouchGuard: "しゃがみガード",
+            reversal: "無敵技",
+          },
+        },
       },
       home: {
         toasts: {
@@ -125,10 +171,56 @@ const resources = {
         languageLabel: "Language",
       },
       presets: {
-        rps: { label: "Rock Paper Scissors" },
-        glico: { label: "Glico Rock Paper Scissors" },
-        okizeme: { label: "Meaty Strike Pressure" },
-        okizemeHighLow: { label: "Meaty High-Low Mix" },
+        rps: {
+          label: "Rock Paper Scissors",
+          strategyLabels1: {
+            rock: "Rock",
+            scissors: "Scissors",
+            paper: "Paper",
+          },
+          strategyLabels2: {
+            rock: "Rock",
+            scissors: "Scissors",
+            paper: "Paper",
+          },
+        },
+        glico: {
+          label: "Glico Rock Paper Scissors",
+          strategyLabels1: {
+            glico: "Glico",
+            chocolate: "Chocolate",
+            pineapple: "Pineapple",
+          },
+          strategyLabels2: {
+            glico: "Glico",
+            chocolate: "Chocolate",
+            pineapple: "Pineapple",
+          },
+        },
+        okizeme: {
+          label: "Meaty Oki",
+          strategyLabels1: {
+            meaty: "Meaty Attack",
+            wait: "Wait",
+          },
+          strategyLabels2: {
+            guard: "Guard",
+            reversal: "Reversal",
+          },
+        },
+        okizemeHighLow: {
+          label: "High/Low Oki Mix-up",
+          strategyLabels1: {
+            overhead: "Overhead",
+            low: "Low",
+            wait: "Wait",
+          },
+          strategyLabels2: {
+            standGuard: "Standing Guard",
+            crouchGuard: "Crouching Guard",
+            reversal: "Reversal",
+          },
+        },
       },
       home: {
         toasts: {
