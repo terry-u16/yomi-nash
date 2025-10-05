@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Heading, Box } from "@chakra-ui/react";
+import { Table, Heading, Box, Button } from "@chakra-ui/react";
 import type { GameInputUI } from "@/types/game";
 import ColHeaderCell from "./ColHeaderCell";
 import RowHeaderCell from "./RowHeaderCell";
@@ -8,6 +8,8 @@ import AddRowCell from "./AddRowCell";
 import AddColCell from "./AddColCell";
 import DeleteRowCell from "./DeleteRowCell";
 import DeleteColCell from "./DeleteColCell";
+import { toaster } from "@/components/ui/toaster";
+import { TbArrowsUpLeft } from "react-icons/tb";
 
 interface Props {
   inputUI: GameInputUI;
@@ -17,6 +19,40 @@ interface Props {
 const PayoffTable: React.FC<Props> = React.memo(
   ({ inputUI, setInputUI }: Props) => {
     const { strategyLabels1, strategyLabels2, payoffMatrix } = inputUI;
+
+    const handleTranspose = React.useCallback(() => {
+      setInputUI((prev) => {
+        const nextRowCount = prev.strategyLabels2.length;
+        const nextColCount = prev.strategyLabels1.length;
+        const nextPayoffMatrix = nextRowCount
+          ? Array.from({ length: nextRowCount }, (_, columnIndex) =>
+              Array.from({ length: nextColCount }, (_, rowIndex) => {
+                const cell = prev.payoffMatrix[rowIndex]?.[columnIndex] ?? "";
+                const trimmed = cell.trim();
+                if (trimmed === "") return "";
+                const parsed = Number(trimmed);
+                if (Number.isNaN(parsed)) return cell;
+                const negated = -parsed;
+                if (Object.is(negated, -0)) {
+                  return "0";
+                }
+                return `${negated}`;
+              })
+            )
+          : [];
+
+        return {
+          strategyLabels1: [...prev.strategyLabels2],
+          strategyLabels2: [...prev.strategyLabels1],
+          payoffMatrix: nextPayoffMatrix,
+        };
+      });
+
+      toaster.create({
+        title: "Player 1とPlayer 2を入れ替えました",
+        type: "success",
+      });
+    }, [setInputUI]);
 
     return (
       <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
@@ -73,6 +109,11 @@ const PayoffTable: React.FC<Props> = React.memo(
                     key={`delete_col_${j + 1}`}
                   />
                 ))}
+                <Table.Cell>
+                  <Button w="100%" variant="surface" onClick={handleTranspose}>
+                    <TbArrowsUpLeft /> 行列入替
+                  </Button>
+                </Table.Cell>
               </Table.Row>
             </Table.Body>
           </Table.Root>
