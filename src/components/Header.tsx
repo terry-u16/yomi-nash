@@ -23,7 +23,7 @@ const Header: React.FC = () => {
     >
       <Heading size="2xl" color="white" as="h1">
         <ChakraLink asChild color="white">
-          <RouterLink to="/">読み合いナッシュ（仮）</RouterLink>
+          <RouterLink to="/">読み合いナッシュ</RouterLink>
         </ChakraLink>
       </Heading>
       <Flex gap={4} wrap="wrap">
