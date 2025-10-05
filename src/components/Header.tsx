@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Menu, Portal } from "@chakra-ui/react";
+import { Button, Flex, Heading, Icon, Menu, Portal } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import type React from "react";
@@ -57,20 +57,25 @@ const Header: React.FC = () => {
             <TbBook /> {t("header.nav.theory")}
           </RouterLink>
         </ChakraLink>
-        <ColorModeButton color="white" size="xs" />
+        <ColorModeButton
+          color="white"
+          size="xs"
+          _hover={{ bg: "whiteAlpha.400" }}
+          _active={{ bg: "whiteAlpha.500" }}
+        />
         <Menu.Root>
           <Menu.Trigger asChild>
             <Button
               size="sm"
-              variant="surface"
-              leftIcon={<TbLanguage />}
-              rightIcon={<TbChevronDown />}
+              variant="ghost"
               color="white"
-              bg="whiteAlpha.300"
               _hover={{ bg: "whiteAlpha.400" }}
               _active={{ bg: "whiteAlpha.500" }}
+              px="2"
             >
+              <TbLanguage />
               {t(`language.${currentLanguage}`)}
+              <TbChevronDown />
             </Button>
           </Menu.Trigger>
           <Portal>
@@ -83,7 +88,13 @@ const Header: React.FC = () => {
                     onClick={() => handleLanguageChange(language)}
                   >
                     <Flex align="center" gap={2}>
-                      {language === currentLanguage ? <TbCheck /> : null}
+                      <Icon
+                        as={TbCheck}
+                        visibility={
+                          language === currentLanguage ? "visible" : "hidden"
+                        }
+                        aria-hidden
+                      />
                       {t(`language.${language}`)}
                     </Flex>
                   </Menu.Item>
