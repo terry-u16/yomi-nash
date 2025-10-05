@@ -2,7 +2,7 @@ import { Flex, Heading } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import type React from "react";
-import { TbHelp, TbHome } from "react-icons/tb";
+import { TbBook, TbHelp, TbHome } from "react-icons/tb";
 import { ColorModeButton } from "./ui/color-mode";
 
 const Header: React.FC = () => {
@@ -35,6 +35,11 @@ const Header: React.FC = () => {
         <ChakraLink asChild color="white">
           <RouterLink to="/help">
             <TbHelp /> Help
+          </RouterLink>
+        </ChakraLink>
+        <ChakraLink asChild color="white">
+          <RouterLink to="/theory">
+            <TbBook /> Theory
           </RouterLink>
         </ChakraLink>
         <ColorModeButton color="white" size="xs" />
