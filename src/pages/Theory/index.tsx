@@ -3,11 +3,13 @@ import {
   Box,
   Heading,
   Highlight,
+  Link,
   List,
   Separator,
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { TbExternalLink } from "react-icons/tb";
 
 const Theory: React.FC = () => {
   return (
@@ -70,7 +72,7 @@ const Theory: React.FC = () => {
         <Separator />
         <Stack gap={4}>
           <Heading size="lg" as="h3">
-            2. 均衡が示すものを読み解く
+            2. 均衡確率の読み取り方
           </Heading>
           <Text>
             アプリで計算される確率分布は、「相手に行動がバレていても損しないように選ぶ行動の割合」を示しています。
@@ -115,6 +117,40 @@ const Theory: React.FC = () => {
             </List.Item>
             <List.Item>
               人読みの研究を行うときに、相手の行動傾向を均衡確率と比較した上で、どの選択肢が最も期待値が高くなるかを把握しておく。
+            </List.Item>
+          </List.Root>
+        </Stack>
+        <Separator />
+        <Stack gap={4}>
+          <Heading size="lg" as="h3">
+            4. もっと学びたい方へ
+          </Heading>
+          <Text>
+            混合戦略ナッシュ均衡の理論背景をより体系的に学びたい方は、以下の資料が参考になります。
+          </Text>
+          <List.Root ps={4} as="ul" listStyle="disc">
+            <List.Item>
+              <Link
+                href="https://nabenavi.net/nash-equilibrium/"
+                colorPalette="blue"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                渡辺先生によるナッシュ均衡の解説記事 <TbExternalLink />
+              </Link>
+              ：ナッシュ均衡の概要について分かりやすく説明されています。その他にも多数の解説記事があります。
+            </List.Item>
+            <List.Item>
+              <Link
+                href="https://amzn.to/4mOnGEO"
+                colorPalette="blue"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                書籍『一歩ずつ学ぶ ゲーム理論 -数理で導く戦略的意思決定-』{" "}
+                <TbExternalLink />
+              </Link>
+              ：ナッシュ均衡を含む主要トピックを網羅した入門書で、ゲーム理論の初学者にオススメです。
             </List.Item>
           </List.Root>
         </Stack>
