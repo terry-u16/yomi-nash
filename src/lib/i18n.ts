@@ -42,9 +42,9 @@ const resources = {
       },
       header: {
         nav: {
-          home: "Home",
-          help: "Help",
-          theory: "Theory",
+          home: "ホーム",
+          help: "ヘルプ",
+          theory: "理論",
         },
         languageLabel: "表示言語",
       },
