@@ -7,6 +7,11 @@ import { ColorModeButton } from "./ui/color-mode";
 import { useTranslation } from "react-i18next";
 import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
 
+const LANGUAGE_LABELS: Record<SupportedLanguage, string> = {
+  ja: "日本語",
+  en: "English",
+};
+
 const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { lang } = useParams();
@@ -93,7 +98,7 @@ const Header: React.FC = () => {
               px="2"
             >
               <TbLanguage />
-              {t(`language.${currentLanguage}`)}
+              {LANGUAGE_LABELS[currentLanguage]}
               <TbChevronDown />
             </Button>
           </Menu.Trigger>
@@ -114,7 +119,7 @@ const Header: React.FC = () => {
                         }
                         aria-hidden
                       />
-                      {t(`language.${language}`)}
+                      {LANGUAGE_LABELS[language]}
                     </Flex>
                   </Menu.Item>
                 ))}

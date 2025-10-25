@@ -30,10 +30,6 @@ const getLanguageFromPathname = (): SupportedLanguage | null => {
 const resources = {
   ja: {
     translation: {
-      language: {
-        ja: "日本語",
-        en: "英語",
-      },
       common: {
         appName: "読み合いナッシュ",
         appDescription:
@@ -168,10 +164,6 @@ const resources = {
   },
   en: {
     translation: {
-      language: {
-        ja: "Japanese",
-        en: "English",
-      },
       common: {
         appName: "Yomi Nash",
         appDescription:
