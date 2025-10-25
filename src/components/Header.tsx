@@ -1,5 +1,5 @@
 import { Button, Flex, Heading, Icon, Menu, Portal } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import type React from "react";
 import { TbBook, TbCheck, TbChevronDown, TbHelp, TbHome, TbLanguage } from "react-icons/tb";
@@ -9,16 +9,35 @@ import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
 
 const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const resolvedLanguage = i18n.resolvedLanguage ?? i18n.language;
-  const currentLanguage: SupportedLanguage =
-    supportedLanguages.find((language) =>
-      resolvedLanguage?.toLowerCase().startsWith(language)
-    ) ?? "ja";
+  const { lang } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleLanguageChange = (value: string) => {
-    if (value && value !== i18n.language) {
-      void i18n.changeLanguage(value);
+  const currentLanguage: SupportedLanguage =
+    (lang && supportedLanguages.includes(lang as SupportedLanguage)
+      ? (lang as SupportedLanguage)
+      : supportedLanguages[0]);
+
+  // 現在の言語セグメントを保ったままパスを生成する。
+  const localizedPath = (segment?: string) => {
+    if (!segment) {
+      return `/${currentLanguage}`;
     }
+    return `/${currentLanguage}/${segment}`;
+  };
+
+  const handleLanguageChange = (value: SupportedLanguage) => {
+    if (!value || value === currentLanguage) {
+      return;
+    }
+
+    const segments = location.pathname.split("/").filter(Boolean);
+    const nextSegments = [value, ...segments.slice(1)];
+    const nextPath = `/${nextSegments.join("/")}`;
+
+    // 言語を切り替えつつ、URL のその他の要素は維持する。
+    void i18n.changeLanguage(value);
+    navigate(`${nextPath}${location.search}${location.hash}`);
   };
 
   return (
@@ -38,22 +57,22 @@ const Header: React.FC = () => {
     >
       <Heading size="2xl" color="white" as="h1">
         <ChakraLink asChild color="white">
-          <RouterLink to="/">{t("common.appName")}</RouterLink>
+          <RouterLink to={localizedPath()}>{t("common.appName")}</RouterLink>
         </ChakraLink>
       </Heading>
       <Flex gap={4} wrap="wrap" align="center">
         <ChakraLink asChild color="white">
-          <RouterLink to="/">
+          <RouterLink to={localizedPath()}>
             <TbHome /> {t("header.nav.home")}
           </RouterLink>
         </ChakraLink>
         <ChakraLink asChild color="white">
-          <RouterLink to="/help">
+          <RouterLink to={localizedPath("help")}>
             <TbHelp /> {t("header.nav.help")}
           </RouterLink>
         </ChakraLink>
         <ChakraLink asChild color="white">
-          <RouterLink to="/theory">
+          <RouterLink to={localizedPath("theory")}>
             <TbBook /> {t("header.nav.theory")}
           </RouterLink>
         </ChakraLink>

@@ -2,13 +2,27 @@ import i18n, { type Resource } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 export const languageStorageKey = "yomi-nash.language";
-export const supportedLanguages = ["ja", "en"] as const;
+export const supportedLanguages = ["en", "ja"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 const isSupportedLanguage = (
   value: string | null | undefined
 ): value is SupportedLanguage => {
   return !!value && supportedLanguages.includes(value as SupportedLanguage);
+};
+
+const getLanguageFromPathname = (): SupportedLanguage | null => {
+  // パス先頭セグメントから言語コードを抽出する。
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const [, maybeLang] = window.location.pathname.split("/");
+  if (isSupportedLanguage(maybeLang)) {
+    return maybeLang;
+  }
+
+  return null;
 };
 
 const resources = {
@@ -289,6 +303,12 @@ const resources = {
 const getInitialLanguage = (): SupportedLanguage => {
   if (typeof window === "undefined") {
     return "en";
+  }
+
+  const languageFromPath = getLanguageFromPathname();
+  if (languageFromPath) {
+    // URL の言語指定を最優先で採用する。
+    return languageFromPath;
   }
 
   const stored = window.localStorage.getItem(languageStorageKey);
