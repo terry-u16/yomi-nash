@@ -34,6 +34,8 @@ const resources = {
       },
       common: {
         appName: "読み合いナッシュ",
+        appDescription:
+          "二人零和ゲームの混合戦略ナッシュ均衡を計算し、視覚的に理解できるツールです。",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "選択肢{{index}}",
@@ -170,6 +172,8 @@ const resources = {
       },
       common: {
         appName: "Yomi Nash",
+        appDescription:
+          "Compute mixed-strategy Nash equilibria for two-player zero-sum games with interactive visuals.",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "Option {{index}}",

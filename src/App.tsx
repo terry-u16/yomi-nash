@@ -1,4 +1,11 @@
-import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Help from "./pages/Help";
@@ -6,6 +13,7 @@ import Theory from "./pages/Theory";
 import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import SeoLinks from "./components/SeoLinks";
 
 const App: React.FC = () => {
   return (
@@ -26,9 +34,10 @@ const RedirectToPreferredLanguage: React.FC = () => {
   const resolved = (i18n.resolvedLanguage ?? i18n.language) as
     | SupportedLanguage
     | undefined;
-  const fallback = resolved && supportedLanguages.includes(resolved)
-    ? resolved
-    : supportedLanguages[0];
+  const fallback =
+    resolved && supportedLanguages.includes(resolved)
+      ? resolved
+      : supportedLanguages[0];
 
   // `/` アクセス時は保存済みまたは自動判定した言語へ誘導する。
   return <Navigate to={`/${fallback}`} replace />;
@@ -70,7 +79,12 @@ const LanguageGuard: React.FC = () => {
     return null;
   }
 
-  return <Layout />;
+  return (
+    <>
+      <SeoLinks currentLanguage={lang as SupportedLanguage} />
+      <Layout />
+    </>
+  );
 };
 
 export default App;
