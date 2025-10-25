@@ -2,6 +2,8 @@ import i18n, { type Resource } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 export const languageStorageKey = "yomi-nash.language";
+// The order of supportedLanguages determines the default language (supportedLanguages[0]).
+// Changing this order is a breaking change for default language selection.
 export const supportedLanguages = ["ja", "en"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
@@ -9,6 +11,20 @@ const isSupportedLanguage = (
   value: string | null | undefined
 ): value is SupportedLanguage => {
   return !!value && supportedLanguages.includes(value as SupportedLanguage);
+};
+
+const getLanguageFromPathname = (): SupportedLanguage | null => {
+  // パス先頭セグメントから言語コードを抽出する。
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const [, maybeLang] = window.location.pathname.split("/");
+  if (isSupportedLanguage(maybeLang)) {
+    return maybeLang;
+  }
+
+  return null;
 };
 
 const resources = {
@@ -20,6 +36,8 @@ const resources = {
       },
       common: {
         appName: "読み合いナッシュ",
+        appDescription:
+          "二人零和ゲームの混合戦略ナッシュ均衡を計算し、視覚的に理解できるツールです。",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "選択肢{{index}}",
@@ -156,6 +174,8 @@ const resources = {
       },
       common: {
         appName: "Yomi Nash",
+        appDescription:
+          "Compute mixed-strategy Nash equilibria for two-player zero-sum games with interactive visuals.",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "Option {{index}}",
@@ -289,6 +309,12 @@ const resources = {
 const getInitialLanguage = (): SupportedLanguage => {
   if (typeof window === "undefined") {
     return "en";
+  }
+
+  const languageFromPath = getLanguageFromPathname();
+  if (languageFromPath) {
+    // URL の言語指定を最優先で採用する。
+    return languageFromPath;
   }
 
   const stored = window.localStorage.getItem(languageStorageKey);
