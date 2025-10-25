@@ -32,7 +32,12 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
         .forEach((node) => head.removeChild(node));
     };
 
-    const remainderPath = location.pathname.replace(/^\/[^/]+/, "");
+    const remainderPath = (() => {
+      const parts = location.pathname.split("/");
+      // parts[0] は常に ""、parts[1] は言語コード。
+      const remainder = parts.slice(2).join("/");
+      return remainder ? `/${remainder}` : "";
+    })();
     const canonicalPath = `/${currentLanguage}${remainderPath}`;
     const search = location.search ?? "";
     const origin = window.location.origin;
