@@ -69,7 +69,7 @@ const LanguageGuard: React.FC = () => {
       | SupportedLanguage
       | undefined;
 
-    if (activeLanguage !== lang) {
+    if (activeLanguage !== undefined && activeLanguage !== lang) {
       // URL が示す言語と i18next の状態を同期する。
       void i18n.changeLanguage(lang);
     }
