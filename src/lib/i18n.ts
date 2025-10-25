@@ -2,7 +2,9 @@ import i18n, { type Resource } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 export const languageStorageKey = "yomi-nash.language";
-export const supportedLanguages = ["en", "ja"] as const;
+// The order of supportedLanguages determines the default language (supportedLanguages[0]).
+// Changing this order is a breaking change for default language selection.
+export const supportedLanguages = ["ja", "en"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 const isSupportedLanguage = (
