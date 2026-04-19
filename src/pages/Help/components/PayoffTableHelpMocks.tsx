@@ -44,7 +44,6 @@ const HighlightWrap: React.FC<{
       p="0.5"
       borderRadius="md"
       opacity={active ? 1 : 0.5}
-      transition="opacity 0.2s ease"
     >
       {children}
     </Box>
