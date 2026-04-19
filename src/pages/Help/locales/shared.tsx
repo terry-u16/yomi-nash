@@ -19,6 +19,10 @@ interface TutorialPresetFlowPreviewProps {
   activeStep: 1 | 2 | 3;
 }
 
+interface TutorialCustomFlowPreviewProps {
+  activeStep: 1 | 2 | 3 | 4;
+}
+
 export const HelpContentLayout: React.FC<HelpContentLayoutProps> = ({ children }) => {
   return (
     <Box p={6} borderRadius="sm" bg="bg.subtle" boxShadow="sm">
@@ -119,6 +123,220 @@ const TutorialProbabilityPreview: React.FC<{
   );
 };
 
+const TutorialResultPreview: React.FC<{
+  expectedValueLabel: string;
+  probabilityHeading: string;
+  player1Label: string;
+  player2Label: string;
+  player1Probabilities: Array<{ name: string; value: number; color: string }>;
+  player2Probabilities: Array<{ name: string; value: number; color: string }>;
+  valueText: string;
+}> = ({
+  expectedValueLabel,
+  probabilityHeading,
+  player1Label,
+  player2Label,
+  player1Probabilities,
+  player2Probabilities,
+  valueText,
+}) => {
+  return (
+    <Stack gap={3}>
+      <Text fontSize="sm" color="fg.muted">
+        {expectedValueLabel}: {valueText}
+      </Text>
+      <Stack gap={3}>
+        <Heading size="sm" as="h6">
+          {probabilityHeading}
+        </Heading>
+        <TutorialProbabilityPreview
+          playerLabel={player1Label}
+          items={player1Probabilities}
+        />
+        <TutorialProbabilityPreview
+          playerLabel={player2Label}
+          items={player2Probabilities}
+        />
+      </Stack>
+    </Stack>
+  );
+};
+
+const TutorialControlsPreview: React.FC<{
+  presetMode: boolean;
+  presetActive: boolean;
+  calculateActive: boolean;
+  selectedPresetLabel?: string;
+}> = ({ presetMode, presetActive, calculateActive, selectedPresetLabel }) => {
+  const { t } = useTranslation();
+  const controlPanelLabel = t("home.tableControls.heading");
+  const presetLabel = t("home.tableControls.presets");
+  const calculateLabel = t("home.tableControls.calculate");
+
+  return (
+    <PreviewCard title={controlPanelLabel} active={presetActive || calculateActive}>
+      <Stack gap={3}>
+        {presetMode ? (
+          <Box
+            borderWidth="1px"
+            borderColor={presetActive ? "blue.solid" : "border.subtle"}
+            borderRadius="md"
+            bg={presetActive ? "blue.subtle" : "bg"}
+            p={3}
+          >
+            <Stack gap={2}>
+              <Text fontSize="sm" fontWeight="medium">
+                <TbAdjustments style={{ display: "inline", marginRight: "0.375rem" }} />
+                {presetLabel}
+              </Text>
+              <Box
+                borderWidth="1px"
+                borderColor="border.subtle"
+                borderRadius="sm"
+                bg="bg.subtle"
+                px={3}
+                py={2}
+              >
+                <Text fontSize="sm">{selectedPresetLabel}</Text>
+              </Box>
+            </Stack>
+          </Box>
+        ) : null}
+
+        <HStack justify="flex-start">
+          <Box
+            borderWidth="1px"
+            borderColor={calculateActive ? "red.solid" : "border.subtle"}
+            borderRadius="md"
+            bg={calculateActive ? "red.subtle" : "transparent"}
+            p="2"
+          >
+            <Button
+              size="sm"
+              colorPalette="blue"
+              variant={calculateActive ? "solid" : "surface"}
+              pointerEvents="none"
+            >
+              <TbCalculator />
+              {calculateLabel}
+            </Button>
+          </Box>
+        </HStack>
+      </Stack>
+    </PreviewCard>
+  );
+};
+
+const TableCell: React.FC<{
+  children: React.ReactNode;
+  bg?: string;
+  borderColor?: string;
+}> = ({ children, bg = "bg", borderColor = "border.subtle" }) => {
+  return (
+    <Box
+      minH="44px"
+      px={2}
+      py={2}
+      borderWidth="1px"
+      borderColor={borderColor}
+      bg={bg}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      textAlign="center"
+      fontSize="sm"
+      borderRadius="sm"
+    >
+      {children}
+    </Box>
+  );
+};
+
+const TutorialPayoffTablePreview: React.FC<{
+  activeStep: 1 | 2;
+}> = ({ activeStep }) => {
+  const { t } = useTranslation();
+  const labelsActive = activeStep === 1;
+  const valuesActive = activeStep === 2;
+
+  const cells = [
+    {
+      key: "corner",
+      content: `${t("common.player1")} \\ 2`,
+      bg: "bg",
+      borderColor: "border.solid",
+    },
+    {
+      key: "col1",
+      content: t("presets.okizeme.strategyLabels2.guard"),
+      bg: labelsActive ? "blue.subtle" : "bg",
+      borderColor: labelsActive ? "blue.solid" : "border.solid",
+    },
+    {
+      key: "col2",
+      content: t("presets.okizeme.strategyLabels2.reversal"),
+      bg: labelsActive ? "blue.subtle" : "bg",
+      borderColor: labelsActive ? "blue.solid" : "border.solid",
+    },
+    {
+      key: "row1",
+      content: t("presets.okizeme.strategyLabels1.meaty"),
+      bg: labelsActive ? "red.subtle" : "bg",
+      borderColor: labelsActive ? "red.solid" : "border.solid",
+    },
+    {
+      key: "v11",
+      content: "1000",
+      bg: valuesActive ? "green.subtle" : "bg",
+      borderColor: valuesActive ? "green.solid" : "border.solid",
+    },
+    {
+      key: "v12",
+      content: "-1500",
+      bg: valuesActive ? "green.subtle" : "bg",
+      borderColor: valuesActive ? "green.solid" : "border.solid",
+    },
+    {
+      key: "row2",
+      content: t("presets.okizeme.strategyLabels1.wait"),
+      bg: labelsActive ? "red.subtle" : "bg",
+      borderColor: labelsActive ? "red.solid" : "border.solid",
+    },
+    {
+      key: "v21",
+      content: "0",
+      bg: valuesActive ? "green.subtle" : "bg",
+      borderColor: valuesActive ? "green.solid" : "border.solid",
+    },
+    {
+      key: "v22",
+      content: "5000",
+      bg: valuesActive ? "green.subtle" : "bg",
+      borderColor: valuesActive ? "green.solid" : "border.solid",
+    },
+  ];
+
+  return (
+    <PreviewCard title={t("home.payoffTable.heading")} active>
+      <Stack gap={3}>
+        <Box display="grid" gridTemplateColumns="1.1fr 1fr 1fr" gap={2}>
+          {cells.map((cell) => (
+            <TableCell
+              key={cell.key}
+              bg={cell.bg}
+              borderColor={cell.borderColor}
+            >
+              <Text fontWeight={cell.key === "corner" ? "medium" : "normal"}>
+                {cell.content}
+              </Text>
+            </TableCell>
+          ))}
+        </Box>
+      </Stack>
+    </PreviewCard>
+  );
+};
+
 export const TutorialPresetFlowPreview: React.FC<TutorialPresetFlowPreviewProps> = ({
   activeStep,
 }) => {
@@ -126,10 +344,6 @@ export const TutorialPresetFlowPreview: React.FC<TutorialPresetFlowPreviewProps>
   const presetActive = activeStep === 1;
   const calculateActive = activeStep === 2;
   const resultsActive = activeStep === 3;
-  const controlPanelLabel = t("home.tableControls.heading");
-  const presetLabel = t("home.tableControls.presets");
-  const selectedPresetLabel = t("presets.okizeme.label");
-  const calculateLabel = t("home.tableControls.calculate");
   const resultsLabel = t("home.resultDisplay.heading");
   const player1Label = t("common.player1");
   const player2Label = t("common.player2");
@@ -164,75 +378,90 @@ export const TutorialPresetFlowPreview: React.FC<TutorialPresetFlowPreviewProps>
 
   return (
     <Stack gap={3}>
-      <PreviewCard title={controlPanelLabel} active={presetActive || calculateActive}>
-        <Stack gap={3}>
-          <Box
-            borderWidth="1px"
-            borderColor={presetActive ? "blue.solid" : "border.subtle"}
-            borderRadius="md"
-            bg={presetActive ? "blue.subtle" : "bg"}
-            p={3}
-          >
-            <Stack gap={2}>
-              <Text fontSize="sm" fontWeight="medium">
-                <TbAdjustments style={{ display: "inline", marginRight: "0.375rem" }} />
-                {presetLabel}
-              </Text>
-              <Box
-                borderWidth="1px"
-                borderColor="border.subtle"
-                borderRadius="sm"
-                bg="bg.subtle"
-                px={3}
-                py={2}
-              >
-                <Text fontSize="sm">{selectedPresetLabel}</Text>
-              </Box>
-            </Stack>
-          </Box>
-
-          <HStack justify="flex-start">
-            <Box
-              borderWidth="1px"
-              borderColor={calculateActive ? "red.solid" : "border.subtle"}
-              borderRadius="md"
-              bg={calculateActive ? "red.subtle" : "transparent"}
-              p="2"
-            >
-              <Button
-                size="sm"
-                colorPalette="blue"
-                variant={calculateActive ? "solid" : "surface"}
-                pointerEvents="none"
-              >
-                <TbCalculator />
-                {calculateLabel}
-              </Button>
-            </Box>
-          </HStack>
-        </Stack>
-      </PreviewCard>
+      <TutorialControlsPreview
+        presetMode
+        presetActive={presetActive}
+        calculateActive={calculateActive}
+        selectedPresetLabel={t("presets.okizeme.label")}
+      />
 
       {resultsActive ? (
         <PreviewCard title={resultsLabel} active>
-          <Stack gap={3}>
-            <Text fontSize="sm" color="fg.muted">
-              {expectedValueLabel}: +666.67
-            </Text>
-            <Stack gap={3}>
-              <Heading size="sm" as="h6">
-                {probabilityHeading}
-              </Heading>
-              <TutorialProbabilityPreview
-                playerLabel={player1Label}
-                items={player1Probabilities}
-              />
-              <TutorialProbabilityPreview
-                playerLabel={player2Label}
-                items={player2Probabilities}
-              />
-            </Stack>
-          </Stack>
+          <TutorialResultPreview
+            expectedValueLabel={expectedValueLabel}
+            probabilityHeading={probabilityHeading}
+            player1Label={player1Label}
+            player2Label={player2Label}
+            player1Probabilities={player1Probabilities}
+            player2Probabilities={player2Probabilities}
+            valueText="+666.67"
+          />
+        </PreviewCard>
+      ) : null}
+    </Stack>
+  );
+};
+
+export const TutorialCustomFlowPreview: React.FC<TutorialCustomFlowPreviewProps> = ({
+  activeStep,
+}) => {
+  const { t } = useTranslation();
+  const resultsActive = activeStep === 4;
+  const resultsLabel = t("home.resultDisplay.heading");
+  const player1Label = t("common.player1");
+  const player2Label = t("common.player2");
+  const expectedValueLabel = t("home.resultDisplay.expectedValueHeading", {
+    player: player1Label,
+  });
+  const probabilityHeading = t("home.resultDisplay.probabilityHeading");
+  const player1Probabilities = [
+    {
+      name: t("presets.okizeme.strategyLabels1.meaty"),
+      value: 67,
+      color: "var(--chakra-colors-red-600)",
+    },
+    {
+      name: t("presets.okizeme.strategyLabels1.wait"),
+      value: 33,
+      color: "var(--chakra-colors-red-400)",
+    },
+  ];
+  const player2Probabilities = [
+    {
+      name: t("presets.okizeme.strategyLabels2.guard"),
+      value: 87,
+      color: "var(--chakra-colors-blue-600)",
+    },
+    {
+      name: t("presets.okizeme.strategyLabels2.reversal"),
+      value: 13,
+      color: "var(--chakra-colors-blue-400)",
+    },
+  ];
+
+  return (
+    <Stack gap={3}>
+      {activeStep === 1 || activeStep === 2 ? (
+        <TutorialPayoffTablePreview activeStep={activeStep} />
+      ) : null}
+      {activeStep >= 3 ? (
+        <TutorialControlsPreview
+          presetMode={false}
+          presetActive={false}
+          calculateActive={activeStep === 3}
+        />
+      ) : null}
+      {resultsActive ? (
+        <PreviewCard title={resultsLabel} active>
+          <TutorialResultPreview
+            expectedValueLabel={expectedValueLabel}
+            probabilityHeading={probabilityHeading}
+            player1Label={player1Label}
+            player2Label={player2Label}
+            player1Probabilities={player1Probabilities}
+            player2Probabilities={player2Probabilities}
+            valueText="+666.67"
+          />
         </PreviewCard>
       ) : null}
     </Stack>

@@ -11,6 +11,7 @@ import {
 import { TbExternalLink } from "react-icons/tb";
 import {
   HelpContentLayout,
+  TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
   TutorialStepCard,
 } from "./shared";
@@ -85,28 +86,34 @@ const HelpEn: React.FC = () => {
             visual={<TutorialPresetFlowPreview activeStep={3} />}
           />
         </Stack>
-        <Stack>
+        <Stack gap={4}>
           <Heading size="md" as="h3">
             B. Define your own game rules
           </Heading>
-          <List.Root ps={4} as="ol" listStyle="decimal">
-            <List.Item>
-              Add or remove rows and columns in the payoff table as needed. Fill
-              the first column (red cells) with Player 1 options and the first
-              row (blue cells) with Player 2 options.
-            </List.Item>
-            <List.Item>
-              Enter Player 1's payoff (how happy Player 1 is) for each option
-              combination in the remaining cells.
-            </List.Item>
-            <List.Item>
-              Press the “Calculate” button in the control panel.
-            </List.Item>
-            <List.Item>
-              The app will show the probability mix that keeps each option
-              balanced.
-            </List.Item>
-          </List.Root>
+          <TutorialStepCard
+            step="1"
+            title="Name the rows and columns"
+            description="Add or remove rows and columns as needed. Fill the red first column with Player 1 options and the blue first row with Player 2 options."
+            visual={<TutorialCustomFlowPreview activeStep={1} />}
+          />
+          <TutorialStepCard
+            step="2"
+            title="Enter payoff values"
+            description="Fill each payoff cell with Player 1's payoff value for that option combination."
+            visual={<TutorialCustomFlowPreview activeStep={2} />}
+          />
+          <TutorialStepCard
+            step="3"
+            title="Press Calculate"
+            description="Once the table is ready, press the Calculate button in the control panel."
+            visual={<TutorialCustomFlowPreview activeStep={3} />}
+          />
+          <TutorialStepCard
+            step="4"
+            title="Check the recommended mix"
+            description="After the calculation finishes, the results panel shows how often each option should be used."
+            visual={<TutorialCustomFlowPreview activeStep={4} />}
+          />
           <Alert.Root status="info" mt={2}>
             <Alert.Indicator />
             <Alert.Description>

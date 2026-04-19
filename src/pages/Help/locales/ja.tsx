@@ -11,6 +11,7 @@ import {
 import { TbExternalLink } from "react-icons/tb";
 import {
   HelpContentLayout,
+  TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
   TutorialStepCard,
 } from "./shared";
@@ -78,27 +79,34 @@ const HelpJa: React.FC = () => {
             visual={<TutorialPresetFlowPreview activeStep={3} />}
           />
         </Stack>
-        <Stack>
+        <Stack gap={4}>
           <Heading size="md" as="h3">
             B. 自分でゲームのルールを設定する
           </Heading>
-          <List.Root ps={4} as="ol" listStyle="decimal">
-            <List.Item>
-              戦略相性表の行・列を必要に応じて追加・削除し、1列目（赤いセル）に
-              Player 1 の選択肢を、1行目（青いセル）に Player 2
-              の選択肢を記入してください。
-            </List.Item>
-            <List.Item>
-              戦略相性表の各セルに、各選択肢の組み合わせに対する Player 1
-              の利得（うれしさ）を数値で記入してください。
-            </List.Item>
-            <List.Item>
-              操作パネルの計算ボタンをクリックしてください。
-            </List.Item>
-            <List.Item>
-              各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。
-            </List.Item>
-          </List.Root>
+          <TutorialStepCard
+            step="1"
+            title="行と列の名前を入力する"
+            description="戦略相性表の行・列を必要に応じて追加・削除し、1列目の赤いセルに Player 1 の選択肢を、1行目の青いセルに Player 2 の選択肢を記入してください。"
+            visual={<TutorialCustomFlowPreview activeStep={1} />}
+          />
+          <TutorialStepCard
+            step="2"
+            title="各組み合わせの利得を入力する"
+            description="戦略相性表の各セルに、各選択肢の組み合わせに対する Player 1 の利得（うれしさ）を数値で記入してください。"
+            visual={<TutorialCustomFlowPreview activeStep={2} />}
+          />
+          <TutorialStepCard
+            step="3"
+            title="計算ボタンを押す"
+            description="入力が終わったら、操作パネルの計算ボタンをクリックしてください。"
+            visual={<TutorialCustomFlowPreview activeStep={3} />}
+          />
+          <TutorialStepCard
+            step="4"
+            title="おすすめの比率を確認する"
+            description="計算が終わると、各選択肢をどのくらいの割合で選ぶとよいかが計算結果に表示されます。"
+            visual={<TutorialCustomFlowPreview activeStep={4} />}
+          />
           <Alert.Root status="info" mt={2}>
             <Alert.Indicator />
             <Alert.Description>
