@@ -43,7 +43,13 @@ export const TutorialStepCard: React.FC<TutorialStepCardProps> = ({
               {title}
             </Heading>
           </HStack>
-          <Text color="fg.muted">{description}</Text>
+          {typeof description === "string" ? (
+            <Text color="fg.muted">{description}</Text>
+          ) : (
+            <Stack gap={2} color="fg.muted">
+              {description}
+            </Stack>
+          )}
         </Stack>
         {visual ? (
           <Box flex="1" minW={{ base: "auto", lg: "360px" }}>

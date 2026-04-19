@@ -74,7 +74,18 @@ const HelpJa: React.FC = () => {
           <TutorialStepCard
             step="3"
             title="おすすめの比率を確認する"
-            description="計算が終わると、各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。"
+            description={
+              <>
+                <Text>
+                  計算が終わると、各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。
+                </Text>
+                <Text>
+                  今回の例では、Player 1は打撃重ねを67% / 様子見を33%、Player
+                  2はガードを87% /
+                  無敵技を13%の割合で選ぶのが良いと計算されました。
+                </Text>
+              </>
+            }
             visual={<TutorialPresetFlowPreview activeStep={3} />}
           />
         </TutorialSectionCard>
@@ -100,7 +111,18 @@ const HelpJa: React.FC = () => {
           <TutorialStepCard
             step="4"
             title="おすすめの比率を確認する"
-            description="計算が終わると、各選択肢をどのくらいの割合で選ぶとよいかが計算結果に表示されます。"
+            description={
+              <>
+                <Text>
+                  計算が終わると、各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。
+                </Text>
+                <Text>
+                  今回の例では、Player 1は打撃重ねを67% / 様子見を33%、Player
+                  2はガードを87% /
+                  無敵技を13%の割合で選ぶのが良いと計算されました。
+                </Text>
+              </>
+            }
             visual={<TutorialCustomFlowPreview activeStep={4} />}
           />
           <Alert.Root status="info" mt={2}>
@@ -109,7 +131,7 @@ const HelpJa: React.FC = () => {
               <Text>
                 利得（うれしさ）は、勝敗・ダメージ値・状況の良さなど自由に決めて構いません。値が大きいほど
                 Player 1 が有利であることを、値が小さいほど Player 2
-                が有利であることを表します。
+                が有利であること、0であれば互角であることをを表します。
               </Text>
               <Text>
                 じゃんけんを例に取ると、 Player 1 が勝つなら +1 、あいこなら 0
@@ -118,35 +140,78 @@ const HelpJa: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
-          <Alert.Root status="info" mt={2}>
-            <Alert.Indicator />
-            <Alert.Description>
-              <Text>
-                互角の時に利得が 0
-                となるように設定すると、計算結果が分かりやすくなります。
-              </Text>
-            </Alert.Description>
-          </Alert.Root>
         </TutorialSectionCard>
         <TutorialSectionCard title="C. 対戦相手の癖を分析して人対策をする">
           <TutorialStepCard
             step="1"
-            title="計算を行う"
-            description="チュートリアルA/Bと同様に、行動選択割合の計算を行ってください。"
+            title="計算を行い、Player 1の行動期待値を確認する"
+            description={
+              <>
+                <Text>
+                  チュートリアルA/Bと同様に、行動選択割合の計算を行ってください。Player
+                  1の選択肢ごとの期待値が棒グラフで表示されます。
+                </Text>
+                <Text>
+                  今回の場合、Player
+                  1は打撃重ねをしても様子見をしても期待値は同じ+666.67になると計算されました。
+                </Text>
+              </>
+            }
             visual={<TutorialCounterplayFlowPreview activeStep={1} />}
           />
           <TutorialStepCard
             step="2"
             title="Player 2の行動選択割合を変更する"
-            description="スライダーを左右に操作し、対戦相手の癖に合わせてPlayer 2の行動選択割合を変更します。"
+            description={
+              <>
+                <Text>
+                  スライダーを左右に操作し、対戦相手の癖に合わせてPlayer
+                  2の行動選択割合を変更します。
+                </Text>
+                <Text>
+                  今回の例では、Player
+                  2が無敵技を選択する確率をおすすめの13%から25%に上げてみました。
+                </Text>
+              </>
+            }
             visual={<TutorialCounterplayFlowPreview activeStep={2} />}
           />
           <TutorialStepCard
             step="3"
             title="Player 1の行動ごとの期待値を確認する"
-            description="Player 1の選択肢ごとの期待値が棒グラフで表示されます。"
+            description={
+              <>
+                <Text>
+                  Player 1の選択肢ごとの期待値は、Player
+                  2の選択割合に応じて変化します。
+                </Text>
+                <Text>
+                  今回の例では、Player 2が無敵技の割合を増やしたことで、Player
+                  1の打撃重ねの期待値が375、様子見の期待値が1250に変化したため、様子見を増やすのが良さそうだと分かります。
+                </Text>
+                <Text>
+                  このように、相手がおすすめの選択割合から外れているときは、その偏りにつけ込むことでより期待値の高い行動を取ることができます。
+                </Text>
+              </>
+            }
             visual={<TutorialCounterplayFlowPreview activeStep={3} />}
           />
+          <Alert.Root status="info" mt={2}>
+            <Alert.Indicator />
+            <Alert.Description>
+              <Text>
+                このように相手の癖を分析し、それに対して有利な選択を増やすことで期待値を高めることができますが、そうすると自分の戦略も偏ることになるため、相手はそれに対する有利な選択を増やしてくるでしょう。このようにして読み合いが回っていきます。
+              </Text>
+            </Alert.Description>
+          </Alert.Root>
+          <Alert.Root status="info" mt={2}>
+            <Alert.Indicator />
+            <Alert.Description>
+              <Text>
+                この計算機で計算されるおすすめの行動選択割合は、相手につけ込まれることを防ぐ守りの戦略と考えると良いでしょう。相手の癖につけ込む攻めと、相手につけ込まれないための守りを上手く調整しながら使い分けることが、対戦ゲームの読み合いにおいて重要となります。
+              </Text>
+            </Alert.Description>
+          </Alert.Root>
         </TutorialSectionCard>
       </Stack>
       <Separator />
