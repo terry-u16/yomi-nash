@@ -137,8 +137,15 @@ const TutorialStrategySliderPreview: React.FC<{
     >
       <Slider.Root value={value} size="sm" thumbAlignment="center" disabled>
         <Slider.Control>
-          <Slider.Track bg={`${colorPalette}.subtle`} />
-          <Slider.Thumbs />
+          <Slider.Track
+            bg={active ? `${colorPalette}.solid` : `${colorPalette}.subtle`}
+          />
+          <Slider.Thumbs
+            borderColor={
+              active ? `${colorPalette}.solid` : `${colorPalette}.subtle`
+            }
+            bg="bg"
+          />
         </Slider.Control>
       </Slider.Root>
     </Box>
@@ -155,8 +162,8 @@ const TutorialExpectedChartPreview: React.FC<{
   return (
     <Box
       borderWidth="1px"
-      borderColor={active ? "red.solid" : "border.subtle"}
-      bg={active ? "red.subtle" : "transparent"}
+      borderColor={active ? "blue.solid" : "border.subtle"}
+      bg={active ? "blue.subtle" : "transparent"}
       borderRadius="md"
       px={3}
       py={3}
@@ -164,6 +171,7 @@ const TutorialExpectedChartPreview: React.FC<{
       <Chart.Root chart={chart} maxH="2xs">
         <BarChart data={chart.data}>
           <CartesianGrid
+            horizontal={false}
             vertical={false}
             stroke={chart.color("border.muted")}
           />
@@ -182,9 +190,9 @@ const TutorialExpectedChartPreview: React.FC<{
 
 export const TutorialAnalysisResultPreview: React.FC<{
   valueText: string;
-  player2Probabilities?: TutorialChartDatum[];
-  sliderValue?: number[];
-  expectedChartItems?: TutorialChartDatum[];
+  player2Probabilities: TutorialChartDatum[];
+  sliderValue: number[];
+  expectedChartItems: TutorialChartDatum[];
   sliderActive?: boolean;
   expectedChartActive?: boolean;
 }> = ({
@@ -215,35 +223,6 @@ export const TutorialAnalysisResultPreview: React.FC<{
       color: "var(--chakra-colors-red-400)",
     },
   ];
-  const defaultPlayer2Probabilities = [
-    {
-      name: t("presets.okizeme.strategyLabels2.guard"),
-      value: 60,
-      color: "var(--chakra-colors-blue-600)",
-    },
-    {
-      name: t("presets.okizeme.strategyLabels2.reversal"),
-      value: 40,
-      color: "var(--chakra-colors-blue-400)",
-    },
-  ];
-  const defaultExpectedChartItems = [
-    {
-      name: t("presets.okizeme.strategyLabels1.meaty"),
-      value: -214.29,
-      color: "var(--chakra-colors-red-600)",
-    },
-    {
-      name: t("presets.okizeme.strategyLabels1.wait"),
-      value: 2476.19,
-      color: "var(--chakra-colors-red-400)",
-    },
-  ];
-  const resolvedPlayer2Probabilities =
-    player2Probabilities ?? defaultPlayer2Probabilities;
-  const resolvedSliderValue = sliderValue ?? [60];
-  const resolvedExpectedChartItems =
-    expectedChartItems ?? defaultExpectedChartItems;
 
   return (
     <Stack gap={3}>
@@ -261,11 +240,11 @@ export const TutorialAnalysisResultPreview: React.FC<{
         <Stack gap={2}>
           <TutorialProbabilityPreview
             playerLabel={player2Label}
-            items={resolvedPlayer2Probabilities}
+            items={player2Probabilities}
           />
           <TutorialStrategySliderPreview
             colorPalette="blue"
-            value={resolvedSliderValue}
+            value={sliderValue}
             active={sliderActive}
           />
         </Stack>
@@ -275,7 +254,7 @@ export const TutorialAnalysisResultPreview: React.FC<{
           {expectedHeading}
         </Heading>
         <TutorialExpectedChartPreview
-          items={resolvedExpectedChartItems}
+          items={expectedChartItems}
           active={expectedChartActive}
         />
       </Stack>
@@ -332,9 +311,9 @@ export const TutorialControlsPreview: React.FC<{
         <HStack justify="flex-start">
           <Box
             borderWidth="1px"
-            borderColor={calculateActive ? "red.solid" : "border.subtle"}
+            borderColor={calculateActive ? "blue.solid" : "border.subtle"}
             borderRadius="md"
-            bg={calculateActive ? "red.subtle" : "transparent"}
+            bg={calculateActive ? "blue.subtle" : "transparent"}
             p="2"
           >
             <Button
