@@ -13,7 +13,6 @@ import {
   TutorialCounterplayFlowPreview,
   TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
-  TutorialSectionCard,
   TutorialStepCard,
 } from "./shared";
 import type React from "react";
@@ -54,12 +53,15 @@ const HelpEn: React.FC = () => {
           </Alert.Description>
         </Alert.Root>
       </Stack>
-      <Separator />
+      <Separator my={4} size="lg" />
       <Stack gap={4}>
         <Heading size="xl" as="h2">
           Tutorial
         </Heading>
-        <TutorialSectionCard title="A. Try a preset game (quick start)">
+        <Stack gap={4}>
+          <Heading size="md" as="h3">
+            A. Try a preset game (quick start)
+          </Heading>
           <TutorialStepCard
             step="1"
             title="Choose a sample preset"
@@ -91,8 +93,12 @@ const HelpEn: React.FC = () => {
             }
             visual={<TutorialPresetFlowPreview activeStep={3} />}
           />
-        </TutorialSectionCard>
-        <TutorialSectionCard title="B. Define your own game rules">
+        </Stack>
+        <Stack gap={4}>
+          <Separator my={2} />
+          <Heading size="md" as="h3">
+            B. Define your own game rules
+          </Heading>
           <TutorialStepCard
             step="1"
             title="Name the rows and columns"
@@ -147,8 +153,12 @@ const HelpEn: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
-        </TutorialSectionCard>
-        <TutorialSectionCard title="C. Analyze opponent habits and adapt to players">
+        </Stack>
+        <Stack gap={4}>
+          <Separator my={2} />
+          <Heading size="md" as="h3">
+            C. Analyze opponent habits and adapt to players
+          </Heading>
           <TutorialStepCard
             step="1"
             title="Run the calculation and check Player 1's expected values"
@@ -233,9 +243,9 @@ const HelpEn: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
-        </TutorialSectionCard>
+        </Stack>
       </Stack>
-      <Separator />
+      <Separator my={4} size="lg" />
       <Stack gap={4}>
         <Heading size="xl" as="h2">
           Payoff table

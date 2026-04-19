@@ -13,7 +13,6 @@ import {
   TutorialCounterplayFlowPreview,
   TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
-  TutorialSectionCard,
   TutorialStepCard,
 } from "./shared";
 import type React from "react";
@@ -47,12 +46,15 @@ const HelpJa: React.FC = () => {
           </Alert.Description>
         </Alert.Root>
       </Stack>
-      <Separator />
+      <Separator my={4} size="lg" />
       <Stack gap={4}>
         <Heading size="xl" as="h2">
           チュートリアル
         </Heading>
-        <TutorialSectionCard title="A. プリセットからゲームのルールを選ぶ（おためし）">
+        <Stack gap={4}>
+          <Heading size="md" as="h3">
+            A. プリセットからゲームのルールを選ぶ（おためし）
+          </Heading>
           <TutorialStepCard
             step="1"
             title="サンプルプリセットを選ぶ"
@@ -82,8 +84,12 @@ const HelpJa: React.FC = () => {
             }
             visual={<TutorialPresetFlowPreview activeStep={3} />}
           />
-        </TutorialSectionCard>
-        <TutorialSectionCard title="B. 自分でゲームのルールを設定する">
+        </Stack>
+        <Stack gap={4}>
+          <Separator my={2} />
+          <Heading size="md" as="h3">
+            B. 自分でゲームのルールを設定する
+          </Heading>
           <TutorialStepCard
             step="1"
             title="行と列の名前を入力する"
@@ -134,8 +140,12 @@ const HelpJa: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
-        </TutorialSectionCard>
-        <TutorialSectionCard title="C. 対戦相手の癖を分析して人対策をする">
+        </Stack>
+        <Stack gap={4}>
+          <Separator my={2} />
+          <Heading size="md" as="h3">
+            C. 対戦相手の癖を分析して人対策をする
+          </Heading>
           <TutorialStepCard
             step="1"
             title="計算を行い、Player 1の行動期待値を確認する"
@@ -206,9 +216,9 @@ const HelpJa: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
-        </TutorialSectionCard>
+        </Stack>
       </Stack>
-      <Separator />
+      <Separator my={4} size="lg" />
       <Stack gap={4}>
         <Heading size="xl" as="h2">
           戦略相性表

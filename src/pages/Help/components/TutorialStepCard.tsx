@@ -17,7 +17,7 @@ export const TutorialStepCard: React.FC<TutorialStepCardProps> = ({
   return (
     <Box
       borderWidth="1px"
-      borderColor="border.emphasized"
+      borderColor="border.subtle"
       borderRadius="lg"
       bg="bg"
       p={4}
