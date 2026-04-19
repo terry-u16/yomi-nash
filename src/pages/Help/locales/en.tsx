@@ -9,7 +9,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { TbExternalLink } from "react-icons/tb";
-import { HelpContentLayout } from "./shared";
+import {
+  HelpContentLayout,
+  TutorialPresetFlowPreview,
+  TutorialStepCard,
+} from "./shared";
 import type React from "react";
 
 const HelpEn: React.FC = () => {
@@ -46,7 +50,7 @@ const HelpEn: React.FC = () => {
           <Alert.Description>
             <Text>
               More precisely, the app solves for the mixed-strategy Nash
-              equilibrium of two-player zero-sum games — the state where, even
+              equilibrium of two-player zero-sum games - the state where, even
               if both players know each other's plan, neither can unilaterally
               switch strategies to do better.
             </Text>
@@ -58,21 +62,28 @@ const HelpEn: React.FC = () => {
         <Heading size="xl" as="h2">
           Tutorial
         </Heading>
-        <Stack>
+        <Stack gap={4}>
           <Heading size="md" as="h3">
             A. Try a preset game (quick start)
           </Heading>
-          <List.Root ps={4} as="ol" listStyle="decimal">
-            <List.Item>
-              Pick a sample game from “Sample Presets” in the control panel.
-            </List.Item>
-            <List.Item>
-              Press the “Calculate” button in the control panel.
-            </List.Item>
-            <List.Item>
-              The recommended mix for each option will appear instantly.
-            </List.Item>
-          </List.Root>
+          <TutorialStepCard
+            step="1"
+            title="Choose a sample preset"
+            description="Pick a sample game from the Sample Presets menu in the control panel."
+            visual={<TutorialPresetFlowPreview activeStep={1} />}
+          />
+          <TutorialStepCard
+            step="2"
+            title="Press Calculate"
+            description="Once the preset is loaded, press the Calculate button in the control panel."
+            visual={<TutorialPresetFlowPreview activeStep={2} />}
+          />
+          <TutorialStepCard
+            step="3"
+            title="Check the recommended mix"
+            description="After the calculation finishes, the app shows how often each option should be used."
+            visual={<TutorialPresetFlowPreview activeStep={3} />}
+          />
         </Stack>
         <Stack>
           <Heading size="md" as="h3">
@@ -168,7 +179,7 @@ const HelpEn: React.FC = () => {
               </List.Item>
               <List.Item>
                 Extend the previous example by folding in the follow-up
-                situation — okizeme pressure, frame advantage, screen position,
+                situation - okizeme pressure, frame advantage, screen position,
                 meter gain, and so on
               </List.Item>
             </List.Root>

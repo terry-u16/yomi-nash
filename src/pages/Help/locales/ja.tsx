@@ -9,7 +9,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { TbExternalLink } from "react-icons/tb";
-import { HelpContentLayout } from "./shared";
+import {
+  HelpContentLayout,
+  TutorialPresetFlowPreview,
+  TutorialStepCard,
+} from "./shared";
 import type React from "react";
 
 const HelpJa: React.FC = () => {
@@ -51,21 +55,28 @@ const HelpJa: React.FC = () => {
         <Heading size="xl" as="h2">
           チュートリアル
         </Heading>
-        <Stack>
+        <Stack gap={4}>
           <Heading size="md" as="h3">
             A. プリセットからゲームのルールを選ぶ（おためし）
           </Heading>
-          <List.Root ps={4} as="ol" listStyle="decimal">
-            <List.Item>
-              操作パネルのサンプルプリセットから、お好みのサンプルゲームを選んでください。
-            </List.Item>
-            <List.Item>
-              操作パネルの計算ボタンをクリックしてください。
-            </List.Item>
-            <List.Item>
-              各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。
-            </List.Item>
-          </List.Root>
+          <TutorialStepCard
+            step="1"
+            title="サンプルプリセットを選ぶ"
+            description="操作パネルのサンプルプリセットから、お好みのサンプルゲームを選んでください。"
+            visual={<TutorialPresetFlowPreview activeStep={1} />}
+          />
+          <TutorialStepCard
+            step="2"
+            title="計算ボタンを押す"
+            description="プリセットを読み込んだら、操作パネルの計算ボタンをクリックしてください。"
+            visual={<TutorialPresetFlowPreview activeStep={2} />}
+          />
+          <TutorialStepCard
+            step="3"
+            title="おすすめの比率を確認する"
+            description="計算が終わると、各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。"
+            visual={<TutorialPresetFlowPreview activeStep={3} />}
+          />
         </Stack>
         <Stack>
           <Heading size="md" as="h3">
