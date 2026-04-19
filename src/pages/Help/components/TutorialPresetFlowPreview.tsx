@@ -30,7 +30,10 @@ export const TutorialPresetFlowPreview: React.FC<
 
       {resultsActive ? (
         <PreviewCard title={t("home.resultDisplay.heading")} active>
-          <TutorialResultPreview valueText="+666.67" />
+          <TutorialResultPreview
+            valueText="+666.67"
+            player2SliderActive={false}
+          />
         </PreviewCard>
       ) : null}
     </Stack>

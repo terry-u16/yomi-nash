@@ -18,7 +18,6 @@ const TableCell: React.FC<{
 }> = ({ children, bg = "bg", borderColor = "border.subtle" }) => {
   return (
     <Box
-      minH="44px"
       px={2}
       py={2}
       borderWidth="1px"
@@ -75,14 +74,14 @@ const TutorialPayoffTablePreview: React.FC<{
     {
       key: "v11",
       content: "1000",
-      bg: valuesActive ? "green.subtle" : "bg",
-      borderColor: valuesActive ? "green.solid" : "border.solid",
+      bg: valuesActive ? "blue.subtle" : "bg",
+      borderColor: valuesActive ? "blue.solid" : "border.solid",
     },
     {
       key: "v12",
       content: "-1500",
-      bg: valuesActive ? "green.subtle" : "bg",
-      borderColor: valuesActive ? "green.solid" : "border.solid",
+      bg: valuesActive ? "blue.subtle" : "bg",
+      borderColor: valuesActive ? "blue.solid" : "border.solid",
     },
     {
       key: "row2",
@@ -93,21 +92,21 @@ const TutorialPayoffTablePreview: React.FC<{
     {
       key: "v21",
       content: "0",
-      bg: valuesActive ? "green.subtle" : "bg",
-      borderColor: valuesActive ? "green.solid" : "border.solid",
+      bg: valuesActive ? "blue.subtle" : "bg",
+      borderColor: valuesActive ? "blue.solid" : "border.solid",
     },
     {
       key: "v22",
       content: "5000",
-      bg: valuesActive ? "green.subtle" : "bg",
-      borderColor: valuesActive ? "green.solid" : "border.solid",
+      bg: valuesActive ? "blue.subtle" : "bg",
+      borderColor: valuesActive ? "blue.solid" : "border.solid",
     },
   ];
 
   return (
     <PreviewCard title={t("home.payoffTable.heading")} active>
       <Stack gap={3}>
-        <Box display="grid" gridTemplateColumns="1.1fr 1fr 1fr" gap={2}>
+        <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" gap={2}>
           {cells.map((cell) => (
             <TableCell
               key={cell.key}
@@ -143,7 +142,10 @@ export const TutorialCustomFlowPreview: React.FC<
       ) : null}
       {resultsActive ? (
         <PreviewCard title={t("home.resultDisplay.heading")} active>
-          <TutorialResultPreview valueText="+666.67" />
+          <TutorialResultPreview
+            valueText="+666.67"
+            player2SliderActive={false}
+          />
         </PreviewCard>
       ) : null}
     </Stack>

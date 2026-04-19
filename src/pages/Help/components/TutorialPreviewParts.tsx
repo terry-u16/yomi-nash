@@ -46,27 +46,61 @@ export const PreviewCard: React.FC<{
 const TutorialProbabilityPreview: React.FC<{
   playerLabel: string;
   items: Array<{ name: string; value: number; color: string }>;
-}> = ({ playerLabel, items }) => {
+  sliderActive: boolean;
+  colorPalette: string;
+}> = ({ playerLabel, items, sliderActive, colorPalette }) => {
   const chart = useChart({ data: items });
+  const value = items.slice(0, items.length - 1).map((item) => item.value);
 
   return (
     <Stack gap={2}>
       <Text fontSize="xs" color="fg.muted">
         {playerLabel}
       </Text>
-      <BarSegment.Root chart={chart} barSize="5">
-        <BarSegment.Content>
-          <BarSegment.Bar gap={0} />
-        </BarSegment.Content>
-        <BarSegment.Legend showPercent />
-      </BarSegment.Root>
+      <Stack gap={1}>
+        <Box
+          borderWidth="1px"
+          borderColor={sliderActive ? `${colorPalette}.solid` : "border.subtle"}
+          bg={sliderActive ? `${colorPalette}.subtle` : "transparent"}
+          borderRadius="md"
+          px={sliderActive ? 1 : 0}
+          py={sliderActive ? 1 : 0}
+        >
+          <Slider.Root value={value} size="sm" thumbAlignment="center" disabled>
+            <Slider.Control>
+              <Slider.Track
+                bg={
+                  sliderActive
+                    ? `${colorPalette}.solid`
+                    : `${colorPalette}.subtle`
+                }
+              />
+              <Slider.Thumbs
+                borderColor={
+                  sliderActive
+                    ? `${colorPalette}.solid`
+                    : `${colorPalette}.subtle`
+                }
+                bg="bg"
+              />
+            </Slider.Control>
+          </Slider.Root>
+        </Box>
+        <BarSegment.Root chart={chart} barSize="5">
+          <BarSegment.Content>
+            <BarSegment.Bar gap={0} />
+          </BarSegment.Content>
+          <BarSegment.Legend showPercent />
+        </BarSegment.Root>
+      </Stack>
     </Stack>
   );
 };
 
 export const TutorialResultPreview: React.FC<{
   valueText: string;
-}> = ({ valueText }) => {
+  player2SliderActive: boolean;
+}> = ({ valueText, player2SliderActive: sliderActive }) => {
   const { t } = useTranslation();
   const player1Label = t("common.player1");
   const player2Label = t("common.player2");
@@ -111,44 +145,17 @@ export const TutorialResultPreview: React.FC<{
         <TutorialProbabilityPreview
           playerLabel={player1Label}
           items={player1Probabilities}
+          sliderActive={false}
+          colorPalette="red"
         />
         <TutorialProbabilityPreview
           playerLabel={player2Label}
           items={player2Probabilities}
+          sliderActive={sliderActive}
+          colorPalette="blue"
         />
       </Stack>
     </Stack>
-  );
-};
-
-const TutorialStrategySliderPreview: React.FC<{
-  colorPalette: string;
-  value: number[];
-  active?: boolean;
-}> = ({ colorPalette, value, active = false }) => {
-  return (
-    <Box
-      borderWidth="1px"
-      borderColor={active ? `${colorPalette}.solid` : "border.subtle"}
-      bg={active ? `${colorPalette}.subtle` : "transparent"}
-      borderRadius="md"
-      px={3}
-      py={2}
-    >
-      <Slider.Root value={value} size="sm" thumbAlignment="center" disabled>
-        <Slider.Control>
-          <Slider.Track
-            bg={active ? `${colorPalette}.solid` : `${colorPalette}.subtle`}
-          />
-          <Slider.Thumbs
-            borderColor={
-              active ? `${colorPalette}.solid` : `${colorPalette}.subtle`
-            }
-            bg="bg"
-          />
-        </Slider.Control>
-      </Slider.Root>
-    </Box>
   );
 };
 
@@ -191,14 +198,12 @@ const TutorialExpectedChartPreview: React.FC<{
 export const TutorialAnalysisResultPreview: React.FC<{
   valueText: string;
   player2Probabilities: TutorialChartDatum[];
-  sliderValue: number[];
   expectedChartItems: TutorialChartDatum[];
   sliderActive?: boolean;
   expectedChartActive?: boolean;
 }> = ({
   valueText,
   player2Probabilities,
-  sliderValue,
   expectedChartItems,
   sliderActive = false,
   expectedChartActive = false,
@@ -233,19 +238,20 @@ export const TutorialAnalysisResultPreview: React.FC<{
         <Heading size="sm" as="h6">
           {probabilityHeading}
         </Heading>
-        <TutorialProbabilityPreview
-          playerLabel={player1Label}
-          items={player1Probabilities}
-        />
+        <Stack gap={2}>
+          <TutorialProbabilityPreview
+            playerLabel={player1Label}
+            items={player1Probabilities}
+            sliderActive={false}
+            colorPalette="red"
+          />
+        </Stack>
         <Stack gap={2}>
           <TutorialProbabilityPreview
             playerLabel={player2Label}
             items={player2Probabilities}
-          />
-          <TutorialStrategySliderPreview
+            sliderActive={sliderActive}
             colorPalette="blue"
-            value={sliderValue}
-            active={sliderActive}
           />
         </Stack>
       </Stack>

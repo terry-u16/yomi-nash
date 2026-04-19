@@ -86,7 +86,6 @@ export const TutorialCounterplayFlowPreview: React.FC<
             player2Probabilities={
               adjusted ? afterPlayer2Probabilities : beforePlayer2Probabilities
             }
-            sliderValue={adjusted ? [75] : [87]}
             expectedChartItems={
               adjusted ? afterExpectedChartItems : beforeExpectedChartItems
             }
