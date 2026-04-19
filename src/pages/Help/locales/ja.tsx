@@ -233,7 +233,7 @@ const HelpJa: React.FC = () => {
               選択肢名
             </Heading>
             <Text>
-              表の1行目・1列目のセルです。Player 1 の選択肢は赤、Player 2
+              取りうる選択肢の名前です。Player 1 の選択肢は赤、Player 2
               の選択肢は青で表示されます。好きな名前を付けてください。
             </Text>
             <PayoffTableOverviewMock mode="names" />
@@ -243,12 +243,11 @@ const HelpJa: React.FC = () => {
               利得（うれしさ）
             </Heading>
             <Text>
-              表の2行目・2列目以降のセルに、Player 1, Player 2
-              がそれぞれある選択肢を採ったときにPlayer 1
+              Player 1, Player 2 がそれぞれある選択肢を採ったときに、Player 1
               がどのくらい嬉しいかを表す値を入力します。0
               を互角の状態として、プラスの値になればなるほど Player 1
               が有利・マイナスの値になればなるほど Player 2
-              が有利と考えるとよいです。
+              が有利であることを表します。
             </Text>
             <Text>
               利得の設定方法は比較的自由ですが、いくつか設定例を挙げます。
@@ -260,7 +259,7 @@ const HelpJa: React.FC = () => {
               </List.Item>
               <List.Item>
                 Player 1 が x ダメージを与えたら +x 、 x ダメージを受けたら -x
-                、ダメージのやり取りがなければ 0 （格ゲーなど）
+                、ダメージのやり取りがなければ 0 （格闘ゲームなど）
               </List.Item>
               <List.Item>
                 2.
@@ -278,7 +277,7 @@ const HelpJa: React.FC = () => {
                 <Text>
                   「Player 1 が得をした分 Player 2
                   が損をする」という設定のゲームを、2人ゼロサムゲームと呼びます。純粋に勝利のみを目的とする対戦ゲームは2人ゼロサムゲームに含まれると考えて良いでしょう。
-                  一方、囚人のジレンマのようなゲームはこのアプリでは扱えません。
+                  一方、囚人のジレンマのような非ゼロサムゲームはこのアプリでは扱えません。
                 </Text>
               </Alert.Description>
             </Alert.Root>
@@ -305,8 +304,7 @@ const HelpJa: React.FC = () => {
               行・列入れ替えボタン
             </Heading>
             <Text>
-              表の右下にある入替ボタンを押すと、Player 1 と Player 2
-              の視点を入れ替えます。
+              ボタンを押すと、Player 1 と Player 2 の視点を入れ替えます。
             </Text>
             <PayoffTableOverviewMock mode="transpose" />
           </Stack>

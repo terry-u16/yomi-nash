@@ -261,9 +261,9 @@ const HelpEn: React.FC = () => {
               Option names
             </Heading>
             <Text>
-              These are the cells in the first row and first column. Player 1
-              options appear in red, Player 2 options in blue. Name them however
-              you like.
+              These are the names of the available options. Player 1 options
+              appear in red, and Player 2 options appear in blue. Name them
+              however you like.
             </Text>
             <PayoffTableOverviewMock mode="names" />
           </Stack>
@@ -272,10 +272,11 @@ const HelpEn: React.FC = () => {
               Payoff values
             </Heading>
             <Text>
-              Fill the rest of the table with numbers that describe how happy
-              Player 1 is when each pair of options resolves. Treat 0 as an even
-              outcome: the higher the value, the better it is for Player 1; the
-              lower the value, the better it is for Player 2.
+              Enter a value describing how favorable the outcome is for Player
+              1 when Player 1 and Player 2 choose a particular pair of options.
+              Treat 0 as an even outcome: the higher the value, the more
+              favorable it is for Player 1, and the lower the value, the more
+              favorable it is for Player 2.
             </Text>
             <Text>
               You have a lot of freedom when setting payoffs, but here are a few
@@ -306,8 +307,9 @@ const HelpEn: React.FC = () => {
                 <Text>
                   Games where one player's benefit equals the other's loss are
                   called two-player zero-sum games. Competitive games focused
-                  purely on winning fit this model well. Non-zero-sum games like
-                  the Prisoner's Dilemma are outside the scope of the app.
+                  purely on winning generally fit this model well. Non-zero-sum
+                  games such as the Prisoner's Dilemma are outside the scope of
+                  this app.
                 </Text>
               </Alert.Description>
             </Alert.Root>
@@ -335,8 +337,7 @@ const HelpEn: React.FC = () => {
               Swap rows and columns
             </Heading>
             <Text>
-              The switch button in the lower right corner swaps Player 1 and
-              Player 2's perspectives.
+              Press this button to swap Player 1 and Player 2's perspectives.
             </Text>
             <PayoffTableOverviewMock mode="transpose" />
           </Stack>
