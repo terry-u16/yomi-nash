@@ -81,7 +81,20 @@ const HelpEn: React.FC = () => {
           <TutorialStepCard
             step="3"
             title="Check the recommended mix"
-            description="After the calculation finishes, the app shows how often each option should be used."
+            description={
+              <>
+                <Text>
+                  After the calculation finishes, the app shows how often each
+                  option should be used.
+                </Text>
+                <Text>
+                  In this example, the result says Player 1 should choose Meaty
+                  Attack 67% of the time and Wait 33% of the time, while Player
+                  2 should choose Guard 87% of the time and Reversal 13% of the
+                  time.
+                </Text>
+              </>
+            }
             visual={<TutorialPresetFlowPreview activeStep={3} />}
           />
         </TutorialSectionCard>
@@ -107,7 +120,20 @@ const HelpEn: React.FC = () => {
           <TutorialStepCard
             step="4"
             title="Check the recommended mix"
-            description="After the calculation finishes, the results panel shows how often each option should be used."
+            description={
+              <>
+                <Text>
+                  After the calculation finishes, the results panel shows how
+                  often each option should be used.
+                </Text>
+                <Text>
+                  In this example, the result says Player 1 should choose Meaty
+                  Attack 67% of the time and Wait 33% of the time, while Player
+                  2 should choose Guard 87% of the time and Reversal 13% of the
+                  time.
+                </Text>
+              </>
+            }
             visual={<TutorialCustomFlowPreview activeStep={4} />}
           />
           <Alert.Root status="info" mt={2}>
@@ -117,7 +143,8 @@ const HelpEn: React.FC = () => {
                 You can decide the payoff values however you like: match result,
                 damage dealt, positional advantage, or any custom measure.
                 Larger numbers mean the situation favors Player 1, and smaller
-                numbers mean Player 2 is better off.
+                numbers mean Player 2 is better off. A value of 0 means the
+                situation is even.
               </Text>
               <Text>
                 For rock-paper-scissors, a simple setup is +1 when Player 1
@@ -126,35 +153,92 @@ const HelpEn: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
-          <Alert.Root status="info" mt={2}>
-            <Alert.Indicator />
-            <Alert.Description>
-              <Text>
-                Setting payoffs so that evenly matched outcomes are 0 makes the
-                results easier to interpret.
-              </Text>
-            </Alert.Description>
-          </Alert.Root>
         </TutorialSectionCard>
         <TutorialSectionCard title="C. Analyze opponent habits and adapt to players">
           <TutorialStepCard
             step="1"
-            title="Run the calculation"
-            description="As in Tutorial A/B, first calculate the action selection ratios."
+            title="Run the calculation and check Player 1's expected values"
+            description={
+              <>
+                <Text>
+                  As in Tutorial A/B, first calculate the action selection
+                  ratios. A bar chart will also show the expected value of each
+                  Player 1 option.
+                </Text>
+                <Text>
+                  In this example, Player 1's Meaty Attack and Wait both have
+                  the same expected value of +666.67.
+                </Text>
+              </>
+            }
             visual={<TutorialCounterplayFlowPreview activeStep={1} />}
           />
           <TutorialStepCard
             step="2"
             title="Adjust Player 2's action ratio"
-            description="Move the slider left and right to match the opponent's habits and adjust Player 2's action selection ratio."
+            description={
+              <>
+                <Text>
+                  Move the slider left and right to match the opponent's habits
+                  and adjust Player 2's action selection ratio.
+                </Text>
+                <Text>
+                  In this example, we increase Player 2's Reversal rate from
+                  the recommended 13% to 25%.
+                </Text>
+              </>
+            }
             visual={<TutorialCounterplayFlowPreview activeStep={2} />}
           />
           <TutorialStepCard
             step="3"
             title="Check Player 1's expected values"
-            description="A bar chart shows the expected value of each Player 1 option."
+            description={
+              <>
+                <Text>
+                  Player 1's expected value for each option changes depending
+                  on Player 2's selection ratio.
+                </Text>
+                <Text>
+                  In this example, after Player 2 increases the Reversal rate,
+                  Player 1's expected value changes to 375 for Meaty Attack and
+                  1250 for Wait, which suggests increasing the frequency of
+                  Wait.
+                </Text>
+                <Text>
+                  In other words, when the opponent deviates from the
+                  recommended ratio, you can often exploit that bias and choose
+                  actions with a higher expected value.
+                </Text>
+              </>
+            }
             visual={<TutorialCounterplayFlowPreview activeStep={3} />}
           />
+          <Alert.Root status="info" mt={2}>
+            <Alert.Indicator />
+            <Alert.Description>
+              <Text>
+                This is how player-specific adaptation works: by identifying an
+                opponent's habits and increasing the options that beat them,
+                you can raise your expected value. But if you lean too hard in
+                that direction, your own strategy becomes biased, and the
+                opponent can start exploiting you in return. That is how the
+                mind game keeps rotating.
+              </Text>
+            </Alert.Description>
+          </Alert.Root>
+          <Alert.Root status="info" mt={2}>
+            <Alert.Indicator />
+            <Alert.Description>
+              <Text>
+                A good way to think about the recommended action ratios from
+                this calculator is as a defensive baseline that prevents the
+                opponent from exploiting you. In real matches, strong decision
+                making comes from balancing offense that punishes habits with
+                defense that avoids becoming predictable.
+              </Text>
+            </Alert.Description>
+          </Alert.Root>
         </TutorialSectionCard>
       </Stack>
       <Separator />
