@@ -10,6 +10,7 @@ import {
 import { TbExternalLink } from "react-icons/tb";
 import {
   HelpContentLayout,
+  PayoffTableOverviewMock,
   TutorialCounterplayFlowPreview,
   TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
@@ -254,7 +255,7 @@ const HelpEn: React.FC = () => {
           This table records how each Player 1 option interacts with each Player
           2 option.
         </Text>
-        <Stack gap={4}>
+        <Stack gap={10}>
           <Stack>
             <Heading size="md" as="h3">
               Option names
@@ -264,6 +265,7 @@ const HelpEn: React.FC = () => {
               options appear in red, Player 2 options in blue. Name them however
               you like.
             </Text>
+            <PayoffTableOverviewMock mode="names" />
           </Stack>
           <Stack>
             <Heading size="md" as="h3">
@@ -309,6 +311,7 @@ const HelpEn: React.FC = () => {
                 </Text>
               </Alert.Description>
             </Alert.Root>
+            <PayoffTableOverviewMock mode="values" />
           </Stack>
           <Stack>
             <Heading size="md" as="h3">
@@ -318,12 +321,14 @@ const HelpEn: React.FC = () => {
               These buttons append a new row to the bottom or a new column to
               the right side of the table.
             </Text>
+            <PayoffTableOverviewMock mode="add" />
           </Stack>
           <Stack>
             <Heading size="md" as="h3">
               Delete row / column buttons
             </Heading>
             <Text>Pressing these removes the selected row or column.</Text>
+            <PayoffTableOverviewMock mode="delete" />
           </Stack>
           <Stack>
             <Heading size="md" as="h3">
@@ -333,6 +338,7 @@ const HelpEn: React.FC = () => {
               The switch button in the lower right corner swaps Player 1 and
               Player 2's perspectives.
             </Text>
+            <PayoffTableOverviewMock mode="transpose" />
           </Stack>
         </Stack>
       </Stack>

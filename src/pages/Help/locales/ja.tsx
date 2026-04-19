@@ -10,6 +10,7 @@ import {
 import { TbExternalLink } from "react-icons/tb";
 import {
   HelpContentLayout,
+  PayoffTableOverviewMock,
   TutorialCounterplayFlowPreview,
   TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
@@ -226,7 +227,7 @@ const HelpJa: React.FC = () => {
         <Text>
           Player 1 の各選択肢と Player 2 の各選択肢の相性を記入する表です。
         </Text>
-        <Stack gap={4}>
+        <Stack gap={10}>
           <Stack>
             <Heading size="md" as="h3">
               選択肢名
@@ -235,6 +236,7 @@ const HelpJa: React.FC = () => {
               表の1行目・1列目のセルです。Player 1 の選択肢は赤、Player 2
               の選択肢は青で表示されます。好きな名前を付けてください。
             </Text>
+            <PayoffTableOverviewMock mode="names" />
           </Stack>
           <Stack>
             <Heading size="md" as="h3">
@@ -280,6 +282,7 @@ const HelpJa: React.FC = () => {
                 </Text>
               </Alert.Description>
             </Alert.Root>
+            <PayoffTableOverviewMock mode="values" />
           </Stack>
           <Stack>
             <Heading size="md" as="h3">
@@ -288,12 +291,14 @@ const HelpJa: React.FC = () => {
             <Text>
               ボタンを押すと、表の下または右に新しい行・列が追加されます。
             </Text>
+            <PayoffTableOverviewMock mode="add" />
           </Stack>
           <Stack>
             <Heading size="md" as="h3">
               行・列削除ボタン
             </Heading>
             <Text>ボタンを押すと、該当する行・列が削除されます。</Text>
+            <PayoffTableOverviewMock mode="delete" />
           </Stack>
           <Stack>
             <Heading size="md" as="h3">
@@ -303,6 +308,7 @@ const HelpJa: React.FC = () => {
               表の右下にある入替ボタンを押すと、Player 1 と Player 2
               の視点を入れ替えます。
             </Text>
+            <PayoffTableOverviewMock mode="transpose" />
           </Stack>
         </Stack>
       </Stack>
