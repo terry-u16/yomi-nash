@@ -79,7 +79,7 @@ export const TutorialCounterplayFlowPreview: React.FC<
       {activeStep >= 1 ? (
         <PreviewCard
           title={t("home.resultDisplay.heading")}
-          active={activeStep === 2 || activeStep === 3}
+          active
         >
           <TutorialAnalysisResultPreview
             valueText="+666.67"
@@ -91,7 +91,7 @@ export const TutorialCounterplayFlowPreview: React.FC<
               adjusted ? afterExpectedChartItems : beforeExpectedChartItems
             }
             sliderActive={activeStep === 2}
-            expectedChartActive={activeStep === 3}
+            expectedChartActive={activeStep === 1 || activeStep === 3}
           />
         </PreviewCard>
       ) : null}
