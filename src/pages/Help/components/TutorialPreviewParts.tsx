@@ -11,15 +11,7 @@ import { BarSegment, Chart, useChart } from "@chakra-ui/charts";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { TbAdjustments, TbCalculator } from "react-icons/tb";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  LabelList,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis } from "recharts";
 
 export interface TutorialChartDatum {
   name: string;
@@ -176,7 +168,6 @@ const TutorialExpectedChartPreview: React.FC<{
             stroke={chart.color("border.muted")}
           />
           <XAxis tickLine={false} dataKey={chart.key("name")} />
-          <YAxis domain={[0, 1500]} ticks={[0, 500, 1000, 1500]} />
           <Bar dataKey="value" radius={2}>
             <LabelList position="top" dataKey={chart.key("value")} offset={8} />
             {chart.data.map((item) => (
