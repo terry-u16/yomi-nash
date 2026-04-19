@@ -13,6 +13,7 @@ import {
   HelpContentLayout,
   TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
+  TutorialSectionCard,
   TutorialStepCard,
 } from "./shared";
 import type React from "react";
@@ -63,10 +64,7 @@ const HelpEn: React.FC = () => {
         <Heading size="xl" as="h2">
           Tutorial
         </Heading>
-        <Stack gap={4}>
-          <Heading size="md" as="h3">
-            A. Try a preset game (quick start)
-          </Heading>
+        <TutorialSectionCard title="A. Try a preset game (quick start)">
           <TutorialStepCard
             step="1"
             title="Choose a sample preset"
@@ -85,11 +83,8 @@ const HelpEn: React.FC = () => {
             description="After the calculation finishes, the app shows how often each option should be used."
             visual={<TutorialPresetFlowPreview activeStep={3} />}
           />
-        </Stack>
-        <Stack gap={4}>
-          <Heading size="md" as="h3">
-            B. Define your own game rules
-          </Heading>
+        </TutorialSectionCard>
+        <TutorialSectionCard title="B. Define your own game rules">
           <TutorialStepCard
             step="1"
             title="Name the rows and columns"
@@ -139,7 +134,7 @@ const HelpEn: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
-        </Stack>
+        </TutorialSectionCard>
       </Stack>
       <Separator />
       <Stack gap={4}>

@@ -13,6 +13,7 @@ import {
   HelpContentLayout,
   TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
+  TutorialSectionCard,
   TutorialStepCard,
 } from "./shared";
 import type React from "react";
@@ -56,10 +57,7 @@ const HelpJa: React.FC = () => {
         <Heading size="xl" as="h2">
           チュートリアル
         </Heading>
-        <Stack gap={4}>
-          <Heading size="md" as="h3">
-            A. プリセットからゲームのルールを選ぶ（おためし）
-          </Heading>
+        <TutorialSectionCard title="A. プリセットからゲームのルールを選ぶ（おためし）">
           <TutorialStepCard
             step="1"
             title="サンプルプリセットを選ぶ"
@@ -78,11 +76,8 @@ const HelpJa: React.FC = () => {
             description="計算が終わると、各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。"
             visual={<TutorialPresetFlowPreview activeStep={3} />}
           />
-        </Stack>
-        <Stack gap={4}>
-          <Heading size="md" as="h3">
-            B. 自分でゲームのルールを設定する
-          </Heading>
+        </TutorialSectionCard>
+        <TutorialSectionCard title="B. 自分でゲームのルールを設定する">
           <TutorialStepCard
             step="1"
             title="行と列の名前を入力する"
@@ -131,7 +126,7 @@ const HelpJa: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
-        </Stack>
+        </TutorialSectionCard>
       </Stack>
       <Separator />
       <Stack gap={4}>
