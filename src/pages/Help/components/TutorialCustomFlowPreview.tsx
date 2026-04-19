@@ -47,8 +47,9 @@ const TutorialPayoffTablePreview: React.FC<{
     {
       key: "corner",
       content: t("home.payoffTable.playerHeader", {
-        player1: t("common.player1"),
-        player2: t("common.player2"),
+        // `Player 1 / Player 2` だと長すぎるため、ここでは `P1 / P2` とする。
+        player1: "P1",
+        player2: "P2",
       }),
       bg: "bg",
       borderColor: "border.solid",
