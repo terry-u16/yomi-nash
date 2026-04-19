@@ -11,6 +11,7 @@ import {
 import { TbExternalLink } from "react-icons/tb";
 import {
   HelpContentLayout,
+  TutorialCounterplayFlowPreview,
   TutorialCustomFlowPreview,
   TutorialPresetFlowPreview,
   TutorialSectionCard,
@@ -126,6 +127,26 @@ const HelpJa: React.FC = () => {
               </Text>
             </Alert.Description>
           </Alert.Root>
+        </TutorialSectionCard>
+        <TutorialSectionCard title="C. 対戦相手の癖を分析して人対策をする">
+          <TutorialStepCard
+            step="1"
+            title="計算を行う"
+            description="チュートリアルA/Bと同様に、行動選択割合の計算を行ってください。"
+            visual={<TutorialCounterplayFlowPreview activeStep={1} />}
+          />
+          <TutorialStepCard
+            step="2"
+            title="Player 2の行動選択割合を変更する"
+            description="スライダーを左右に操作し、対戦相手の癖に合わせてPlayer 2の行動選択割合を変更します。"
+            visual={<TutorialCounterplayFlowPreview activeStep={2} />}
+          />
+          <TutorialStepCard
+            step="3"
+            title="Player 1の行動ごとの期待値を確認する"
+            description="Player 1の選択肢ごとの期待値が棒グラフで表示されます。"
+            visual={<TutorialCounterplayFlowPreview activeStep={3} />}
+          />
         </TutorialSectionCard>
       </Stack>
       <Separator />

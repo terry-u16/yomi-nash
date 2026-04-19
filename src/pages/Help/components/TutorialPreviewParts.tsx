@@ -1,8 +1,31 @@
-import { Box, Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
-import { BarSegment, useChart } from "@chakra-ui/charts";
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Slider,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { BarSegment, Chart, useChart } from "@chakra-ui/charts";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { TbAdjustments, TbCalculator } from "react-icons/tb";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  LabelList,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+export interface TutorialChartDatum {
+  name: string;
+  value: number;
+  color: string;
+}
 
 export const PreviewCard: React.FC<{
   title: string;
@@ -62,12 +85,12 @@ export const TutorialResultPreview: React.FC<{
   const player1Probabilities = [
     {
       name: t("presets.okizeme.strategyLabels1.meaty"),
-      value: 67,
+      value: 66.666666667,
       color: "var(--chakra-colors-red-600)",
     },
     {
       name: t("presets.okizeme.strategyLabels1.wait"),
-      value: 33,
+      value: 33.333333333,
       color: "var(--chakra-colors-red-400)",
     },
   ];
@@ -100,6 +123,169 @@ export const TutorialResultPreview: React.FC<{
         <TutorialProbabilityPreview
           playerLabel={player2Label}
           items={player2Probabilities}
+        />
+      </Stack>
+    </Stack>
+  );
+};
+
+const TutorialStrategySliderPreview: React.FC<{
+  colorPalette: string;
+  value: number[];
+  active?: boolean;
+}> = ({ colorPalette, value, active = false }) => {
+  return (
+    <Box
+      borderWidth="1px"
+      borderColor={active ? `${colorPalette}.solid` : "border.subtle"}
+      bg={active ? `${colorPalette}.subtle` : "transparent"}
+      borderRadius="md"
+      px={3}
+      py={2}
+    >
+      <Slider.Root value={value} size="sm" thumbAlignment="center" disabled>
+        <Slider.Control>
+          <Slider.Track bg={`${colorPalette}.subtle`} />
+          <Slider.Thumbs />
+        </Slider.Control>
+      </Slider.Root>
+    </Box>
+  );
+};
+
+const TutorialExpectedChartPreview: React.FC<{
+  items: TutorialChartDatum[];
+  active?: boolean;
+}> = ({ items, active = false }) => {
+  const data = items.map((item, index) => ({ ...item, index }));
+  const chart = useChart({ data });
+
+  return (
+    <Box
+      borderWidth="1px"
+      borderColor={active ? "red.solid" : "border.subtle"}
+      bg={active ? "red.subtle" : "transparent"}
+      borderRadius="md"
+      px={3}
+      py={3}
+    >
+      <Chart.Root chart={chart} maxH="2xs">
+        <BarChart data={chart.data}>
+          <CartesianGrid
+            vertical={false}
+            stroke={chart.color("border.muted")}
+          />
+          <XAxis tickLine={false} dataKey={chart.key("name")} />
+          <YAxis domain={[0, 1500]} ticks={[0, 500, 1000, 1500]} />
+          <Bar dataKey="value" radius={2}>
+            <LabelList position="top" dataKey={chart.key("value")} offset={8} />
+            {chart.data.map((item) => (
+              <Cell key={item.index} fill={item.color} />
+            ))}
+          </Bar>
+        </BarChart>
+      </Chart.Root>
+    </Box>
+  );
+};
+
+export const TutorialAnalysisResultPreview: React.FC<{
+  valueText: string;
+  player2Probabilities?: TutorialChartDatum[];
+  sliderValue?: number[];
+  expectedChartItems?: TutorialChartDatum[];
+  sliderActive?: boolean;
+  expectedChartActive?: boolean;
+}> = ({
+  valueText,
+  player2Probabilities,
+  sliderValue,
+  expectedChartItems,
+  sliderActive = false,
+  expectedChartActive = false,
+}) => {
+  const { t } = useTranslation();
+  const player1Label = t("common.player1");
+  const player2Label = t("common.player2");
+  const expectedValueLabel = t("home.resultDisplay.expectedValueHeading", {
+    player: player1Label,
+  });
+  const probabilityHeading = t("home.resultDisplay.probabilityHeading");
+  const expectedHeading = t("home.resultDisplay.expectedHeading");
+  const player1Probabilities = [
+    {
+      name: t("presets.okizeme.strategyLabels1.meaty"),
+      value: 66.666666667,
+      color: "var(--chakra-colors-red-600)",
+    },
+    {
+      name: t("presets.okizeme.strategyLabels1.wait"),
+      value: 33.333333333,
+      color: "var(--chakra-colors-red-400)",
+    },
+  ];
+  const defaultPlayer2Probabilities = [
+    {
+      name: t("presets.okizeme.strategyLabels2.guard"),
+      value: 60,
+      color: "var(--chakra-colors-blue-600)",
+    },
+    {
+      name: t("presets.okizeme.strategyLabels2.reversal"),
+      value: 40,
+      color: "var(--chakra-colors-blue-400)",
+    },
+  ];
+  const defaultExpectedChartItems = [
+    {
+      name: t("presets.okizeme.strategyLabels1.meaty"),
+      value: -214.29,
+      color: "var(--chakra-colors-red-600)",
+    },
+    {
+      name: t("presets.okizeme.strategyLabels1.wait"),
+      value: 2476.19,
+      color: "var(--chakra-colors-red-400)",
+    },
+  ];
+  const resolvedPlayer2Probabilities =
+    player2Probabilities ?? defaultPlayer2Probabilities;
+  const resolvedSliderValue = sliderValue ?? [60];
+  const resolvedExpectedChartItems =
+    expectedChartItems ?? defaultExpectedChartItems;
+
+  return (
+    <Stack gap={3}>
+      <Text fontSize="sm" color="fg.muted">
+        {expectedValueLabel}: {valueText}
+      </Text>
+      <Stack gap={3}>
+        <Heading size="sm" as="h6">
+          {probabilityHeading}
+        </Heading>
+        <TutorialProbabilityPreview
+          playerLabel={player1Label}
+          items={player1Probabilities}
+        />
+        <Stack gap={2}>
+          <TutorialProbabilityPreview
+            playerLabel={player2Label}
+            items={resolvedPlayer2Probabilities}
+          />
+          <TutorialStrategySliderPreview
+            colorPalette="blue"
+            value={resolvedSliderValue}
+            active={sliderActive}
+          />
+        </Stack>
+      </Stack>
+      <Stack gap={2}>
+        <Heading size="sm" as="h6">
+          {expectedHeading}
+        </Heading>
+        <TutorialExpectedChartPreview
+          items={resolvedExpectedChartItems}
+          active={expectedChartActive}
         />
       </Stack>
     </Stack>
