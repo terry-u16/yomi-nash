@@ -29,7 +29,7 @@ export const TutorialStepCard: React.FC<TutorialStepCardProps> = ({
             <Box
               minW="2rem"
               h="2rem"
-              borderRadius="full"
+              borderRadius="sm"
               bg="blue.solid"
               color="white"
               display="flex"
