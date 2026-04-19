@@ -1,7 +1,6 @@
 import {
   Alert,
   Heading,
-  Highlight,
   Link,
   List,
   Separator,
@@ -27,14 +26,9 @@ const HelpEn: React.FC = () => {
           What is this app?
         </Heading>
         <Text>
-          <Highlight
-            query="what probability mix keeps your options balanced"
-            styles={{ px: "0.5", bg: "red.muted" }}
-          >
-            This app calculates what probability mix keeps your options balanced
-            in two-player competitive games, from fighting games to
-            rock-paper-scissors.
-          </Highlight>
+          This app calculates what probability mix keeps your options balanced
+          in two-player competitive games, from fighting games to
+          rock-paper-scissors.
         </Text>
         <Text>
           Take rock-paper-scissors for example: if you throw rock too often,
@@ -183,8 +177,8 @@ const HelpEn: React.FC = () => {
                   and adjust Player 2's action selection ratio.
                 </Text>
                 <Text>
-                  In this example, we increase Player 2's Reversal rate from
-                  the recommended 13% to 25%.
+                  In this example, we increase Player 2's Reversal rate from the
+                  recommended 13% to 25%.
                 </Text>
               </>
             }
@@ -196,8 +190,8 @@ const HelpEn: React.FC = () => {
             description={
               <>
                 <Text>
-                  Player 1's expected value for each option changes depending
-                  on Player 2's selection ratio.
+                  Player 1's expected value for each option changes depending on
+                  Player 2's selection ratio.
                 </Text>
                 <Text>
                   In this example, after Player 2 increases the Reversal rate,
@@ -219,11 +213,11 @@ const HelpEn: React.FC = () => {
             <Alert.Description>
               <Text>
                 This is how player-specific adaptation works: by identifying an
-                opponent's habits and increasing the options that beat them,
-                you can raise your expected value. But if you lean too hard in
-                that direction, your own strategy becomes biased, and the
-                opponent can start exploiting you in return. That is how the
-                mind game keeps rotating.
+                opponent's habits and increasing the options that beat them, you
+                can raise your expected value. But if you lean too hard in that
+                direction, your own strategy becomes biased, and the opponent
+                can start exploiting you in return. That is how the mind game
+                keeps rotating.
               </Text>
             </Alert.Description>
           </Alert.Root>
