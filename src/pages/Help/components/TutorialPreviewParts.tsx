@@ -10,7 +10,14 @@ import {
 import { BarSegment, Chart, useChart } from "@chakra-ui/charts";
 import type React from "react";
 import { useTranslation } from "react-i18next";
-import { TbAdjustments, TbCalculator } from "react-icons/tb";
+import {
+  TbAdjustments,
+  TbCalculator,
+  TbFileDownload,
+  TbFileUpload,
+  TbRestore,
+  TbShare3,
+} from "react-icons/tb";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis } from "recharts";
 
 export interface TutorialChartDatum {
@@ -335,5 +342,52 @@ export const TutorialControlsPreview: React.FC<{
         </HStack>
       </Stack>
     </PreviewCard>
+  );
+};
+
+export const ControlPanelOverviewMock: React.FC = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Box
+      p={6}
+      borderRadius="sm"
+      bg="bg.subtle"
+      boxShadow="sm"
+      w="fit-content"
+      maxW="100%"
+    >
+      <Stack gap={4}>
+        <Heading size="xl" as="h3">
+          {t("home.tableControls.heading")}
+        </Heading>
+        <HStack gap={4} align="stretch" wrap="wrap">
+          <Button colorPalette="blue" pointerEvents="none">
+            <TbCalculator />
+            {t("home.tableControls.calculate")}
+          </Button>
+          <Button variant="surface" pointerEvents="none">
+            <TbShare3 />
+            {t("home.tableControls.share")}
+          </Button>
+          <Button variant="surface" pointerEvents="none">
+            <TbAdjustments />
+            {t("home.tableControls.presets")}
+          </Button>
+          <Button variant="surface" pointerEvents="none">
+            <TbFileUpload />
+            {t("home.tableControls.upload")}
+          </Button>
+          <Button variant="surface" pointerEvents="none">
+            <TbFileDownload />
+            {t("home.tableControls.download")}
+          </Button>
+          <Button variant="outline" colorPalette="red" pointerEvents="none">
+            <TbRestore />
+            {t("home.tableControls.reset")}
+          </Button>
+        </HStack>
+      </Stack>
+    </Box>
   );
 };

@@ -3,6 +3,5 @@ export { TutorialStepCard } from "../components/TutorialStepCard";
 export { TutorialPresetFlowPreview } from "../components/TutorialPresetFlowPreview";
 export { TutorialCustomFlowPreview } from "../components/TutorialCustomFlowPreview";
 export { TutorialCounterplayFlowPreview } from "../components/TutorialCounterplayFlowPreview";
-export {
-  PayoffTableOverviewMock,
-} from "../components/PayoffTableHelpMocks";
+export { ControlPanelOverviewMock } from "../components/TutorialPreviewParts";
+export { PayoffTableOverviewMock } from "../components/PayoffTableHelpMocks";

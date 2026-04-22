@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { TbExternalLink } from "react-icons/tb";
 import {
+  ControlPanelOverviewMock,
   HelpContentLayout,
   PayoffTableOverviewMock,
   TutorialCounterplayFlowPreview,
@@ -310,7 +311,7 @@ const HelpJa: React.FC = () => {
           </Stack>
         </Stack>
       </Stack>
-      <Separator />
+      <Separator my={4} size="lg" />
       <Stack gap={4}>
         <Heading size="xl" as="h2">
           操作パネル
@@ -318,6 +319,7 @@ const HelpJa: React.FC = () => {
         <Text>
           戦略相性表の下にある操作パネルから、計算や共有などの主要な操作を行えます。
         </Text>
+        <ControlPanelOverviewMock />
         <List.Root ps={4} as="ul" listStyle="disc">
           <List.Item>
             計算: 今の表をもとに、おすすめの比率を計算します。
@@ -334,11 +336,10 @@ const HelpJa: React.FC = () => {
           <List.Item>
             CSVダウンロード: 今の表をCSVファイルとして保存します。
           </List.Item>
-          <List.Item>行列入替: 表の行と列を入れ替えます。</List.Item>
           <List.Item>リセット: 入力内容を初期状態に戻します。</List.Item>
         </List.Root>
       </Stack>
-      <Separator />
+      <Separator my={4} size="lg" />
       <Stack gap={4}>
         <Heading size="xl" as="h2">
           計算結果の見方

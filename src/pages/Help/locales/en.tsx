@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { TbExternalLink } from "react-icons/tb";
 import {
+  ControlPanelOverviewMock,
   HelpContentLayout,
   PayoffTableOverviewMock,
   TutorialCounterplayFlowPreview,
@@ -272,8 +273,8 @@ const HelpEn: React.FC = () => {
               Payoff values
             </Heading>
             <Text>
-              Enter a value describing how favorable the outcome is for Player
-              1 when Player 1 and Player 2 choose a particular pair of options.
+              Enter a value describing how favorable the outcome is for Player 1
+              when Player 1 and Player 2 choose a particular pair of options.
               Treat 0 as an even outcome: the higher the value, the more
               favorable it is for Player 1, and the lower the value, the more
               favorable it is for Player 2.
@@ -352,6 +353,7 @@ const HelpEn: React.FC = () => {
           The control panel below the payoff table lets you run calculations and
           access the main utilities.
         </Text>
+        <ControlPanelOverviewMock />
         <List.Root ps={4} as="ul" listStyle="disc">
           <List.Item>
             Calculate: solves for the recommended mix using the current table.
@@ -366,13 +368,12 @@ const HelpEn: React.FC = () => {
           <List.Item>
             CSV Download: saves the current table as a CSV file.
           </List.Item>
-          <List.Item>Transpose Matrix: swaps rows and columns.</List.Item>
           <List.Item>
             Reset: clears the form back to its initial state.
           </List.Item>
         </List.Root>
       </Stack>
-      <Separator />
+      <Separator my={4} size="lg" />
       <Stack gap={4}>
         <Heading size="xl" as="h2">
           Reading the results
