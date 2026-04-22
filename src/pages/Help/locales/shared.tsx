@@ -4,4 +4,7 @@ export { TutorialPresetFlowPreview } from "../components/TutorialPresetFlowPrevi
 export { TutorialCustomFlowPreview } from "../components/TutorialCustomFlowPreview";
 export { TutorialCounterplayFlowPreview } from "../components/TutorialCounterplayFlowPreview";
 export { ControlPanelOverviewMock } from "../components/TutorialPreviewParts";
+export { ExpectedValueOverviewMock } from "../components/TutorialPreviewParts";
+export { StrategyAdjustmentOverviewMock } from "../components/TutorialPreviewParts";
+export { ResultTableOverviewMock } from "../components/TutorialPreviewParts";
 export { PayoffTableOverviewMock } from "../components/PayoffTableHelpMocks";
