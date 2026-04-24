@@ -50,8 +50,8 @@ const HelpJaResultsSection: React.FC = () => {
           </Text>
           <Text>
             棒グラフの色は、赤くなるほど Player 1
-            にとって有利な展開、青くなるほど Player 2
-            にとって有利な展開を表します。棒の長さは、選択肢のペアが選ばれる確率を表します。
+            にとって有利な展開であることを、青くなるほど Player 2
+            にとって有利な展開であることを表します。棒の長さは、選択肢のペアが選ばれる確率を表します。
           </Text>
           <ResultTableOverviewMock />
         </Stack>
