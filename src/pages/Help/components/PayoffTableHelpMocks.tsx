@@ -79,6 +79,8 @@ const StaticInput: React.FC<{
     <Input
       value={value}
       readOnly
+      tabIndex={-1}
+      aria-hidden="true"
       pointerEvents="none"
       size="sm"
       variant="outline"
@@ -106,6 +108,8 @@ const SmallButton: React.FC<{
     <Button
       size="sm"
       variant={active ? "surface" : "outline"}
+      tabIndex={-1}
+      aria-hidden="true"
       pointerEvents="none"
       w="100%"
       colorPalette={active ? "blue" : undefined}

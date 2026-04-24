@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { BarSegment, Chart, useChart } from "@chakra-ui/charts";
 import chroma from "chroma-js";
+import { scaleLinear } from "d3-scale";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -27,7 +28,15 @@ import {
   TbRestore,
   TbShare3,
 } from "react-icons/tb";
-import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  LabelList,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 export interface TutorialChartDatum {
   name: string;
@@ -208,6 +217,14 @@ const TutorialExpectedChartPreview: React.FC<{
 }> = ({ items, active = false }) => {
   const data = items.map((item, index) => ({ ...item, index }));
   const chart = useChart({ data });
+  const lower = Math.min(...data.map((item) => item.value), 0);
+  const upper = Math.max(...data.map((item) => item.value), 0);
+  const difference = upper - lower;
+  const domainLower = lower < 0 ? lower - difference * 0.2 : lower;
+  const domainUpper = upper > 0 ? upper + difference * 0.2 : upper;
+  const scale = scaleLinear().domain([domainLower, domainUpper]).nice();
+  const ticks = scale.ticks(5);
+  const domain = [domainLower, domainUpper];
 
   return (
     <Box
@@ -226,6 +243,7 @@ const TutorialExpectedChartPreview: React.FC<{
             stroke={chart.color("border.muted")}
           />
           <XAxis tickLine={false} dataKey={chart.key("name")} />
+          <YAxis domain={domain} ticks={ticks} interval={0} />
           <Bar dataKey="value" radius={2}>
             <LabelList position="top" dataKey={chart.key("value")} offset={8} />
             {chart.data.map((item) => (
@@ -367,6 +385,8 @@ export const TutorialControlsPreview: React.FC<{
               size="sm"
               colorPalette="blue"
               variant={calculateActive ? "solid" : "surface"}
+              tabIndex={-1}
+              aria-hidden="true"
               pointerEvents="none"
             >
               <TbCalculator />
@@ -396,27 +416,58 @@ export const ControlPanelOverviewMock: React.FC = () => {
           {t("home.tableControls.heading")}
         </Heading>
         <HStack gap={4} align="stretch" wrap="wrap">
-          <Button colorPalette="blue" pointerEvents="none">
+          <Button
+            colorPalette="blue"
+            tabIndex={-1}
+            aria-hidden="true"
+            pointerEvents="none"
+          >
             <TbCalculator />
             {t("home.tableControls.calculate")}
           </Button>
-          <Button variant="surface" pointerEvents="none">
+          <Button
+            variant="surface"
+            tabIndex={-1}
+            aria-hidden="true"
+            pointerEvents="none"
+          >
             <TbShare3 />
             {t("home.tableControls.share")}
           </Button>
-          <Button variant="surface" pointerEvents="none">
+          <Button
+            variant="surface"
+            tabIndex={-1}
+            aria-hidden="true"
+            pointerEvents="none"
+          >
             <TbAdjustments />
             {t("home.tableControls.presets")}
           </Button>
-          <Button variant="surface" pointerEvents="none">
+          <Button
+            variant="surface"
+            tabIndex={-1}
+            aria-hidden="true"
+            pointerEvents="none"
+          >
             <TbFileUpload />
             {t("home.tableControls.upload")}
           </Button>
-          <Button variant="surface" pointerEvents="none">
+          <Button
+            variant="surface"
+            tabIndex={-1}
+            aria-hidden="true"
+            pointerEvents="none"
+          >
             <TbFileDownload />
             {t("home.tableControls.download")}
           </Button>
-          <Button variant="outline" colorPalette="red" pointerEvents="none">
+          <Button
+            variant="outline"
+            colorPalette="red"
+            tabIndex={-1}
+            aria-hidden="true"
+            pointerEvents="none"
+          >
             <TbRestore />
             {t("home.tableControls.reset")}
           </Button>
@@ -445,9 +496,9 @@ export const ResultTableOverviewMock: React.FC = () => {
   const maxAbsPayoff = 5000;
 
   const payoffToColor = (payoff: number, maxAbs: number): string => {
-    const t = Math.max(-1, Math.min(1, payoff / maxAbs));
+    const normalized = Math.max(-1, Math.min(1, payoff / maxAbs));
     const scale = chroma.scale([blue, gray, red]).domain([-1, 0, 1]);
-    return scale(t).hex();
+    return scale(normalized).hex();
   };
 
   const ResultBarCell: React.FC<{
