@@ -63,10 +63,10 @@ const HelpEnPayoffTableSection: React.FC = () => {
             <Alert.Description>
               <Text>
                 Games where one player's benefit equals the other's loss are
-                called two-player zero-sum games. Competitive games focused
-                purely on winning generally fit this model well. Non-zero-sum
-                games such as the Prisoner's Dilemma are outside the scope of
-                this app.
+                called two-player zero-sum games. Two-player competitive games
+                focused purely on winning generally fit this model well.
+                Non-zero-sum games such as the Prisoner's Dilemma are outside
+                the scope of this app.
               </Text>
             </Alert.Description>
           </Alert.Root>

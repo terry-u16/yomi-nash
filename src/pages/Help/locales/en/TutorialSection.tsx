@@ -15,7 +15,8 @@ const HelpEnTutorialSection: React.FC = () => {
       </Heading>
       <Stack gap={4}>
         <Heading size="md" as="h3">
-          A. Try a preset game (quick start)
+          A. Choose preset game rules and calculate what mix of options to use
+          (quick start)
         </Heading>
         <TutorialStepCard
           step="1"
@@ -36,7 +37,7 @@ const HelpEnTutorialSection: React.FC = () => {
             <>
               <Text>
                 After the calculation finishes, the app shows how often each
-                option should be used.
+                option should be chosen.
               </Text>
               <Text>
                 In this example, the result says Player 1 should choose Meaty
@@ -44,15 +45,41 @@ const HelpEnTutorialSection: React.FC = () => {
                 should choose Guard 87% of the time and Reversal 13% of the
                 time.
               </Text>
+              <Text>
+                The expected value for Player 1 is positive here, which means
+                the situation favors Player 1. In other words, Player 1 should
+                actively aim for this situation.
+              </Text>
             </>
           }
           visual={<TutorialPresetFlowPreview activeStep={3} />}
         />
+        <Alert.Root status="info" mt={2}>
+          <Alert.Indicator />
+          <Alert.Description>
+            <Text>
+              The option mix calculated here is not always the best strategy in
+              every practical situation. For an extreme example, if you know
+              Player 2 will use Reversal 100% of the time, Player 1's best play
+              is to Wait every time and punish it every time.
+            </Text>
+            <Text>
+              On the other hand, if Player 2 chooses Guard 87% of the time and
+              Reversal 13% of the time, Player 1 cannot exploit that habit even
+              if they know the ratio.
+            </Text>
+            <Text>
+              A useful way to read this mix is as a relatively safe defensive
+              strategy: even if the opponent reads your habits, they cannot
+              exploit a clear weakness.
+            </Text>
+          </Alert.Description>
+        </Alert.Root>
       </Stack>
       <Stack gap={4}>
         <Separator my={2} />
         <Heading size="md" as="h3">
-          B. Define your own game rules
+          B. Define your own game rules and calculate what mix of options to use
         </Heading>
         <TutorialStepCard
           step="1"
@@ -66,6 +93,22 @@ const HelpEnTutorialSection: React.FC = () => {
           description="Fill each payoff cell with Player 1's payoff value for that option combination."
           visual={<TutorialCustomFlowPreview activeStep={2} />}
         />
+        <Alert.Root status="info" mt={2}>
+          <Alert.Indicator />
+          <Alert.Description>
+            <Text>
+              You can decide the payoff values however you like: match result,
+              damage dealt, positional advantage, or any custom measure. Larger
+              numbers mean the situation favors Player 1, smaller numbers mean
+              Player 2 is favored, and 0 means the situation is even.
+            </Text>
+            <Text>
+              For rock-paper-scissors, a simple setup is +1 when Player 1 wins,
+              0 for a draw, and -1 when Player 2 wins. The presets provide handy
+              references as well.
+            </Text>
+          </Alert.Description>
+        </Alert.Root>
         <TutorialStepCard
           step="3"
           title="Press Calculate"
@@ -79,7 +122,7 @@ const HelpEnTutorialSection: React.FC = () => {
             <>
               <Text>
                 After the calculation finishes, the results panel shows how
-                often each option should be used.
+                often each option should be chosen.
               </Text>
               <Text>
                 In this example, the result says Player 1 should choose Meaty
@@ -87,27 +130,15 @@ const HelpEnTutorialSection: React.FC = () => {
                 should choose Guard 87% of the time and Reversal 13% of the
                 time.
               </Text>
+              <Text>
+                The expected value for Player 1 is positive here, which means
+                the situation favors Player 1. In other words, Player 1 should
+                actively aim for this situation.
+              </Text>
             </>
           }
           visual={<TutorialCustomFlowPreview activeStep={4} />}
         />
-        <Alert.Root status="info" mt={2}>
-          <Alert.Indicator />
-          <Alert.Description>
-            <Text>
-              You can decide the payoff values however you like: match result,
-              damage dealt, positional advantage, or any custom measure. Larger
-              numbers mean the situation favors Player 1, and smaller numbers
-              mean Player 2 is better off. A value of 0 means the situation is
-              even.
-            </Text>
-            <Text>
-              For rock-paper-scissors, a simple setup is +1 when Player 1 wins,
-              0 for a draw, and -1 when Player 2 wins. The presets provide handy
-              references as well.
-            </Text>
-          </Alert.Description>
-        </Alert.Root>
       </Stack>
       <Stack gap={4}>
         <Separator my={2} />
@@ -183,17 +214,12 @@ const HelpEnTutorialSection: React.FC = () => {
               start exploiting you in return. That is how the mind game keeps
               rotating.
             </Text>
-          </Alert.Description>
-        </Alert.Root>
-        <Alert.Root status="info" mt={2}>
-          <Alert.Indicator />
-          <Alert.Description>
             <Text>
-              A good way to think about the recommended action ratios from this
-              calculator is as a defensive baseline that prevents the opponent
-              from exploiting you. In real matches, strong decision making comes
-              from balancing offense that punishes habits with defense that
-              avoids becoming predictable.
+              As noted above, a good way to think about the recommended action
+              ratios from this calculator is as a defensive strategy that
+              prevents the opponent from exploiting you. In real matches, strong
+              decision making comes from balancing offense that punishes habits
+              with defense that avoids becoming predictable.
             </Text>
           </Alert.Description>
         </Alert.Root>

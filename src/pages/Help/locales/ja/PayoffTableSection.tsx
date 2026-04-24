@@ -27,7 +27,7 @@ const HelpJaPayoffTableSection: React.FC = () => {
             利得（うれしさ）
           </Heading>
           <Text>
-            Player 1, Player 2 がそれぞれある選択肢を採ったときに、Player 1
+            Player 1, Player 2 がそれぞれある選択肢を選んだときに、Player 1
             がどのくらい嬉しいかを表す値を入力します。0
             を互角の状態として、プラスの値になればなるほど Player 1
             が有利・マイナスの値になればなるほど Player 2
@@ -60,7 +60,7 @@ const HelpJaPayoffTableSection: React.FC = () => {
             <Alert.Description>
               <Text>
                 「Player 1 が得をした分 Player 2
-                が損をする」という設定のゲームを、2人ゼロサムゲームと呼びます。純粋に勝利のみを目的とする対戦ゲームは2人ゼロサムゲームに含まれると考えて良いでしょう。一方、囚人のジレンマのような非ゼロサムゲームはこのアプリでは扱えません。
+                が損をする」という設定のゲームを、2人ゼロサムゲームと呼びます。純粋に勝利のみを目的とする2人対戦ゲームは2人ゼロサムゲームに含まれると考えて良いでしょう。一方、囚人のジレンマのような非ゼロサムゲームはこのアプリでは扱えません。
               </Text>
             </Alert.Description>
           </Alert.Root>

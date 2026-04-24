@@ -15,7 +15,8 @@ const HelpJaTutorialSection: React.FC = () => {
       </Heading>
       <Stack gap={4}>
         <Heading size="md" as="h3">
-          A. プリセットからゲームのルールを選ぶ（おためし）
+          A.
+          プリセットからゲームのルールを選び、どの選択肢をどの割合で選ぶのが良いか計算する（おためし用）
         </Heading>
         <TutorialStepCard
           step="1"
@@ -35,22 +36,46 @@ const HelpJaTutorialSection: React.FC = () => {
           description={
             <>
               <Text>
-                計算が終わると、各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。
+                計算が終わると、各選択肢をどのくらいの割合で選ぶと良いかが表示されます。
               </Text>
               <Text>
                 今回の例では、Player 1は打撃重ねを67% / 様子見を33%、Player
                 2はガードを87% /
                 無敵技を13%の割合で選ぶのが良いと計算されました。
               </Text>
+              <Text>
+                また、このときの Player 1 の期待値はプラスの値であり、 Player 1
+                が有利であることが分かります。つまり、 Player 1
+                は積極的にこの状況を狙っていくべきであると言えます。
+              </Text>
             </>
           }
           visual={<TutorialPresetFlowPreview activeStep={3} />}
         />
+        <Alert.Root status="info" mt={2}>
+          <Alert.Indicator />
+          <Alert.Description>
+            <Text>
+              ここで計算される選択割合は、必ずしもベストな戦略を表すわけではありません。極端な例を挙げると、もし仮に
+              Player 2 が100%無敵技を出してくると分かっているのであれば、 Player
+              1 は毎回様子見して毎回カウンターを叩き込むのがベストだからです。
+            </Text>
+            <Text>
+              一方、 Player 2
+              がガード87%、無敵技13%の割合で選ぶとすると、それが分かっていたとしても
+              Player 1 は相手の癖につけ込むことができなくなります。
+            </Text>
+            <Text>
+              このように、「相手に自分の癖が読まれた場合でも、弱みにつけ込まれることがない比較的安全な守りの戦略」と考えると良いでしょう。
+            </Text>
+          </Alert.Description>
+        </Alert.Root>
       </Stack>
       <Stack gap={4}>
         <Separator my={2} />
         <Heading size="md" as="h3">
-          B. 自分でゲームのルールを設定する
+          B.
+          自分でゲームのルールを設定し、どの選択肢をどの割合で選ぶのが良いか計算する
         </Heading>
         <TutorialStepCard
           step="1"
@@ -64,6 +89,21 @@ const HelpJaTutorialSection: React.FC = () => {
           description="戦略相性表の各セルに、各選択肢の組み合わせに対する Player 1 の利得（うれしさ）を数値で記入してください。"
           visual={<TutorialCustomFlowPreview activeStep={2} />}
         />
+        <Alert.Root status="info" mt={2}>
+          <Alert.Indicator />
+          <Alert.Description>
+            <Text>
+              利得は、勝敗・ダメージ値・状況の良さなど自由に決めて構いません。値が大きいほど
+              Player 1 が有利であることを、値が小さいほど Player 2
+              が有利であることを、0であれば互角であることを表します。
+            </Text>
+            <Text>
+              じゃんけんを例に取ると、 Player 1 が勝つなら +1 、あいこなら 0
+              、Player 2 が勝つなら -1
+              などとするとよいです。サンプルプリセットも参考にしてください。
+            </Text>
+          </Alert.Description>
+        </Alert.Root>
         <TutorialStepCard
           step="3"
           title="計算ボタンを押す"
@@ -76,32 +116,22 @@ const HelpJaTutorialSection: React.FC = () => {
           description={
             <>
               <Text>
-                計算が終わると、各選択肢をどのくらいの割合で選ぶといい感じになるかが表示されます。
+                計算が終わると、各選択肢をどのくらいの割合で選ぶと良いかが表示されます。
               </Text>
               <Text>
                 今回の例では、Player 1は打撃重ねを67% / 様子見を33%、Player
                 2はガードを87% /
                 無敵技を13%の割合で選ぶのが良いと計算されました。
               </Text>
+              <Text>
+                また、このときの Player 1 の期待値はプラスの値であり、 Player 1
+                が有利であることが分かります。つまり、 Player 1
+                は積極的にこの状況を狙っていくべきであると言えます。
+              </Text>
             </>
           }
           visual={<TutorialCustomFlowPreview activeStep={4} />}
         />
-        <Alert.Root status="info" mt={2}>
-          <Alert.Indicator />
-          <Alert.Description>
-            <Text>
-              利得（うれしさ）は、勝敗・ダメージ値・状況の良さなど自由に決めて構いません。値が大きいほど
-              Player 1 が有利であることを、値が小さいほど Player 2
-              が有利であること、0であれば互角であることをを表します。
-            </Text>
-            <Text>
-              じゃんけんを例に取ると、 Player 1 が勝つなら +1 、あいこなら 0
-              、Player 2 が勝つなら -1
-              などとするとよいです。サンプルプリセットも参考にしてください。
-            </Text>
-          </Alert.Description>
-        </Alert.Root>
       </Stack>
       <Stack gap={4}>
         <Separator my={2} />
@@ -168,13 +198,8 @@ const HelpJaTutorialSection: React.FC = () => {
             <Text>
               このように相手の癖を分析し、それに対して有利な選択を増やすことで期待値を高めることができますが、そうすると自分の戦略も偏ることになるため、相手はそれに対する有利な選択を増やしてくるでしょう。このようにして読み合いが回っていきます。
             </Text>
-          </Alert.Description>
-        </Alert.Root>
-        <Alert.Root status="info" mt={2}>
-          <Alert.Indicator />
-          <Alert.Description>
             <Text>
-              この計算機で計算されるおすすめの行動選択割合は、相手につけ込まれることを防ぐ守りの戦略と考えると良いでしょう。相手の癖につけ込む攻めと、相手につけ込まれないための守りを上手く調整しながら使い分けることが、対戦ゲームの読み合いにおいて重要となります。
+              繰り返しになりますが、この計算機で計算されるおすすめの行動選択割合は、相手につけ込まれることを防ぐ守りの戦略と考えると良いでしょう。相手の癖につけ込む攻めと、相手につけ込まれないための守りを上手く調整しながら使い分けることが、対戦ゲームの読み合いにおいて重要となります。
             </Text>
           </Alert.Description>
         </Alert.Root>

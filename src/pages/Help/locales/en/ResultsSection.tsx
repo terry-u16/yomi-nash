@@ -15,31 +15,37 @@ const HelpEnResultsSection: React.FC = () => {
       <Stack gap={10}>
         <Text>
           After a calculation finishes, the “Results” card appears and shows how
-          to mix each option as well as the expected outcome.
+          often each option should be chosen as well as the expected outcome.
         </Text>
         <Stack>
           <Heading size="md" as="h3">
             Player 1 expected value
           </Heading>
           <Text>
-            This number represents Player 1's average payoff. Positive values
-            favor Player 1, negative values favor Player 2.
+            This represents Player 1's average payoff. Positive values favor
+            Player 1, while negative values mean Player 1 is disadvantaged
+            (Player 2 is favored).
           </Text>
           <ExpectedValueOverviewMock />
         </Stack>
         <Stack>
           <Heading size="md" as="h3">
-            Adjusting strategies
+            Strategy analysis
           </Heading>
           <Text>
-            The “Option Mix” chart lets you drag sliders to tweak probabilities.
-            It's handy when you want to see how outcomes shift as you deviate
-            from the equilibrium.
+            This area shows how often each player chooses each option, and the
+            expected value of choosing each option.
           </Text>
           <Text>
-            The “Expected Value” bar chart underneath shows the average payoff
-            when a player commits to each option. Taller bars signal better
-            outcomes for that player.
+            Drag the sliders left or right to adjust option probabilities. This
+            is useful when you want to check how the results change as the mix
+            changes.
+          </Text>
+          <Text>
+            The “Expected Value” chart shows the expected value of choosing each
+            option. Bars extending upward represent favorable situations for
+            that player, while bars extending downward represent unfavorable
+            situations.
           </Text>
           <StrategyAdjustmentOverviewMock />
         </Stack>
@@ -48,8 +54,13 @@ const HelpEnResultsSection: React.FC = () => {
             Detailed results table
           </Heading>
           <Text>
-            The “Detailed Results” table augments the original grid with row and
-            column averages and a color-coded overall average.
+            The “Detailed Results” table shows the probability of each option
+            pair being chosen and the result for that pair.
+          </Text>
+          <Text>
+            The bar color becomes redder for situations that favor Player 1 and
+            bluer for situations that favor Player 2. The bar length represents
+            the probability that the option pair is chosen.
           </Text>
           <ResultTableOverviewMock />
         </Stack>
