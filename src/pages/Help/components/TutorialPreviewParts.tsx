@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   FormatNumber,
+  Grid,
   Heading,
   HStack,
   Slider,
@@ -669,35 +670,45 @@ export const StrategyAdjustmentOverviewMock: React.FC = () => {
   ];
 
   return (
-    <Box
-      p={6}
-      my={2}
-      borderRadius="sm"
-      bg="bg.subtle"
-      boxShadow="sm"
-      w="fit-content"
-      maxW="100%"
-    >
-      <Stack gap={4} direction={{ base: "column", md: "row" }}>
-        <Box flex={1} minW={{ md: "320px" }}>
-          <ResultStrategyOverviewMock
-            playerLabel={player1Label}
-            playerName={player1Label}
-            items={player1Probabilities}
-            expectedChartItems={player1Expected}
-            colorPalette="red"
-          />
-        </Box>
-        <Box flex={1} minW={{ md: "320px" }}>
-          <ResultStrategyOverviewMock
-            playerLabel={player2Label}
-            playerName={player2Label}
-            items={player2Probabilities}
-            expectedChartItems={player2Expected}
-            colorPalette="blue"
-          />
-        </Box>
-      </Stack>
+    <Box w="100%" css={{ containerType: "inline-size" }}>
+      <Box
+        p={6}
+        my={2}
+        borderRadius="sm"
+        bg="bg.subtle"
+        boxShadow="sm"
+        w="fit-content"
+        maxW="100%"
+      >
+        <Grid
+          gap={4}
+          templateColumns="repeat(2, minmax(250px, 400px))"
+          css={{
+            "@container (max-width: 563px)": {
+              gridTemplateColumns: "minmax(min(250px, 100%), 400px)",
+            },
+          }}
+        >
+          <Box minW={0}>
+            <ResultStrategyOverviewMock
+              playerLabel={player1Label}
+              playerName={player1Label}
+              items={player1Probabilities}
+              expectedChartItems={player1Expected}
+              colorPalette="red"
+            />
+          </Box>
+          <Box minW={0}>
+            <ResultStrategyOverviewMock
+              playerLabel={player2Label}
+              playerName={player2Label}
+              items={player2Probabilities}
+              expectedChartItems={player2Expected}
+              colorPalette="blue"
+            />
+          </Box>
+        </Grid>
+      </Box>
     </Box>
   );
 };
