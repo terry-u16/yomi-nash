@@ -15,18 +15,22 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import SeoLinks from "./components/SeoLinks";
 import FirstVisitHelpToast from "./components/FirstVisitHelpToast";
+import PageScrollRestoration from "./components/PageScrollRestoration";
 
 const App: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/" element={<RedirectToPreferredLanguage />} />
-      <Route path="/:lang/*" element={<LanguageGuard />}>
-        <Route index element={<Home />} />
-        <Route path="help" element={<Help />} />
-        <Route path="theory" element={<Theory />} />
-      </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <PageScrollRestoration />
+      <Routes>
+        <Route path="/" element={<RedirectToPreferredLanguage />} />
+        <Route path="/:lang/*" element={<LanguageGuard />}>
+          <Route index element={<Home />} />
+          <Route path="help" element={<Help />} />
+          <Route path="theory" element={<Theory />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 };
 
