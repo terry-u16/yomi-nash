@@ -13,6 +13,10 @@ const localeComponentMap: Record<SupportedLanguage, React.ComponentType> = {
   ja: HelpJa,
 };
 
+const prefersReducedMotion = () => {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+};
+
 const Help: React.FC = () => {
   const { i18n } = useTranslation();
   const location = useLocation();
@@ -28,13 +32,34 @@ const Help: React.FC = () => {
       return;
     }
 
-    const frameId = window.requestAnimationFrame(() => {
-      document.getElementById(HELP_TUTORIAL_SECTION_ID)?.scrollIntoView({
-        block: "start",
+    let scrollFrameId: number | undefined;
+
+    const startFrameId = window.requestAnimationFrame(() => {
+      const target = document.getElementById(HELP_TUTORIAL_SECTION_ID);
+      if (!target) {
+        return;
+      }
+
+      if (prefersReducedMotion()) {
+        target.scrollIntoView({ block: "start" });
+        return;
+      }
+
+      window.scrollTo({ top: 0, behavior: "auto" });
+      scrollFrameId = window.requestAnimationFrame(() => {
+        target.scrollIntoView({
+          block: "start",
+          behavior: "smooth",
+        });
       });
     });
 
-    return () => window.cancelAnimationFrame(frameId);
+    return () => {
+      window.cancelAnimationFrame(startFrameId);
+      if (scrollFrameId !== undefined) {
+        window.cancelAnimationFrame(scrollFrameId);
+      }
+    };
   }, [location.hash]);
 
   return <Content />;
