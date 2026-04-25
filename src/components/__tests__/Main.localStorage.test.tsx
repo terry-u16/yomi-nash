@@ -23,9 +23,10 @@ vi.mock("@chakra-ui/react", () => ({
 }));
 
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual<typeof import("react-router-dom")>(
-    "react-router-dom"
-  );
+  const actual =
+    await vi.importActual<typeof import("react-router-dom")>(
+      "react-router-dom"
+    );
   return {
     ...actual,
     Outlet: ({ context }: { context: unknown }) => {
@@ -114,7 +115,10 @@ describe("Main localStorage restore", () => {
     localStorage.setItem(STORAGE_KEYS.inputUI, "not json");
     localStorage.setItem(
       STORAGE_KEYS.result,
-      JSON.stringify({ version: DATA_SCHEMA_VERSION + 1, payload: storedResult })
+      JSON.stringify({
+        version: DATA_SCHEMA_VERSION + 1,
+        payload: storedResult,
+      })
     );
     localStorageMock.setItem.mockClear();
 

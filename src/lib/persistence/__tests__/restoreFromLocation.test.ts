@@ -30,8 +30,7 @@ const validResult: GameResult = {
 
 describe("restoreFromLocation", () => {
   it("returns none when no share data is present", () => {
-    expect(restoreFromLocation(""))
-      .toEqual({ status: "none" });
+    expect(restoreFromLocation("")).toEqual({ status: "none" });
   });
 
   it("detects schema version mismatches", () => {
@@ -58,7 +57,9 @@ describe("restoreFromLocation", () => {
     const outcome = restoreFromLocation(`?${params.toString()}`);
     expect(outcome.status).toBe("input-error");
     if (outcome.status === "input-error") {
-      expect(outcome.message).toBe("表のサイズと行・列のラベル数が一致していません。");
+      expect(outcome.message).toBe(
+        "表のサイズと行・列のラベル数が一致していません。"
+      );
     }
   });
 
@@ -114,7 +115,9 @@ describe("restoreFromLocation", () => {
     const outcome = restoreFromLocation(`?${params.toString()}`);
     expect(outcome.status).toBe("input-error");
     if (outcome.status === "input-error") {
-      expect(outcome.message).toBe("共有された入力データを復元できませんでした");
+      expect(outcome.message).toBe(
+        "共有された入力データを復元できませんでした"
+      );
     }
   });
 });

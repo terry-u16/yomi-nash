@@ -35,47 +35,51 @@ export const useTableControls = ({
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleUpload = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = ""; // allow selecting the same file repeatedly
-    if (!file) return;
+  const handleUpload = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      event.target.value = ""; // allow selecting the same file repeatedly
+      if (!file) return;
 
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const binary = new Uint8Array(arrayBuffer);
-      const parseResult = parseCsvInputFromBinary(binary);
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const binary = new Uint8Array(arrayBuffer);
+        const parseResult = parseCsvInputFromBinary(binary);
 
-      if (parseResult.ok) {
-        const { strategyLabels1, strategyLabels2, payoffMatrix } = parseResult.data;
+        if (parseResult.ok) {
+          const { strategyLabels1, strategyLabels2, payoffMatrix } =
+            parseResult.data;
 
-        setInputUI(
-          clampGameInputUI({
-            strategyLabels1,
-            strategyLabels2,
-            payoffMatrix,
-          })
-        );
+          setInputUI(
+            clampGameInputUI({
+              strategyLabels1,
+              strategyLabels2,
+              payoffMatrix,
+            })
+          );
 
-        toaster.create({
-          title: t("home.tableControls.csvLoadSuccess"),
-          type: "success",
-        });
-      } else {
+          toaster.create({
+            title: t("home.tableControls.csvLoadSuccess"),
+            type: "success",
+          });
+        } else {
+          toaster.create({
+            title: t("home.tableControls.csvLoadError"),
+            description: parseResult.message,
+            type: "error",
+          });
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
         toaster.create({
           title: t("home.tableControls.csvLoadError"),
-          description: parseResult.message,
+          description: message,
           type: "error",
         });
       }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      toaster.create({
-        title: t("home.tableControls.csvLoadError"),
-        description: message,
-        type: "error",
-      });
-    }
-  }, [setInputUI, t]);
+    },
+    [setInputUI, t]
+  );
 
   const handleDownload = useCallback(() => {
     const csv = generateCsvFromGameInputUI(inputUI);
@@ -114,24 +118,27 @@ export const useTableControls = ({
     }
   }, [inputUI, onCalculate, t]);
 
-  const applyPreset = useCallback((presetKey: PresetKey) => {
-    const preset = presets[presetKey];
-    if (!preset) {
+  const applyPreset = useCallback(
+    (presetKey: PresetKey) => {
+      const preset = presets[presetKey];
+      if (!preset) {
+        toaster.create({
+          title: t("home.tableControls.presetError"),
+          type: "error",
+        });
+        return;
+      }
+      const snapshot = createPresetSnapshot(presetKey);
+      setInputUI(snapshot);
       toaster.create({
-        title: t("home.tableControls.presetError"),
-        type: "error",
+        title: t("home.tableControls.presetApplied", {
+          label: t(preset.labelKey),
+        }),
+        type: "success",
       });
-      return;
-    }
-    const snapshot = createPresetSnapshot(presetKey);
-    setInputUI(snapshot);
-    toaster.create({
-      title: t("home.tableControls.presetApplied", {
-        label: t(preset.labelKey),
-      }),
-      type: "success",
-    });
-  }, [setInputUI, t]);
+    },
+    [setInputUI, t]
+  );
 
   const handleShare = useCallback(() => {
     try {
@@ -154,7 +161,10 @@ export const useTableControls = ({
   const handleReset = useCallback(() => {
     setInputUI(createDefaultGameInputUI());
     onReset?.();
-    toaster.create({ title: t("home.tableControls.resetSuccess"), type: "success" });
+    toaster.create({
+      title: t("home.tableControls.resetSuccess"),
+      type: "success",
+    });
   }, [onReset, setInputUI, t]);
 
   return {

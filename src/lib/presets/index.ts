@@ -106,7 +106,4 @@ export const createPresetSnapshot = (presetKey: PresetKey): GameInputUI => {
 export const createDefaultGameInputUI = (): GameInputUI =>
   createPresetSnapshot(DEFAULT_PRESET_KEY);
 
-export const presetEntries = Object.entries(presets) as [
-  PresetKey,
-  Preset
-][];
+export const presetEntries = Object.entries(presets) as [PresetKey, Preset][];

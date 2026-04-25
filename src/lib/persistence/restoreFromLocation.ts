@@ -18,7 +18,9 @@ export type RestoreFromLocationOutcome =
 const INPUT_ERROR_FALLBACK = "入力の復元に失敗しました";
 const RESULT_ERROR_FALLBACK = "結果の復元に失敗しました";
 
-export function restoreFromLocation(search: string): RestoreFromLocationOutcome {
+export function restoreFromLocation(
+  search: string
+): RestoreFromLocationOutcome {
   const searchParams = new URLSearchParams(search);
   const versionParam = searchParams.get("schemaVersion");
 

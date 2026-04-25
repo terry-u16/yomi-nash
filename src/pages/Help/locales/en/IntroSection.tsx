@@ -22,8 +22,8 @@ const HelpEnIntroSection: React.FC = () => {
       <Text>Use it for cases like these:</Text>
       <List.Root ps={4}>
         <List.Item>
-          Analyze what mix of options to use in fighting-game neutral,
-          set-play, or other matchup situations.
+          Analyze what mix of options to use in fighting-game neutral, set-play,
+          or other matchup situations.
         </List.Item>
         <List.Item>
           Enter an opponent's habits and analyze which of your options has the
