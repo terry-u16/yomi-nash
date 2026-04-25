@@ -23,6 +23,7 @@
 - `pnpm preview` — serve the latest build for manual smoke testing.
 - `pnpm lint` — run ESLint across `.ts/.tsx` sources.
 - `pnpm format` — apply Prettier formatting rules in place.
+- `pnpm format:check` — verify Prettier formatting without modifying files.
 - `pnpm test` / `pnpm test:watch` — execute the Vitest suite once or in watch mode.
 
 ## Coding Style & Naming Conventions
