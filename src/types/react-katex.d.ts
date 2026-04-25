@@ -9,5 +9,6 @@ declare module "react-katex" {
     strict?: "warn" | "ignore" | boolean;
   }
 
+  export const BlockMath: ComponentType<BaseMathProps>;
   export const InlineMath: ComponentType<BaseMathProps>;
 }

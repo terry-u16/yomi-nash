@@ -2,7 +2,6 @@ import {
   Alert,
   Box,
   Heading,
-  Highlight,
   Link,
   List,
   Separator,
@@ -10,7 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { TbExternalLink } from "react-icons/tb";
-import { InlineMath } from "react-katex";
+import { BlockMath, InlineMath } from "react-katex";
 
 const Theory: React.FC = () => {
   return (
@@ -27,150 +26,47 @@ const Theory: React.FC = () => {
         </Alert.Root>
         <Stack gap={3}>
           <Heading size="xl" as="h2">
-            ナッシュ均衡を格ゲーに活かす
+            混合戦略ナッシュ均衡の理論背景
           </Heading>
           <Text>
-            <Highlight
-              query="混合戦略ナッシュ均衡"
-              styles={{ px: "0.5", bg: "red.muted" }}
-            >
-              混合戦略ナッシュ均衡
-            </Highlight>
-            とは、各プレイヤーが複数の行動を確率で混ぜる（混合戦略）ときに、互いが自分の確率を一方的に変えても平均的な見返りが良くならない安定状態（ナッシュ均衡）のことです。
+            ゲーム理論における混合戦略ナッシュ均衡とは、各プレイヤーが複数の選択肢から確率的に選択する戦略（混合戦略）を取っているときに、どちらのプレイヤーも、自分だけ戦略を変えて期待利得を改善することができない状態のことを指します。
+            このページでは、アプリが扱う2人ゼロサムゲームに絞って、その定義と計算方法を整理します。
           </Text>
           <Text>
-            「混合戦略」は行動をある確率でランダムに切り替える戦い方、「ナッシュ均衡」は相手に手の内を知られても変える必要がない戦略の組を指します。
-            格ゲーでは相手の癖を読んで偏りを突く「搾取」と、読まれても崩れない「均衡」のバランスが重要となります。
-            そのため、均衡の考え方は、読み合いの基準点や反応の変化を測る物差しとして活用できます。
+            Help ページでは操作手順や結果の読み方を中心に説明しています。Theory
+            ページでは、入力された利得行列からなぜ「おすすめの選択割合」が得られるのかを、数理モデルとして説明します。
           </Text>
         </Stack>
         <Separator />
         <Stack gap={4}>
           <Heading size="lg" as="h3">
-            1. 状況をゲームとして定義する
+            1. アプリが扱うゲーム
           </Heading>
           <Text>
-            読み合いをナッシュ均衡で扱うには、選択肢と利得を具体的に定義します。主に以下の点を整理するとスムーズです。
-          </Text>
-          <List.Root ps={4} as="ol" listStyle="decimal">
-            <List.Item>
-              Player 1 / Player 2
-              が同時に選ぶ行動の集合（例：暴れ、投げ、様子見、バクステ など）
-            </List.Item>
-            <List.Item>
-              各行動の組み合わせが成立したときの結果（ヒット、ガード、投げ抜け
-              等）
-            </List.Item>
-            <List.Item>
-              結果から計算する利得（与ダメージ、位置取り、起き攻め継続、ゲージ獲得量
-              などの総合評価）
-            </List.Item>
-          </List.Root>
-          <Text>
-            利得はダメージ単体でも構いませんが、起き攻め継続で+20、画面端に押し込まれることで-15のように数値化すると、より実戦的な評価ができます。
-          </Text>
-        </Stack>
-        <Separator />
-        <Stack gap={4}>
-          <Heading size="lg" as="h3">
-            2. 均衡確率の読み取り方
-          </Heading>
-          <Text>
-            アプリで計算される確率分布は、「相手に行動がバレていても損しないように選ぶ行動の割合」を示しています。
-            このような状態をナッシュ均衡と呼び、いわば「読み合いの土台となる安定した戦略の組み合わせ」です。
+            このアプリでは、Player 1 と Player 2 が同時に 1
+            つずつ選択肢を選ぶ状況を扱います。Player 1 の選択肢を{" "}
+            <InlineMath math="i = 1,\dots,m" />
+            、Player 2 の選択肢を <InlineMath math="j = 1,\dots,n" />{" "}
+            とし、Player 1 の利得行列を <InlineMath math="A" /> と書きます。成分{" "}
+            <InlineMath math="A_{ij}" /> は、Player 1 が <InlineMath math="i" />
+            、Player 2 が <InlineMath math="j" /> を選んだときの Player 1
+            視点の利得です。
           </Text>
           <Text>
-            この均衡状態での利得は、「お互いに相手の行動傾向を理解したうえで、もうこれ以上有利にならない最適な選択をしたときの平均的な成果」です。
-            実戦ではこの基準から意図的にずらすことで搾取（exploit）を狙ったり、あえて偏らせて印象を植え付けたりといった戦術が重要になります。
-          </Text>
-          <List.Root ps={4} as="ul" listStyle="disc">
-            <List.Item>
-              均衡の確率を基準値として、相手の癖に応じて微調整する（均衡 30%
-              の行動を、相手がビビっているなら 40% に増やす 等）
-            </List.Item>
-            <List.Item>
-              均衡の利得がプラスなら、積極的にその状況を作る
-            </List.Item>
-            <List.Item>
-              均衡で利得がマイナスのときは、そもそもその読み合いに付き合わない
-            </List.Item>
-            <List.Item>
-              相手が均衡から大きく逸脱しているときは、搾取を狙って確率をずらし平均利得を稼ぐ。ただし相手が気付き対応してくるリスクも想定する
-            </List.Item>
-          </List.Root>
-        </Stack>
-        <Separator />
-        <Stack gap={4}>
-          <Heading size="lg" as="h3">
-            3. 混合戦略ナッシュ均衡の実戦での活用例
-          </Heading>
-          <Text>
-            均衡から得られる確率を頭に入れておくと、各状況での読み合いに「数字という基準」が生まれます。
-            「何をどれくらいやっていいのか」が見えることで、相手から搾取されるリスクを減らし、安定して勝率を上げることができます。
-            均衡は勝利を保証する“正解”ではありませんが、状況判断の「ものさし」として非常に強力です。
-          </Text>
-          <List.Root ps={4} as="ul" listStyle="disc">
-            <List.Item>
-              リスクが高い選択肢（例：無敵技など）は基本的には確率を抑えつつも、あまり抑えすぎると相手が増長するので、均衡確率で少し混ぜることで相手に様子見をさせて攻めを和らげることができる。
-            </List.Item>
-            <List.Item>
-              起き攻め側は、無敵技を均衡より多く選択してくる相手に対し、様子見を多めに混ぜることで搾取を狙う。
-            </List.Item>
-            <List.Item>
-              人読みの研究を行うときに、相手の行動傾向を均衡確率と比較した上で、どの選択肢が最も期待値が高くなるかを把握しておく。
-            </List.Item>
-          </List.Root>
-        </Stack>
-        <Separator />
-        <Stack gap={4}>
-          <Heading size="lg" as="h3">
-            4. 混合戦略ナッシュ均衡をどう解くか
-          </Heading>
-          <Text>
-            このアプリが扱う 2 人ゼロサムゲームでは、プレイヤー 1 の利得行列
-            <InlineMath math="A" /> を入力として処理します。 行はプレイヤー 1
-            の純粋戦略、列はプレイヤー 2 の純粋戦略に対応し、成分
-            <InlineMath math="A_{ij}" /> が「プレイヤー 1 が{" "}
-            <InlineMath math="i" /> を選び、プレイヤー 2 が{" "}
-            <InlineMath math="j" /> を選んだときの利得（プレイヤー 1
-            視点）」を表します。 この設定のもとでプレイヤー 2
-            が取り得る利得の最大値 <InlineMath math="\max_j" /> を最小化する
-            minimax 問題を解くことで、混合戦略ナッシュ均衡を求めます。
-            直感的には「こちらがある混合戦略を採用したときに、相手はその戦略に最も刺さる反応（こちらの期待損失を最大化する手）を選ぶ」と悲観的に想定し、その最悪ケースの期待損失を最小化する確率分布を探すという minimax 的な発想です。
-          </Text>
-          <Text>
-            プレイヤー 1 の混合戦略は確率ベクトル{" "}
-            <InlineMath math="x = (x_1, \dots, x_M)^{\top}" />{" "}
-            として表し、各成分が純粋戦略を選ぶ確率を示します。 目的は{" "}
-            <InlineMath math="\max_i (\sum_j A_{ij} x_j)" />{" "}
-            を最小化することなので、max 演算を直接扱う代わりに補助変数{" "}
-            <InlineMath math="v" /> を導入し、全ての行 <InlineMath math="i" />{" "}
-            について <InlineMath math="v \ge \sum_j A_{ij} x_j" />{" "}
-            という制約を課すと、
-            <InlineMath math="v" /> を最小化する問題に書き換えられます。
-            <InlineMath math="x" /> は確率ベクトルなので{" "}
-            <InlineMath math="x_j \ge 0" /> と
-            <InlineMath math="\sum_j x_j = 1" />{" "}
-            という確率制約を併せて課し、その制約付き線形計画問題を{" "}
-            <code>glpk.js</code> のソルバーに渡して 最適な混合戦略{" "}
-            <InlineMath math="x" /> と均衡値 <InlineMath math="v" />{" "}
-            を数値的に計算しています。
-          </Text>
-          <Text>
-            プレイヤー 2 側は利得行列を転置して符号を反転させた{" "}
-            <InlineMath math="-A^{\top}" />{" "}
-            を用いて同じ形式の問題に落とし込み、同様に線形計画問題として解きます。
-            こうして得た 2
-            つの戦略が互いの最適反応となる点、すなわち混合戦略ナッシュ均衡が最終的な出力です。
+            このアプリは、Player 2 の利得を <InlineMath math="-A_{ij}" />{" "}
+            とみなせるゲームに対象を絞っています。つまり、Player 1
+            が得をした分だけ Player 2
+            が損をするゼロサムゲームだけを扱います。この前提のもとでは、Player 1
+            が期待利得を大きくしようとする問題と、Player 2
+            が同じ期待利得を小さくしようとする問題として定式化できます。
           </Text>
           <Alert.Root status="info">
             <Alert.Indicator />
             <Alert.Description>
               <Text>
-                ここで紹介した minimax による定式化は、各組み合わせの利得が常に
-                <InlineMath math="(A_{ij}, -A_{ij})" /> のように総和ゼロになる 2
-                人ゼロサムゲームを前提としています。
-                非ゼロサムや複数人ゲームでは別の手法が必要になる点に注意してください。
+                非ゼロサムゲームでは、両者が同時に得をしたり同時に損をしたりする可能性があります。
+                その場合はこのページの minimax
+                による定式化だけでは扱えず、別の均衡計算が必要です。
               </Text>
             </Alert.Description>
           </Alert.Root>
@@ -178,7 +74,201 @@ const Theory: React.FC = () => {
         <Separator />
         <Stack gap={4}>
           <Heading size="lg" as="h3">
-            5. もっと学びたい方へ
+            2. 混合戦略と期待利得
+          </Heading>
+          <Text>
+            純粋戦略は 1
+            つの選択肢を確定で選ぶ戦略です。これに対して混合戦略は、
+            複数の純粋戦略に確率を割り当てる戦略です。Player 1
+            の混合戦略を確率ベクトル <InlineMath math="x" />
+            、Player 2 の混合戦略を確率ベクトル <InlineMath math="y" />{" "}
+            とすると、それぞれ次の確率制約を満たします。
+          </Text>
+          <Box overflowX="auto">
+            <BlockMath math="x_i \ge 0,\quad \sum_{i=1}^{m} x_i = 1,\qquad y_j \ge 0,\quad \sum_{j=1}^{n} y_j = 1" />
+          </Box>
+          <Text>
+            以降では、このような確率ベクトル全体の集合を{" "}
+            <InlineMath math="\Delta_m" /> や <InlineMath math="\Delta_n" />{" "}
+            と書きます。
+          </Text>
+          <Text>このとき Player 1 の期待利得は次のように表せます。</Text>
+          <Box overflowX="auto">
+            <BlockMath math="u(x,y) = x^{\top} A y = \sum_{i=1}^{m} \sum_{j=1}^{n} x_i A_{ij} y_j" />
+          </Box>
+          <Text>
+            ゼロサムゲームでは Player 2 の期待利得は{" "}
+            <InlineMath math="-u(x,y)" /> です。そのため Player 1 は{" "}
+            <InlineMath math="u(x,y)" /> を最大化しようとし、Player 2 は{" "}
+            <InlineMath math="u(x,y)" /> を最小化しようとします。
+          </Text>
+        </Stack>
+        <Separator />
+        <Stack gap={4}>
+          <Heading size="lg" as="h3">
+            3. ナッシュ均衡の条件
+          </Heading>
+          <Text>
+            混合戦略の組 <InlineMath math="(x^{*}, y^{*})" />{" "}
+            がナッシュ均衡であるとは、相手の戦略を固定したときに、自分だけ別の戦略へ変えても期待利得を改善できないことを意味します。2
+            人ゼロサムゲームでは次の不等式で表せます。
+          </Text>
+          <Box overflowX="auto">
+            <BlockMath math="u(x, y^{*}) \le u(x^{*}, y^{*}) \le u(x^{*}, y)" />
+          </Box>
+          <Text>
+            左側の不等式は、Player 1 が <InlineMath math="y^{*}" />{" "}
+            に対して別の混合戦略 <InlineMath math="x" /> を選んでも、
+            <InlineMath math="u(x^{*}, y^{*})" />{" "}
+            より高い利得を得られないことを表します。右側の不等式は、Player 2 が{" "}
+            <InlineMath math="x^{*}" /> に対して別の混合戦略{" "}
+            <InlineMath math="y" /> を選んでも、Player 1 の利得を{" "}
+            <InlineMath math="u(x^{*}, y^{*})" />{" "}
+            より低くできないことを表します。
+          </Text>
+          <Text>
+            均衡での期待利得 <InlineMath math="u(x^{*}, y^{*})" /> が正なら
+            Player 1 に有利、負なら Player 2 に有利、0
+            ならこのモデル上は互角と読めます。
+          </Text>
+          <Alert.Root status="info">
+            <Alert.Indicator />
+            <Alert.Description>
+              <Text>
+                各プレイヤーの選択肢が有限個であるゲームでは、混合戦略まで含めれば少なくとも
+                1 つのナッシュ均衡が存在することが知られています。これは 2
+                人ゼロサムゲームに限らない一般的な性質です。このアプリでは、その中でも
+                2 人ゼロサムゲームに対象を絞ることで、後述する minimax
+                定理と線形計画問題を使って均衡を計算しています。
+              </Text>
+            </Alert.Description>
+          </Alert.Root>
+        </Stack>
+        <Separator />
+        <Stack gap={4}>
+          <Heading size="lg" as="h3">
+            4. minimax 定理
+          </Heading>
+          <Text>
+            Player 1 は、Player 2
+            が自分にとって最も厳しい反応を選ぶと仮定したうえで、その最悪ケースの利得を最大化します。
+            これは maximin 問題として書けます。
+          </Text>
+          <Box overflowX="auto">
+            <BlockMath math="\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y" />
+          </Box>
+          <Text>
+            一方 Player 2 は、Player 1
+            が自分にとって最も厳しい反応を選ぶと仮定したうえで、Player 1
+            の最大利得を最小化します。
+          </Text>
+          <Box overflowX="auto">
+            <BlockMath math="\min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y" />
+          </Box>
+          <Text>
+            有限 2 人ゼロサムゲームでは minimax 定理により、この 2
+            つの値が一致します。
+          </Text>
+          <Box overflowX="auto">
+            <BlockMath math="\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y = \min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y" />
+          </Box>
+          <Text>
+            この共通の期待利得を達成する Player 1 側の最適解{" "}
+            <InlineMath math="x^{*}" /> と Player 2 側の最適解{" "}
+            <InlineMath math="y^{*}" /> の組が混合戦略ナッシュ均衡になります。
+          </Text>
+          <Alert.Root status="info">
+            <Alert.Indicator />
+            <Alert.Description>
+              <Text>
+                minimax
+                戦略は、相手がこちらにとって最も厳しい反応を選ぶという悲観的な見積もりのもとで、最悪ケースの期待利得をできるだけ良くする戦略です。
+                そのため、相手が均衡から外れた戦略を固定的に取っていると分かっている場合には、その相手に対する最適反応（相手の戦略を固定したとき、自分の期待利得を最大にする戦略）の方が高い期待利得を得られることがあります。
+              </Text>
+            </Alert.Description>
+          </Alert.Root>
+        </Stack>
+        <Separator />
+        <Stack gap={4}>
+          <Heading size="lg" as="h3">
+            5. 線形計画問題への変換
+          </Heading>
+          <Text>
+            Player 2 の混合戦略 <InlineMath math="y" />{" "}
+            を求める問題を考えます。Player 1 が行 <InlineMath math="i" />{" "}
+            を選んだときの期待利得は <InlineMath math="(Ay)_i" /> です。Player 2
+            は、どの行を選ばれても Player 1
+            の期待利得ができるだけ小さくなるようにしたいので、補助変数{" "}
+            <InlineMath math="v" />{" "}
+            を使って次の線形計画問題として書くことができます。
+          </Text>
+          <Box overflowX="auto">
+            <BlockMath
+              math="\begin{aligned}
+\text{minimize}\quad & v \\
+\text{subject to}\quad & (Ay)_i \le v \quad (i=1,\dots,m) \\
+& \sum_{j=1}^{n} y_j = 1 \\
+& y_j \ge 0 \quad (j=1,\dots,n)
+\end{aligned}"
+            />
+          </Box>
+          <Text>
+            Player 1 側も同様に、各列 <InlineMath math="j" /> に対して期待利得{" "}
+            <InlineMath math="(A^{\top}x)_j" /> が補助変数{" "}
+            <InlineMath math="w" /> を下回らないようにする問題として書けます。
+          </Text>
+          <Box overflowX="auto">
+            <BlockMath
+              math="\begin{aligned}
+\text{maximize}\quad & w \\
+\text{subject to}\quad & (A^{\top}x)_j \ge w \quad (j=1,\dots,n) \\
+& \sum_{i=1}^{m} x_i = 1 \\
+& x_i \ge 0 \quad (i=1,\dots,m)
+\end{aligned}"
+            />
+          </Box>
+          <Text>
+            これらの線形計画問題を解くことで、Player 1 と Player 2
+            それぞれの混合戦略が得られます。アプリは入力された利得行列からこの形の問題を作り、数値的に解くことで「おすすめの選択割合」を計算しています。
+          </Text>
+        </Stack>
+        <Separator />
+        <Stack gap={4}>
+          <Heading size="lg" as="h3">
+            6. 結果を読むときの注意
+          </Heading>
+          <Text>
+            均衡戦略は「相手に確率分布を知られても、一方的に戦略変更して得をされにくい基準点」です。
+            ただし、相手が均衡から外れた戦略を固定的に取っていると分かっている場合は、その相手に対する最適反応の方が高い期待利得を出せることがあります。
+          </Text>
+          <List.Root ps={4} as="ul" listStyle="disc">
+            <List.Item>
+              均衡は、相手がこちらの確率を理解して最適に反応してくる前提での基準値です。
+            </List.Item>
+            <List.Item>
+              相手が均衡から外れた戦略を固定的に取っている場合は、スライダーで相手の確率を調整し、各純粋戦略の期待値を比較すると最適反応を探しやすくなります。
+            </List.Item>
+            <List.Item>
+              均衡で正の確率を持つ純粋戦略は、理論上は同じ期待利得になります。正の確率を持たない戦略は、均衡下ではそれ以上の改善をもたらさない戦略です。
+            </List.Item>
+            <List.Item>
+              計算結果は、入力された利得の設計に左右されます。ダメージ、状況、ゲージ、残り時間などをどう数値化するかによって、均衡も変わります。
+            </List.Item>
+          </List.Root>
+          <Alert.Root status="info">
+            <Alert.Indicator />
+            <Alert.Description>
+              <Text>
+                実際の対戦では、相手が均衡戦略を常に選ぶとは限りません。
+                均衡は「これだけ選べば常に最大リターンになる戦略」ではなく、読み合いを分析するための基準点として扱うのが良いでしょう。
+              </Text>
+            </Alert.Description>
+          </Alert.Root>
+        </Stack>
+        <Separator />
+        <Stack gap={4}>
+          <Heading size="lg" as="h3">
+            7. もっと学びたい方へ
           </Heading>
           <Text>
             混合戦略ナッシュ均衡の理論背景をより体系的に学びたい方は、以下の資料が参考になります。
@@ -205,7 +295,7 @@ const Theory: React.FC = () => {
                 書籍『一歩ずつ学ぶ ゲーム理論 -数理で導く戦略的意思決定-』{" "}
                 <TbExternalLink />
               </Link>
-              ：ナッシュ均衡を含む主要トピックを網羅した入門書で、ゲーム理論の初学者にオススメです。
+              ：同じく渡辺先生が執筆された書籍です。ナッシュ均衡を含む主要トピックを網羅した入門書で、ゲーム理論の初学者にオススメです。
             </List.Item>
           </List.Root>
         </Stack>
