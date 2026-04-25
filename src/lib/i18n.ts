@@ -42,9 +42,9 @@ const resources = {
       },
       header: {
         nav: {
-          home: "ホーム",
-          help: "ヘルプ",
-          theory: "理論",
+          home: "Home",
+          help: "Help",
+          theory: "Theory",
         },
         languageLabel: "表示言語",
       },
@@ -173,7 +173,7 @@ const resources = {
   en: {
     translation: {
       common: {
-        appName: "Yomi Nash",
+        appName: "yomi-nash",
         appDescription:
           "Compute mixed-strategy Nash equilibria for two-player zero-sum games with interactive visuals.",
         player1: "Player 1",
