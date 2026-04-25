@@ -204,12 +204,12 @@ const TheoryJa: React.FC = () => {
           </Text>
           <Box overflowX="auto">
             <BlockMath
-              math="\begin{aligned}
+              math={String.raw`\begin{aligned}
 \text{minimize}\quad & v \\
 \text{subject to}\quad & (Ay)_i \le v \quad (i=1,\dots,m) \\
 & \sum_{j=1}^{n} y_j = 1 \\
 & y_j \ge 0 \quad (j=1,\dots,n)
-\end{aligned}"
+\end{aligned}`}
             />
           </Box>
           <Text>
@@ -219,12 +219,12 @@ const TheoryJa: React.FC = () => {
           </Text>
           <Box overflowX="auto">
             <BlockMath
-              math="\begin{aligned}
+              math={String.raw`\begin{aligned}
 \text{maximize}\quad & w \\
 \text{subject to}\quad & (A^{\top}x)_j \ge w \quad (j=1,\dots,n) \\
 & \sum_{i=1}^{m} x_i = 1 \\
 & x_i \ge 0 \quad (i=1,\dots,m)
-\end{aligned}"
+\end{aligned}`}
             />
           </Box>
           <Text>
