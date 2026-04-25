@@ -104,7 +104,7 @@ describe("FirstVisitHelpToast", () => {
       toast.action.onClick();
     });
 
-    expect(mocks.navigate).toHaveBeenCalledWith("/ja/help");
+    expect(mocks.navigate).toHaveBeenCalledWith("/ja/help#tutorial");
   });
 
   it("does not show the toast when the user has already seen it", async () => {
@@ -117,7 +117,7 @@ describe("FirstVisitHelpToast", () => {
     expect(localStorageMock.setItem).not.toHaveBeenCalled();
   });
 
-  it("marks the toast as seen without showing it on the help page", async () => {
+  it("shows the toast on the help page so users can jump to the tutorial", async () => {
     mocks.route.pathname = "/ja/help";
 
     await renderFirstVisitHelpToast();
@@ -126,6 +126,14 @@ describe("FirstVisitHelpToast", () => {
       STORAGE_KEYS.firstVisitHelpToastSeen,
       "true"
     );
-    expect(mocks.toasterCreate).not.toHaveBeenCalled();
+    expect(mocks.toasterCreate).toHaveBeenCalledTimes(1);
+
+    const toast = mocks.toasterCreate.mock.calls[0][0];
+
+    act(() => {
+      toast.action.onClick();
+    });
+
+    expect(mocks.navigate).toHaveBeenCalledWith("/ja/help#tutorial");
   });
 });
