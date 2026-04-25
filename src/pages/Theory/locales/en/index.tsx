@@ -303,7 +303,8 @@ const TheoryEn: React.FC = () => {
           </Heading>
           <Text>
             The following resources are useful if you want to learn the theory
-            behind mixed-strategy Nash equilibria more systematically.
+            behind mixed-strategy Nash equilibria more systematically. Please
+            note that both linked resources are available in Japanese only.
           </Text>
           <List.Root ps={4} as="ul" listStyle="disc">
             <List.Item>
