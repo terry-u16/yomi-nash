@@ -33,7 +33,7 @@ const resources = {
       common: {
         appName: "読み合いナッシュ",
         appDescription:
-          "二人零和ゲームの混合戦略ナッシュ均衡を計算し、視覚的に理解できるツールです。",
+          "格闘ゲームをはじめとした2人対戦ゲームの読み合いにおいて、ゲーム理論を用いてどの選択肢をどのくらいの確率で選ぶのがおすすめかを計算するアプリです。",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "選択肢{{index}}",
@@ -148,7 +148,8 @@ const resources = {
           presetError: "プリセットの読み込みに失敗しました",
           presetApplied: "プリセット{{label}}を適用しました",
           shareError: "シェアURL生成に失敗しました",
-          shareTweet: "ゲーム入力と結果を共有します #yomiNash",
+          shareTweet:
+            "読み合いナッシュ | 格闘ゲームの読み合い分析アプリ #yominash",
           resetSuccess: "リセットしました",
         },
         resultDisplay: {
@@ -175,7 +176,7 @@ const resources = {
       common: {
         appName: "yomi-nash",
         appDescription:
-          "Compute mixed-strategy Nash equilibria for two-player zero-sum games with interactive visuals.",
+          "Use game theory to calculate recommended option probabilities for fighting games and other two-player competitive mind games.",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "Option {{index}}",
@@ -290,7 +291,7 @@ const resources = {
           presetError: "Failed to load the preset",
           presetApplied: "Applied preset {{label}}",
           shareError: "Failed to generate the share URL",
-          shareTweet: "Sharing the game input and result #yomiNash",
+          shareTweet: "yomi-nash | Fighting game mix-up analysis app #yominash",
           resetSuccess: "Reset completed",
         },
         resultDisplay: {

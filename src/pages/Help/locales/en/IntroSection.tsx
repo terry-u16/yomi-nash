@@ -8,8 +8,8 @@ const HelpEnIntroSection: React.FC = () => {
         What is this app?
       </Heading>
       <Text>
-        This app calculates recommended option probabilities for two-player
-        competitive games, from fighting games to rock-paper-scissors.
+        This app uses game theory to calculate recommended option probabilities
+        for fighting games and other two-player competitive mind games.
       </Text>
       <Text>
         Take rock-paper-scissors for example: if you throw rock too often, your
