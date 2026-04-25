@@ -52,11 +52,11 @@ const TheoryEn: React.FC = () => {
           <Text>
             This app handles situations where Player 1 and Player 2 each choose
             one option simultaneously. Let Player 1&apos;s options be{" "}
-            <InlineMath math="i = 1,\dots,m" /> and Player 2&apos;s options be{" "}
-            <InlineMath math="j = 1,\dots,n" />. The payoff matrix for Player 1
-            is written as <InlineMath math="A" />. Each entry{" "}
-            <InlineMath math="A_{ij}" /> is Player 1&apos;s payoff when Player 1
-            chooses <InlineMath math="i" /> and Player 2 chooses{" "}
+            <InlineMath math={String.raw`i = 1,\dots,m`} /> and Player 2&apos;s
+            options be <InlineMath math={String.raw`j = 1,\dots,n`} />. The
+            payoff matrix for Player 1 is written as <InlineMath math="A" />.
+            Each entry <InlineMath math="A_{ij}" /> is Player 1&apos;s payoff
+            when Player 1 chooses <InlineMath math="i" /> and Player 2 chooses{" "}
             <InlineMath math="j" />.
           </Text>
           <Text>
@@ -93,17 +93,22 @@ const TheoryEn: React.FC = () => {
             following probability constraints.
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="x_i \ge 0,\quad \sum_{i=1}^{m} x_i = 1,\qquad y_j \ge 0,\quad \sum_{j=1}^{n} y_j = 1" />
+            <BlockMath
+              math={String.raw`x_i \ge 0,\quad \sum_{i=1}^{m} x_i = 1,\qquad y_j \ge 0,\quad \sum_{j=1}^{n} y_j = 1`}
+            />
           </Box>
           <Text>
             We write the sets of all such probability vectors as{" "}
-            <InlineMath math="\Delta_m" /> and <InlineMath math="\Delta_n" />.
+            <InlineMath math={String.raw`\Delta_m`} /> and{" "}
+            <InlineMath math={String.raw`\Delta_n`} />.
           </Text>
           <Text>
             Player 1&apos;s expected payoff is then written as follows.
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="u(x,y) = x^{\top} A y = \sum_{i=1}^{m} \sum_{j=1}^{n} x_i A_{ij} y_j" />
+            <BlockMath
+              math={String.raw`u(x,y) = x^{\top} A y = \sum_{i=1}^{m} \sum_{j=1}^{n} x_i A_{ij} y_j`}
+            />
           </Box>
           <Text>
             In a zero-sum game, Player 2&apos;s expected payoff is{" "}
@@ -125,7 +130,9 @@ const TheoryEn: React.FC = () => {
             written as the following inequality.
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="u(x, y^{*}) \le u(x^{*}, y^{*}) \le u(x^{*}, y)" />
+            <BlockMath
+              math={String.raw`u(x, y^{*}) \le u(x^{*}, y^{*}) \le u(x^{*}, y)`}
+            />
           </Box>
           <Text>
             The left inequality means that Player 1 cannot obtain a higher
@@ -168,21 +175,27 @@ const TheoryEn: React.FC = () => {
             maximin problem.
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y" />
+            <BlockMath
+              math={String.raw`\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y`}
+            />
           </Box>
           <Text>
             Conversely, Player 2 assumes that Player 1 will choose the harshest
             response and minimizes Player 1&apos;s maximum payoff.
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="\min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y" />
+            <BlockMath
+              math={String.raw`\min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y`}
+            />
           </Box>
           <Text>
             For finite two-player zero-sum games, the minimax theorem states
             that these two values are equal.
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y = \min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y" />
+            <BlockMath
+              math={String.raw`\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y = \min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y`}
+            />
           </Box>
           <Text>
             The pair consisting of Player 1&apos;s optimal solution{" "}
@@ -229,9 +242,9 @@ const TheoryEn: React.FC = () => {
           </Box>
           <Text>
             Player 1&apos;s side can similarly be written as a problem where the
-            expected payoff <InlineMath math="(A^{\top}x)_j" /> for each column{" "}
-            <InlineMath math="j" /> must not fall below an auxiliary variable{" "}
-            <InlineMath math="w" />.
+            expected payoff <InlineMath math={String.raw`(A^{\top}x)_j`} /> for
+            each column <InlineMath math="j" /> must not fall below an auxiliary
+            variable <InlineMath math="w" />.
           </Text>
           <Box overflowX="auto">
             <BlockMath

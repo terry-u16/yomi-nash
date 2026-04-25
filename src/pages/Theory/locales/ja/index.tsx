@@ -45,9 +45,10 @@ const TheoryJa: React.FC = () => {
           <Text>
             このアプリでは、Player 1 と Player 2 が同時に 1
             つずつ選択肢を選ぶ状況を扱います。Player 1 の選択肢を{" "}
-            <InlineMath math="i = 1,\dots,m" />
-            、Player 2 の選択肢を <InlineMath math="j = 1,\dots,n" />{" "}
-            とし、Player 1 の利得行列を <InlineMath math="A" /> と書きます。成分{" "}
+            <InlineMath math={String.raw`i = 1,\dots,m`} />
+            、Player 2 の選択肢を{" "}
+            <InlineMath math={String.raw`j = 1,\dots,n`} /> とし、Player 1
+            の利得行列を <InlineMath math="A" /> と書きます。成分{" "}
             <InlineMath math="A_{ij}" /> は、Player 1 が <InlineMath math="i" />
             、Player 2 が <InlineMath math="j" /> を選んだときの Player 1
             視点の利得です。
@@ -85,16 +86,20 @@ const TheoryJa: React.FC = () => {
             とすると、それぞれ次の確率制約を満たします。
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="x_i \ge 0,\quad \sum_{i=1}^{m} x_i = 1,\qquad y_j \ge 0,\quad \sum_{j=1}^{n} y_j = 1" />
+            <BlockMath
+              math={String.raw`x_i \ge 0,\quad \sum_{i=1}^{m} x_i = 1,\qquad y_j \ge 0,\quad \sum_{j=1}^{n} y_j = 1`}
+            />
           </Box>
           <Text>
             以降では、このような確率ベクトル全体の集合を{" "}
-            <InlineMath math="\Delta_m" /> や <InlineMath math="\Delta_n" />{" "}
-            と書きます。
+            <InlineMath math={String.raw`\Delta_m`} /> や{" "}
+            <InlineMath math={String.raw`\Delta_n`} /> と書きます。
           </Text>
           <Text>このとき Player 1 の期待利得は次のように表せます。</Text>
           <Box overflowX="auto">
-            <BlockMath math="u(x,y) = x^{\top} A y = \sum_{i=1}^{m} \sum_{j=1}^{n} x_i A_{ij} y_j" />
+            <BlockMath
+              math={String.raw`u(x,y) = x^{\top} A y = \sum_{i=1}^{m} \sum_{j=1}^{n} x_i A_{ij} y_j`}
+            />
           </Box>
           <Text>
             ゼロサムゲームでは Player 2 の期待利得は{" "}
@@ -114,7 +119,9 @@ const TheoryJa: React.FC = () => {
             人ゼロサムゲームでは次の不等式で表せます。
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="u(x, y^{*}) \le u(x^{*}, y^{*}) \le u(x^{*}, y)" />
+            <BlockMath
+              math={String.raw`u(x, y^{*}) \le u(x^{*}, y^{*}) \le u(x^{*}, y)`}
+            />
           </Box>
           <Text>
             左側の不等式は、Player 1 が <InlineMath math="y^{*}" />{" "}
@@ -155,7 +162,9 @@ const TheoryJa: React.FC = () => {
             これは maximin 問題として書けます。
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y" />
+            <BlockMath
+              math={String.raw`\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y`}
+            />
           </Box>
           <Text>
             一方 Player 2 は、Player 1
@@ -163,14 +172,18 @@ const TheoryJa: React.FC = () => {
             の最大利得を最小化します。
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="\min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y" />
+            <BlockMath
+              math={String.raw`\min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y`}
+            />
           </Box>
           <Text>
             有限 2 人ゼロサムゲームでは minimax 定理により、この 2
             つの値が一致します。
           </Text>
           <Box overflowX="auto">
-            <BlockMath math="\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y = \min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y" />
+            <BlockMath
+              math={String.raw`\max_{x \in \Delta_m}\ \min_{y \in \Delta_n} x^{\top} A y = \min_{y \in \Delta_n}\ \max_{x \in \Delta_m} x^{\top} A y`}
+            />
           </Box>
           <Text>
             この共通の期待利得を達成する Player 1 側の最適解{" "}
@@ -214,7 +227,7 @@ const TheoryJa: React.FC = () => {
           </Box>
           <Text>
             Player 1 側も同様に、各列 <InlineMath math="j" /> に対して期待利得{" "}
-            <InlineMath math="(A^{\top}x)_j" /> が補助変数{" "}
+            <InlineMath math={String.raw`(A^{\top}x)_j`} /> が補助変数{" "}
             <InlineMath math="w" /> を下回らないようにする問題として書けます。
           </Text>
           <Box overflowX="auto">
