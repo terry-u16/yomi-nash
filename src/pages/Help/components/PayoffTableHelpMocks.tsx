@@ -38,13 +38,8 @@ const HighlightWrap: React.FC<{
   active?: boolean;
   children: React.ReactNode;
 }> = ({ active = false, children }) => {
-
   return (
-    <Box
-      p="0.5"
-      borderRadius="md"
-      opacity={active ? 1 : 0.5}
-    >
+    <Box p="0.5" borderRadius="md" opacity={active ? 1 : 0.5}>
       {children}
     </Box>
   );
@@ -90,14 +85,11 @@ const StaticInput: React.FC<{
   );
 };
 
-const ValueCell: React.FC<{ value: string; active?: boolean }> = ({ value, active = false }) => {
-  return (
-    <StaticInput
-      value={value}
-      activeColor="blue"
-      active={active}
-    />
-  );
+const ValueCell: React.FC<{ value: string; active?: boolean }> = ({
+  value,
+  active = false,
+}) => {
+  return <StaticInput value={value} activeColor="blue" active={active} />;
 };
 
 const SmallButton: React.FC<{

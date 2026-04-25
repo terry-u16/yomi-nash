@@ -77,10 +77,7 @@ export const TutorialCounterplayFlowPreview: React.FC<
         />
       ) : null}
       {activeStep >= 1 ? (
-        <PreviewCard
-          title={t("home.resultDisplay.heading")}
-          active
-        >
+        <PreviewCard title={t("home.resultDisplay.heading")} active>
           <TutorialAnalysisResultPreview
             valueText="+666.67"
             player2Probabilities={

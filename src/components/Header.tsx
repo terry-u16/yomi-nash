@@ -1,8 +1,20 @@
 import { Button, Flex, Heading, Icon, Menu, Portal } from "@chakra-ui/react";
-import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  Link as RouterLink,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import type React from "react";
-import { TbBook, TbCheck, TbChevronDown, TbHelp, TbHome, TbLanguage } from "react-icons/tb";
+import {
+  TbBook,
+  TbCheck,
+  TbChevronDown,
+  TbHelp,
+  TbHome,
+  TbLanguage,
+} from "react-icons/tb";
 import { ColorModeButton } from "./ui/color-mode";
 import { useTranslation } from "react-i18next";
 import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
@@ -19,9 +31,9 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   const currentLanguage: SupportedLanguage =
-    (lang && supportedLanguages.includes(lang as SupportedLanguage)
+    lang && supportedLanguages.includes(lang as SupportedLanguage)
       ? (lang as SupportedLanguage)
-      : supportedLanguages[0]);
+      : supportedLanguages[0];
 
   // 現在の言語セグメントを保ったままパスを生成する。
   const localizedPath = (segment?: string) => {

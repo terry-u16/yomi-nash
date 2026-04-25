@@ -44,9 +44,10 @@ vi.mock("@/components/ui/toaster", () => ({
 }));
 
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual<typeof import("react-router-dom")>(
-    "react-router-dom"
-  );
+  const actual =
+    await vi.importActual<typeof import("react-router-dom")>(
+      "react-router-dom"
+    );
   return {
     ...actual,
     useOutletContext: <T,>() => mockOutletContext() as unknown as T,
