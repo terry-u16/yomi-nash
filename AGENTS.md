@@ -48,8 +48,9 @@
 ## Commit & Pull Request Guidelines
 
 - Use short, imperative commit subjects (≤72 chars). Communicate “what” + “why”.
-- For PRs, include: (1) behaviour summary, (2) linked issues/tickets, (3) screenshots or recordings for UI tweaks, (4) a checklist showing `pnpm lint` / `pnpm test` runs. List follow-up tasks explicitly.
+- For PRs, include: (1) behaviour summary, (2) linked issues/tickets, (3) screenshots or recordings for UI tweaks, (4) a checklist showing `pnpm lint` / `pnpm format:check` / `pnpm test` runs. List follow-up tasks explicitly.
 
-## Communication Preferences
+## Documentation Notes
 
-リファクタリング方針や疑問点を共有するときは、Pull Request の説明やコメントを日本語で記載してください。テキストベースの応答も原則として日本語で返答してください。
+- `README.md` is public-facing and bilingual. Keep the Japanese section first, separate the English section with a horizontal rule, and update both sections together when changing user-facing explanations.
+- Keep detailed contributor and agent instructions in `AGENTS.md`; keep `README.md` focused on product overview, usage, setup, and license information.
