@@ -48,6 +48,14 @@ const resources = {
         },
         languageLabel: "表示言語",
       },
+      onboarding: {
+        helpToast: {
+          title: "チュートリアル",
+          description:
+            "入力例を見ながら、読み合いの設定から計算結果の見方まで一通り試せます。",
+          action: "試してみる",
+        },
+      },
       presets: {
         rps: {
           label: "じゃんけん",
@@ -181,6 +189,14 @@ const resources = {
           theory: "Theory",
         },
         languageLabel: "Language",
+      },
+      onboarding: {
+        helpToast: {
+          title: "Tutorial",
+          description:
+            "Follow the examples to try the full flow, from setting up a matchup to reading the results.",
+          action: "Try it",
+        },
       },
       presets: {
         rps: {

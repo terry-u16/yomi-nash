@@ -14,6 +14,7 @@ import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import SeoLinks from "./components/SeoLinks";
+import FirstVisitHelpToast from "./components/FirstVisitHelpToast";
 
 const App: React.FC = () => {
   return (
@@ -82,6 +83,7 @@ const LanguageGuard: React.FC = () => {
   return (
     <>
       <SeoLinks currentLanguage={lang as SupportedLanguage} />
+      <FirstVisitHelpToast />
       <Layout />
     </>
   );
