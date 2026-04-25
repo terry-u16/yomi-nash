@@ -1,5 +1,9 @@
 # yomi-nash
 
+※ English version is available [below](#overview).
+
+## 概要
+
 格闘ゲームの択、じゃんけん、読み合いなどの 2 人対戦ゲームで「どの選択肢をどのくらいの割合で選ぶとよさそうか」を、利得表（戦略相性表）から計算して可視化する Web アプリケーションです。
 
 専門的には、2 人ゼロサムゲームにおける混合戦略ナッシュ均衡を計算します。相手に選択割合を知られても弱みにつけ込まれない、安定した戦略を確認できます。
@@ -91,5 +95,103 @@ pnpm test:watch    # Vitest watch mode
 - `public/` – Vite から配信される静的アセット
 
 ## ライセンス
+
+MIT License
+
+---
+
+## Overview
+
+yomi-nash is a web application for calculating and visualizing mixed-strategy Nash equilibria from a payoff table for two-player games such as fighting game mixups, rock-paper-scissors, and other matchup situations.
+
+In technical terms, it solves two-player zero-sum games. It helps you find a stable strategy that cannot be exploited even if the opponent knows your selection probabilities.
+
+## Use Cases
+
+- Decide how often to use each option in fighting game neutral situations, okizeme, or set play
+- Find high-expected-value actions against an opponent with known tendencies
+- Check whether a matchup situation is worth seeking or avoiding
+- Learn two-player zero-sum games and mixed-strategy Nash equilibria through concrete examples
+- Reuse matchup settings with CSV import/export or share URLs
+
+## Usage
+
+For detailed tutorials and result explanations, see the in-app **Help** page. This README only covers the basic flow.
+
+### 1. Prepare a payoff table
+
+Enter Player 1's options as rows and Player 2's options as columns. Each cell represents how good that option pair is for Player 1.
+
+Larger values favor Player 1, smaller values favor Player 2, and `0` means even. For rock-paper-scissors, for example, you can use `+1` when Player 1 wins, `-1` when Player 1 loses, and `0` for a draw.
+
+If you are trying the app for the first time, load a sample preset to see how the table is structured.
+
+### 2. Calculate
+
+Press the calculate button in the control panel to compute the mixed-strategy Nash equilibrium for the current payoff table.
+
+### 3. Read the result
+
+The result shows how often Player 1 and Player 2 should choose each option.
+
+If Player 1's expected value is positive, the situation favors Player 1. If it is negative, the situation favors Player 2. You can also adjust the strategy sliders to see which actions gain expected value when the opponent's selection probabilities are biased.
+
+## Pages
+
+- **Home**: Main screen with the payoff table, control panel, and calculation result
+- **Help**: Tutorials for using the app and setting up matchup situations
+- **Theory**: Mathematical background for mixed-strategy Nash equilibria
+
+## For Developers
+
+### Requirements
+
+- Node.js 18 or later (LTS recommended)
+- pnpm
+
+### Setup and Development
+
+Install dependencies and start the development server:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Open `http://localhost:5173` in your browser. Hot reload is enabled while the dev server is running.
+
+Use the following commands for production builds and local previews:
+
+```bash
+pnpm build    # Type check + Vite build
+pnpm preview  # Preview the latest build locally
+```
+
+### Quality Checks
+
+```bash
+pnpm lint          # ESLint
+pnpm format        # Prettier (write)
+pnpm format:check  # Prettier (check only)
+pnpm test          # Vitest (jsdom)
+pnpm test:watch    # Vitest watch mode
+```
+
+See [AGENTS.md](AGENTS.md) for development guidelines and coding conventions.
+
+### Directory Overview
+
+- `src/main.tsx` – Application entry point
+- `src/App.tsx` – Routing for Home / Help / Theory
+- `src/components/` – Layout and shared UI. Chakra-related extensions live under `ui/`
+- `src/pages/` – Page-level UI. Home is split into focused subdirectories
+- `src/lib/` – i18n resources, presets, parsers, and persistence logic
+- `src/utils/` – CSV/share helpers and solver utilities
+- `src/constants/` – Schema versions and storage keys
+- `src/types/` – Shared application types
+- `src/test/utils/` – Vitest utilities
+- `public/` – Static assets served by Vite
+
+## License
 
 MIT License
