@@ -68,10 +68,14 @@ pnpm preview  # ローカルサーバで確認
 ### 品質チェック
 
 ```bash
-pnpm lint     # ESLint
-pnpm format   # Prettier (整形)
-pnpm test     # Vitest (jsdom)
+pnpm lint          # ESLint
+pnpm format        # Prettier (整形)
+pnpm format:check  # Prettier (確認のみ)
+pnpm test          # Vitest (jsdom)
+pnpm test:watch    # Vitest watch mode
 ```
+
+開発方針やコーディング規約の詳細は [AGENTS.md](AGENTS.md) を参照してください。
 
 ### ディレクトリ構成（抜粋）
 
