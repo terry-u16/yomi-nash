@@ -28,6 +28,20 @@ const sampleResult: GameResult = {
 };
 
 describe("createShareUrl", () => {
+  it("uses the origin without a language path by default", () => {
+    window.history.pushState({}, "", "/ja/help?foo=bar");
+
+    const url = createShareUrl(sampleInput);
+    const parsedUrl = new URL(url);
+
+    expect(parsedUrl.origin).toBe(window.location.origin);
+    expect(parsedUrl.pathname).toBe("/");
+    expect(parsedUrl.searchParams.get("schemaVersion")).toBe(
+      String(DATA_SCHEMA_VERSION)
+    );
+    expect(parsedUrl.searchParams.get("gameInput")).toBeTruthy();
+  });
+
   it("encodes the schema version and game input", () => {
     const url = createShareUrl(sampleInput, { baseUrl: "https://example.com" });
     const params = new URL(url).searchParams;

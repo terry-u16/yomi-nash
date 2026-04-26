@@ -11,7 +11,7 @@ const defaultBaseUrl = () => {
   if (typeof window === "undefined") {
     throw new Error("baseUrl is required when window is undefined");
   }
-  return `${window.location.origin}${window.location.pathname}`;
+  return `${window.location.origin}/`;
 };
 
 export function createShareUrl(

@@ -39,6 +39,7 @@ const App: React.FC = () => {
 };
 
 const RedirectToPreferredLanguage: React.FC = () => {
+  const location = useLocation();
   const { i18n } = useTranslation();
   const resolved = (i18n.resolvedLanguage ?? i18n.language) as
     | SupportedLanguage
@@ -49,7 +50,9 @@ const RedirectToPreferredLanguage: React.FC = () => {
       : defaultLanguage;
 
   // `/` アクセス時は保存済みまたは自動判定した言語へ誘導する。
-  return <Navigate to={`/${fallback}`} replace />;
+  return (
+    <Navigate to={`/${fallback}${location.search}${location.hash}`} replace />
+  );
 };
 
 const LanguageGuard: React.FC = () => {
