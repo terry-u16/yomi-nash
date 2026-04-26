@@ -30,16 +30,14 @@ const FirstVisitHelpToast: React.FC = () => {
         return;
       }
 
-      hasShownInSession = true;
       localStorage.setItem(STORAGE_KEYS.firstVisitHelpToastSeen, "true");
     } catch {
       if (hasShownInSession) {
         return;
       }
-
-      hasShownInSession = true;
     }
 
+    hasShownInSession = true;
     toaster.create({
       id: toastId,
       title: t("onboarding.helpToast.title"),

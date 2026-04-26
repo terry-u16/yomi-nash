@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 const scrollPositions = new Map<string, number>();
 
 const getPageScrollKey = (location: ReturnType<typeof useLocation>) => {
-  return `${location.pathname}${location.search}`;
+  return location.pathname;
 };
 
 const PageScrollRestoration: React.FC = () => {

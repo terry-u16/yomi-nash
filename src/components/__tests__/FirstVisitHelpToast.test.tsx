@@ -117,6 +117,20 @@ describe("FirstVisitHelpToast", () => {
     expect(localStorageMock.setItem).not.toHaveBeenCalled();
   });
 
+  it("still shows the toast when localStorage cannot persist it", async () => {
+    localStorageMock.setItem.mockImplementation(() => {
+      throw new Error("Storage disabled");
+    });
+
+    await renderFirstVisitHelpToast();
+
+    expect(mocks.toasterCreate).toHaveBeenCalledTimes(1);
+    expect(mocks.toasterCreate.mock.calls[0][0]).toMatchObject({
+      title: "onboarding.helpToast.title",
+      type: "info",
+    });
+  });
+
   it("shows the toast on the help page so users can jump to the tutorial", async () => {
     mocks.route.pathname = "/ja/help";
 

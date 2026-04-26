@@ -33,7 +33,7 @@ export const Toaster = () => {
             {toast.action && (
               <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger>
             )}
-            {(toast.closable || toast.meta?.closable) && <Toast.CloseTrigger />}
+            {(toast.closable ?? toast.meta?.closable) && <Toast.CloseTrigger />}
           </Toast.Root>
         )}
       </ChakraToaster>

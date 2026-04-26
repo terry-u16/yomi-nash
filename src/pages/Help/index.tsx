@@ -14,6 +14,10 @@ const localeComponentMap: Record<SupportedLanguage, React.ComponentType> = {
 };
 
 const prefersReducedMotion = () => {
+  if (typeof window.matchMedia !== "function") {
+    return true;
+  }
+
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 };
 
