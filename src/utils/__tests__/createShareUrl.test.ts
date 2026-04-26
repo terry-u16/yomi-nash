@@ -40,7 +40,7 @@ describe("createShareUrl", () => {
     expect(parsedUrl.searchParams.get("schemaVersion")).toBe(
       String(SHARE_SCHEMA_VERSION)
     );
-    expect(parsedUrl.searchParams.get("gameInput")).toBeTruthy();
+    expect(parsedUrl.searchParams.get("i")).toBeTruthy();
   });
 
   it("encodes the schema version and game input", () => {
@@ -48,26 +48,31 @@ describe("createShareUrl", () => {
     const params = new URL(url).searchParams;
 
     expect(params.get("schemaVersion")).toBe(String(SHARE_SCHEMA_VERSION));
-    expect(params.get("gameInput")).toBeTruthy();
-    expect(params.get("gameResult")).toBeNull();
+    expect(params.get("i")).toBeTruthy();
+    expect(params.get("gameInput")).toBeNull();
+    expect(params.get("r")).toBeNull();
   });
 
-  it("includes only result probabilities when provided", () => {
+  it("includes compact input and result payloads when provided", () => {
     const url = createShareUrl(sampleInput, {
       baseUrl: "https://example.com/app",
       result: sampleResult,
     });
     const params = new URL(url).searchParams;
-    const rawResult = params.get("gameResult");
+    const rawInput = params.get("i");
+    const rawResult = params.get("r");
 
+    expect(rawInput).toBeTruthy();
     expect(rawResult).toBeTruthy();
-    if (!rawResult) return;
+    if (!rawInput || !rawResult) return;
+    expect(decodeShareObject(rawInput)).toEqual({
+      r: ["A", "B"],
+      c: ["X", "Y"],
+      m: [1, 2, 3, 4],
+    });
     expect(decodeShareObject(rawResult)).toEqual({
-      version: SHARE_SCHEMA_VERSION,
-      payload: {
-        player1Probabilities: [0.5, 0.5],
-        player2Probabilities: [0.25, 0.75],
-      },
+      p: [0.5, 0.5],
+      q: [0.25, 0.75],
     });
   });
 
@@ -78,6 +83,6 @@ describe("createShareUrl", () => {
     });
     const params = new URL(url).searchParams;
 
-    expect(params.get("gameResult")).toBeNull();
+    expect(params.get("r")).toBeNull();
   });
 });

@@ -6,7 +6,7 @@ import { GameResultSchema } from "@/lib/parser/parseGameResult";
 import type { GameInputUI, GameResult } from "@/types/game";
 import { createDefaultGameInputUI } from "@/lib/presets";
 import { DATA_SCHEMA_VERSION, STORAGE_KEYS } from "@/constants/storage";
-import type { ShareEnvelope } from "@/utils/shareCodec";
+import type { ShareEnvelopeV1 } from "@/utils/shareCodec";
 
 interface Props {
   maxWidth: string | undefined;
@@ -17,7 +17,7 @@ const Main: React.FC<Props> = ({ maxWidth }: Props) => {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.inputUI);
       if (raw) {
-        const parsed = JSON.parse(raw) as ShareEnvelope<unknown>;
+        const parsed = JSON.parse(raw) as ShareEnvelopeV1<unknown>;
         if (parsed.version === DATA_SCHEMA_VERSION) {
           const validated = GameInputUISchema.safeParse(parsed.payload);
           if (validated.success) {
@@ -34,7 +34,7 @@ const Main: React.FC<Props> = ({ maxWidth }: Props) => {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.result);
       if (raw) {
-        const parsed = JSON.parse(raw) as ShareEnvelope<unknown>;
+        const parsed = JSON.parse(raw) as ShareEnvelopeV1<unknown>;
         if (parsed.version === DATA_SCHEMA_VERSION) {
           const validated = GameResultSchema.safeParse(parsed.payload);
           if (validated.success) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { encodeShareObject } from "@/utils/shareCodec";
+import { encodeLegacyShareObject, encodeShareObject } from "@/utils/shareCodec";
 import { decodeGameInputUI } from "@/lib/parser/parseGameInputUI";
 import { decodeGameResult } from "@/lib/parser/parseGameResult";
 import type { GameInputUI, GameResult } from "@/types/game";
@@ -30,10 +30,27 @@ const sampleResult: GameResult = {
   ],
 };
 
+const sampleInputV2 = {
+  r: ["A", "B"],
+  c: ["X", "Y"],
+  m: [1, 2, 3, 4],
+};
+
 describe("share encoding", () => {
-  it("encodes data with version envelope", () => {
-    const token = encodeShareObject(sampleInputUI);
+  it("encodes compact input data with version envelope", () => {
+    const token = encodeShareObject(sampleInputV2);
     const parsed = decodeGameInputUI(token);
+    expect(parsed).not.toBeNull();
+    if (!parsed) return;
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(parsed.data).toEqual(sampleInputUI);
+  });
+
+  it("parses legacy input data", () => {
+    const token = encodeLegacyShareObject(sampleInputUI);
+    const parsed = decodeGameInputUI(token, DATA_SCHEMA_VERSION);
+
     expect(parsed).not.toBeNull();
     if (!parsed) return;
     expect(parsed.ok).toBe(true);
@@ -47,7 +64,7 @@ describe("share encoding", () => {
       payload: sampleInputUI,
     } as const;
     const token = compressToEncodedURIComponent(JSON.stringify(envelope));
-    const parsed = decodeGameInputUI(token);
+    const parsed = decodeGameInputUI(token, SHARE_SCHEMA_VERSION + 1);
 
     expect(parsed).not.toBeNull();
     if (!parsed) return;
@@ -57,8 +74,8 @@ describe("share encoding", () => {
   });
 
   it("parses a legacy valid game result", () => {
-    const token = encodeShareObject(sampleResult, DATA_SCHEMA_VERSION);
-    const parsed = decodeGameResult(token, sampleInputUI);
+    const token = encodeLegacyShareObject(sampleResult);
+    const parsed = decodeGameResult(token, sampleInputUI, DATA_SCHEMA_VERSION);
 
     expect(parsed).not.toBeNull();
     if (!parsed) return;
@@ -69,8 +86,8 @@ describe("share encoding", () => {
 
   it("parses a valid compact game result", () => {
     const token = encodeShareObject({
-      player1Probabilities: [0.5, 0.5],
-      player2Probabilities: [0.25, 0.75],
+      p: [0.5, 0.5],
+      q: [0.25, 0.75],
     });
     const parsed = decodeGameResult(token, sampleInputUI);
 
@@ -91,7 +108,7 @@ describe("share encoding", () => {
       payload: invalidResult,
     } as const;
     const token = compressToEncodedURIComponent(JSON.stringify(envelope));
-    const parsed = decodeGameResult(token, sampleInputUI);
+    const parsed = decodeGameResult(token, sampleInputUI, DATA_SCHEMA_VERSION);
 
     expect(parsed).not.toBeNull();
     if (!parsed) return;

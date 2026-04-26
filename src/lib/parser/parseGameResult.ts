@@ -1,8 +1,9 @@
 import { z } from "zod";
 import type { GameResult, GameInputUI } from "@/types/game";
 import type { Result } from "@/types/result";
-import { decodeShareObject } from "@/utils/shareCodec";
+import { decodeShareObject, type ShareEnvelopeV1 } from "@/utils/shareCodec";
 import {
+  DATA_SCHEMA_VERSION,
   SHARE_SCHEMA_VERSION,
   SUPPORTED_SHARE_SCHEMA_VERSIONS,
 } from "@/constants/storage";
@@ -20,22 +21,17 @@ export const GameResultSchema = z.object({
 });
 
 const SharedGameResultV2Schema = z.object({
-  player1Probabilities: z.array(z.number().min(0).max(1)),
-  player2Probabilities: z.array(z.number().min(0).max(1)),
+  p: z.array(z.number().min(0).max(1)),
+  q: z.array(z.number().min(0).max(1)),
 });
 
 export function decodeGameResult(
   raw: string | null,
-  inputUI: GameInputUI
+  inputUI: GameInputUI,
+  version: number = SHARE_SCHEMA_VERSION
 ): Result<GameResult> | null {
   if (!raw) return null;
-
-  const envelope = decodeShareObject<unknown>(raw);
-  if (!envelope) {
-    return { ok: false, error: "共有された結果データを復元できませんでした" };
-  }
-
-  if (!SUPPORTED_SHARE_SCHEMA_VERSIONS.includes(envelope.version)) {
+  if (!SUPPORTED_SHARE_SCHEMA_VERSIONS.includes(version)) {
     return {
       ok: false,
       error: "共有データのバージョンが現在のアプリと一致していません",
@@ -43,44 +39,73 @@ export function decodeGameResult(
   }
 
   try {
-    if (envelope.version >= SHARE_SCHEMA_VERSION) {
-      return decodeSharedGameResultV2(envelope.payload, inputUI);
-    }
-
-    const result = GameResultSchema.parse(envelope.payload);
-
-    // バリデーション：ラベルの一致
-    const labels1 = new Set(inputUI.strategyLabels1);
-    const labels2 = new Set(inputUI.strategyLabels2);
-
-    for (const { label } of result.player1Strategy) {
-      if (!labels1.has(label)) {
-        return { ok: false, error: `不正なplayer1のラベル: ${label}` };
+    switch (version) {
+      case DATA_SCHEMA_VERSION: {
+        const envelope = decodeShareObject<ShareEnvelopeV1<unknown>>(raw);
+        if (!envelope || envelope.version !== DATA_SCHEMA_VERSION) {
+          return {
+            ok: false,
+            error: "共有された結果データを復元できませんでした",
+          };
+        }
+        return decodeLegacyGameResult(envelope.payload, inputUI);
       }
-    }
-
-    for (const { label } of result.player2Strategy) {
-      if (!labels2.has(label)) {
-        return { ok: false, error: `不正なplayer2のラベル: ${label}` };
+      case SHARE_SCHEMA_VERSION: {
+        const payload = decodeShareObject<unknown>(raw);
+        if (payload === null) {
+          return {
+            ok: false,
+            error: "共有された結果データを復元できませんでした",
+          };
+        }
+        return decodeSharedGameResultV2(payload, inputUI);
       }
+      default:
+        return {
+          ok: false,
+          error: "共有データのバージョンが現在のアプリと一致していません",
+        };
     }
-
-    // バリデーション：payoffMatrixのサイズ
-    if (
-      result.payoffMatrix.length !== inputUI.strategyLabels1.length ||
-      result.payoffMatrix[0]?.length !== inputUI.strategyLabels2.length
-    ) {
-      return {
-        ok: false,
-        error: "GameResultのpayoffMatrixのサイズがGameInputUIと一致しません",
-      };
-    }
-
-    return { ok: true, data: result };
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     return { ok: false, error: message };
   }
+}
+
+function decodeLegacyGameResult(
+  payload: unknown,
+  inputUI: GameInputUI
+): Result<GameResult> {
+  const result = GameResultSchema.parse(payload);
+
+  // バリデーション：ラベルの一致
+  const labels1 = new Set(inputUI.strategyLabels1);
+  const labels2 = new Set(inputUI.strategyLabels2);
+
+  for (const { label } of result.player1Strategy) {
+    if (!labels1.has(label)) {
+      return { ok: false, error: `不正なplayer1のラベル: ${label}` };
+    }
+  }
+
+  for (const { label } of result.player2Strategy) {
+    if (!labels2.has(label)) {
+      return { ok: false, error: `不正なplayer2のラベル: ${label}` };
+    }
+  }
+
+  // バリデーション：payoffMatrixのサイズ
+  if (
+    result.payoffMatrix.length !== inputUI.strategyLabels1.length ||
+    result.payoffMatrix[0]?.length !== inputUI.strategyLabels2.length
+  ) {
+    return {
+      ok: false,
+      error: "GameResultのpayoffMatrixのサイズがGameInputUIと一致しません",
+    };
+  }
+
+  return { ok: true, data: result };
 }
 
 function decodeSharedGameResultV2(
@@ -90,9 +115,8 @@ function decodeSharedGameResultV2(
   const probabilities = SharedGameResultV2Schema.parse(payload);
 
   if (
-    probabilities.player1Probabilities.length !==
-      inputUI.strategyLabels1.length ||
-    probabilities.player2Probabilities.length !== inputUI.strategyLabels2.length
+    probabilities.p.length !== inputUI.strategyLabels1.length ||
+    probabilities.q.length !== inputUI.strategyLabels2.length
   ) {
     return {
       ok: false,
@@ -113,11 +137,11 @@ function decodeSharedGameResultV2(
     data: {
       player1Strategy: inputUI.strategyLabels1.map((label, index) => ({
         label,
-        probability: probabilities.player1Probabilities[index],
+        probability: probabilities.p[index],
       })),
       player2Strategy: inputUI.strategyLabels2.map((label, index) => ({
         label,
-        probability: probabilities.player2Probabilities[index],
+        probability: probabilities.q[index],
       })),
       payoffMatrix: inputResult.data.payoffMatrix,
     },

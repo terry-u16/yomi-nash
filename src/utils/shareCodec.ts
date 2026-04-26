@@ -2,39 +2,30 @@ import {
   compressToEncodedURIComponent,
   decompressFromEncodedURIComponent,
 } from "lz-string";
-import { SHARE_SCHEMA_VERSION } from "@/constants/storage";
+import { DATA_SCHEMA_VERSION } from "@/constants/storage";
 
-export interface ShareEnvelope<T> {
-  version: number;
+export interface ShareEnvelopeV1<T> {
+  version: typeof DATA_SCHEMA_VERSION;
   payload: T;
 }
 
-// 型安全のためジェネリック
-export function encodeShareObject<T>(
-  obj: T,
-  version: number = SHARE_SCHEMA_VERSION
-): string {
-  const envelope: ShareEnvelope<T> = {
-    version,
+export function encodeShareObject<T>(obj: T): string {
+  return compressToEncodedURIComponent(JSON.stringify(obj));
+}
+
+export function encodeLegacyShareObject<T>(obj: T): string {
+  const envelope: ShareEnvelopeV1<T> = {
+    version: DATA_SCHEMA_VERSION,
     payload: obj,
   };
   return compressToEncodedURIComponent(JSON.stringify(envelope));
 }
 
-export function decodeShareObject<T>(raw: string): ShareEnvelope<T> | null {
+export function decodeShareObject<T>(raw: string): T | null {
   try {
     const json = decompressFromEncodedURIComponent(raw);
     if (!json) return null;
-    const parsed = JSON.parse(json) as Partial<ShareEnvelope<T>>;
-    if (
-      typeof parsed !== "object" ||
-      parsed === null ||
-      typeof parsed.version !== "number" ||
-      !("payload" in parsed)
-    ) {
-      return null;
-    }
-    return parsed as ShareEnvelope<T>;
+    return JSON.parse(json) as T;
   } catch {
     return null;
   }
