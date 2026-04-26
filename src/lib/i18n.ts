@@ -32,7 +32,7 @@ const resources = {
       common: {
         appName: "Yomi Nash",
         appDescription:
-          "格闘ゲームをはじめとした2人対戦ゲームの読み合いにおいて、ゲーム理論を用いてどの選択肢をどのくらいの確率で選ぶのがおすすめかを計算するアプリです。",
+          "格闘ゲームをはじめとした2人対戦ゲームの読み合いにおいて、ゲーム理論を用いてナッシュ均衡を計算することで、どの選択肢をどのくらいの確率で選ぶのがおすすめかを求めるアプリです。",
         seoTitle: "Yomi Nash | 格闘ゲームの読み合い分析アプリ",
         player1: "Player 1",
         player2: "Player 2",
@@ -182,7 +182,7 @@ const resources = {
       common: {
         appName: "Yomi Nash",
         appDescription:
-          "Use game theory to calculate recommended option probabilities for fighting games and other two-player competitive mind games.",
+          "Use game theory to calculate Nash equilibria and determine recommended option probabilities for fighting games and other two-player competitive mind games.",
         seoTitle: "Yomi Nash | Fighting game mix-up analyzer app",
         player1: "Player 1",
         player2: "Player 2",
