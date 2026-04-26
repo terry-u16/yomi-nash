@@ -174,7 +174,7 @@ const resources = {
   en: {
     translation: {
       common: {
-        appName: "yomi-nash",
+        appName: "Yomi Nash",
         appDescription:
           "Use game theory to calculate recommended option probabilities for fighting games and other two-player competitive mind games.",
         player1: "Player 1",
@@ -291,7 +291,7 @@ const resources = {
           presetError: "Failed to load the preset",
           presetApplied: "Applied preset {{label}}",
           shareError: "Failed to generate the share URL",
-          shareTweet: "yomi-nash | Fighting game mix-up analysis app #yominash",
+          shareTweet: "Yomi Nash | Fighting game mix-up analysis app #yominash",
           resetSuccess: "Reset completed",
         },
         resultDisplay: {
