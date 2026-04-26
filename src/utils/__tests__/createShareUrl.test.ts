@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createShareUrl } from "@/utils/createShareUrl";
 import type { GameInputUI, GameResult } from "@/types/game";
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import { SHARE_SCHEMA_VERSION } from "@/constants/storage";
+import { decodeShareObject } from "@/utils/shareCodec";
 
 const sampleInput: GameInputUI = {
   strategyLabels1: ["A", "B"],
@@ -37,28 +38,42 @@ describe("createShareUrl", () => {
     expect(parsedUrl.origin).toBe(window.location.origin);
     expect(parsedUrl.pathname).toBe("/");
     expect(parsedUrl.searchParams.get("schemaVersion")).toBe(
-      String(DATA_SCHEMA_VERSION)
+      String(SHARE_SCHEMA_VERSION)
     );
-    expect(parsedUrl.searchParams.get("gameInput")).toBeTruthy();
+    expect(parsedUrl.searchParams.get("i")).toBeTruthy();
   });
 
   it("encodes the schema version and game input", () => {
     const url = createShareUrl(sampleInput, { baseUrl: "https://example.com" });
     const params = new URL(url).searchParams;
 
-    expect(params.get("schemaVersion")).toBe(String(DATA_SCHEMA_VERSION));
-    expect(params.get("gameInput")).toBeTruthy();
-    expect(params.get("gameResult")).toBeNull();
+    expect(params.get("schemaVersion")).toBe(String(SHARE_SCHEMA_VERSION));
+    expect(params.get("i")).toBeTruthy();
+    expect(params.get("gameInput")).toBeNull();
+    expect(params.get("r")).toBeNull();
   });
 
-  it("includes the encoded game result when provided", () => {
+  it("includes compact input and result payloads when provided", () => {
     const url = createShareUrl(sampleInput, {
       baseUrl: "https://example.com/app",
       result: sampleResult,
     });
     const params = new URL(url).searchParams;
+    const rawInput = params.get("i");
+    const rawResult = params.get("r");
 
-    expect(params.get("gameResult")).toBeTruthy();
+    expect(rawInput).toBeTruthy();
+    expect(rawResult).toBeTruthy();
+    if (!rawInput || !rawResult) return;
+    expect(decodeShareObject(rawInput)).toEqual([
+      ["A", "B"],
+      ["X", "Y"],
+      [1, 2, 3, 4],
+    ]);
+    expect(decodeShareObject(rawResult)).toEqual([
+      [0.5, 0.5],
+      [0.25, 0.75],
+    ]);
   });
 
   it("omits the game result when null is passed", () => {
@@ -68,6 +83,6 @@ describe("createShareUrl", () => {
     });
     const params = new URL(url).searchParams;
 
-    expect(params.get("gameResult")).toBeNull();
+    expect(params.get("r")).toBeNull();
   });
 });

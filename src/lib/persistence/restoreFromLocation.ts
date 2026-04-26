@@ -1,4 +1,8 @@
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import {
+  DATA_SCHEMA_VERSION,
+  SHARE_SCHEMA_VERSION,
+  SUPPORTED_SHARE_SCHEMA_VERSIONS,
+} from "@/constants/storage";
 import type { GameInputUI, GameResult } from "@/types/game";
 import type { Result } from "@/types/result";
 import { decodeGameInputUI } from "@/lib/parser/parseGameInputUI";
@@ -23,20 +27,24 @@ export function restoreFromLocation(
 ): RestoreFromLocationOutcome {
   const searchParams = new URLSearchParams(search);
   const versionParam = searchParams.get("schemaVersion");
+  let version: number = DATA_SCHEMA_VERSION;
 
-  if (
-    versionParam !== null &&
-    Number.parseInt(versionParam, 10) !== DATA_SCHEMA_VERSION
-  ) {
-    return { status: "schema-version-mismatch" };
+  if (versionParam !== null) {
+    version = Number.parseInt(versionParam, 10);
+    if (!SUPPORTED_SHARE_SCHEMA_VERSIONS.includes(version)) {
+      return { status: "schema-version-mismatch" };
+    }
   }
 
-  const rawInput = searchParams.get("gameInput");
+  const rawInput =
+    version === SHARE_SCHEMA_VERSION
+      ? searchParams.get("i")
+      : searchParams.get("gameInput");
   if (!rawInput) {
     return { status: "none" };
   }
 
-  const inputResult = decodeGameInputUI(rawInput);
+  const inputResult = decodeGameInputUI(rawInput, version);
   if (!inputResult) {
     return { status: "none" };
   }
@@ -48,7 +56,10 @@ export function restoreFromLocation(
     };
   }
 
-  const rawResult = searchParams.get("gameResult");
+  const rawResult =
+    version === SHARE_SCHEMA_VERSION
+      ? searchParams.get("r")
+      : searchParams.get("gameResult");
   if (!rawResult) {
     return {
       status: "success",
@@ -57,7 +68,7 @@ export function restoreFromLocation(
     };
   }
 
-  const resultResult = decodeGameResult(rawResult, inputResult.data);
+  const resultResult = decodeGameResult(rawResult, inputResult.data, version);
   if (!resultResult) {
     return {
       status: "success",

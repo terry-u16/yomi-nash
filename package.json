@@ -21,6 +21,7 @@
     "chroma-js": "^3.1.2",
     "d3-scale": "^4.0.2",
     "encoding-japanese": "^2.2.0",
+    "fflate": "^0.8.2",
     "framer-motion": "^12.12.1",
     "glpk.js": "^4.0.2",
     "i18next": "^25.5.3",

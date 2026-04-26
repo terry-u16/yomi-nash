@@ -1,8 +1,12 @@
 import { z } from "zod";
 import type { GameInputUI } from "@/types/game";
 import type { Result } from "@/types/result";
-import { decodeShareObject } from "@/utils/shareCodec";
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import { decodeLegacyShareObject, decodeShareObject } from "@/utils/shareCodec";
+import {
+  DATA_SCHEMA_VERSION,
+  SHARE_SCHEMA_VERSION,
+  SUPPORTED_SHARE_SCHEMA_VERSIONS,
+} from "@/constants/storage";
 
 export const GameInputUISchema = z.object({
   strategyLabels1: z.array(z.string()).min(1),
@@ -10,17 +14,18 @@ export const GameInputUISchema = z.object({
   payoffMatrix: z.array(z.array(z.string()).min(1)).min(1),
 });
 
+const SharedGameInputV2Schema = z.tuple([
+  z.array(z.string()).min(1),
+  z.array(z.string()).min(1),
+  z.array(z.number().finite()),
+]);
+
 export function decodeGameInputUI(
-  raw: string | null
+  raw: string | null,
+  version: number = SHARE_SCHEMA_VERSION
 ): Result<GameInputUI> | null {
   if (!raw) return null;
-
-  const envelope = decodeShareObject<GameInputUI>(raw);
-  if (!envelope) {
-    return { ok: false, error: "共有された入力データを復元できませんでした" };
-  }
-
-  if (envelope.version !== DATA_SCHEMA_VERSION) {
+  if (!SUPPORTED_SHARE_SCHEMA_VERSIONS.includes(version)) {
     return {
       ok: false,
       error: "共有データのバージョンが現在のアプリと一致していません",
@@ -28,7 +33,13 @@ export function decodeGameInputUI(
   }
 
   try {
-    const input = GameInputUISchema.parse(envelope.payload);
+    const input = decodeVersionedGameInputUI(raw, version);
+    if (!input) {
+      return {
+        ok: false,
+        error: "共有された入力データを復元できませんでした",
+      };
+    }
 
     // バリデーション：行列のサイズがラベル数と一致
     const rows = input.payoffMatrix.length;
@@ -49,4 +60,49 @@ export function decodeGameInputUI(
     const message = e instanceof Error ? e.message : String(e);
     return { ok: false, error: message };
   }
+}
+
+function decodeVersionedGameInputUI(
+  raw: string,
+  version: number
+): GameInputUI | null {
+  switch (version) {
+    case DATA_SCHEMA_VERSION: {
+      const envelope = decodeLegacyShareObject<unknown>(raw);
+      if (!envelope || envelope.version !== DATA_SCHEMA_VERSION) {
+        return null;
+      }
+      return GameInputUISchema.parse(envelope.payload);
+    }
+    case SHARE_SCHEMA_VERSION: {
+      const payload = decodeShareObject<unknown>(raw);
+      if (payload === null) {
+        return null;
+      }
+      return decodeSharedGameInputV2(payload);
+    }
+    default:
+      return null;
+  }
+}
+
+function decodeSharedGameInputV2(payload: unknown): GameInputUI {
+  const [strategyLabels1, strategyLabels2, payoffMatrix] =
+    SharedGameInputV2Schema.parse(payload);
+  const rowCount = strategyLabels1.length;
+  const colCount = strategyLabels2.length;
+
+  if (payoffMatrix.length !== rowCount * colCount) {
+    throw new Error("利得行列の要素数が行・列のラベル数と一致していません。");
+  }
+
+  return {
+    strategyLabels1,
+    strategyLabels2,
+    payoffMatrix: Array.from({ length: rowCount }, (_, rowIndex) =>
+      payoffMatrix
+        .slice(rowIndex * colCount, (rowIndex + 1) * colCount)
+        .map((value) => String(value))
+    ),
+  };
 }

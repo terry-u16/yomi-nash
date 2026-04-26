@@ -5,6 +5,7 @@ import type { GameInput, GameInputUI, GameResult } from "@/types/game";
 import { solveGame } from "@/utils/solveGameInput";
 import { Stack } from "@chakra-ui/react";
 import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
+import type { SetStateAction } from "react";
 import { restoreFromLocation } from "@/lib/persistence/restoreFromLocation";
 import { persistToStorage } from "@/lib/persistence/persistToStorage";
 import { useOutletContext } from "react-router-dom";
@@ -47,6 +48,20 @@ const Home: React.FC = () => {
       }
     },
     [setResult, t]
+  );
+
+  const handleInputChange = useCallback(
+    (action: SetStateAction<GameInputUI>) => {
+      setInputUI(action);
+      if (result) {
+        setResult(null);
+        toaster.create({
+          title: t("home.toasts.resultCleared"),
+          type: "warning",
+        });
+      }
+    },
+    [result, setInputUI, setResult, t]
   );
 
   // 初回マウント時にURL から復元（localStorage は Main 初期化で処理済み）
@@ -107,10 +122,10 @@ const Home: React.FC = () => {
 
   return (
     <Stack gap={4} mb={4}>
-      <PayoffTable inputUI={inputUI} setInputUI={setInputUI} />
+      <PayoffTable inputUI={inputUI} setInputUI={handleInputChange} />
       <TableControls
         inputUI={inputUI}
-        setInputUI={setInputUI}
+        setInputUI={handleInputChange}
         onCalculate={handleCalculate}
         result={result}
         onReset={() => setResult(null)}
