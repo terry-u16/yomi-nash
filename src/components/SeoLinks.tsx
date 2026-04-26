@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
+import {
+  defaultLanguage,
+  supportedLanguages,
+  type SupportedLanguage,
+} from "@/lib/i18n";
 
 const managedLinkAttribute = "data-yomi-seo-link";
 const managedMetaAttribute = "data-yomi-seo-meta";
@@ -63,7 +67,7 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
       createLink("alternate", href, language);
     });
 
-    const defaultHref = `${origin}/${supportedLanguages[0]}${remainderPath}`;
+    const defaultHref = `${origin}/${defaultLanguage}${remainderPath}`;
     createLink("alternate", defaultHref, "x-default");
 
     return removeManagedLinks;

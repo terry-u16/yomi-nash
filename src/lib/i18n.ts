@@ -2,10 +2,9 @@ import i18n, { type Resource } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 export const languageStorageKey = "yomi-nash.language";
-// The order of supportedLanguages determines the default language (supportedLanguages[0]).
-// Changing this order is a breaking change for default language selection.
 export const supportedLanguages = ["ja", "en"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
+export const defaultLanguage: SupportedLanguage = "en";
 
 const isSupportedLanguage = (
   value: string | null | undefined
@@ -318,7 +317,7 @@ const resources = {
 
 const getInitialLanguage = (): SupportedLanguage => {
   if (typeof window === "undefined") {
-    return "en";
+    return defaultLanguage;
   }
 
   const languageFromPath = getLanguageFromPathname();
@@ -345,7 +344,7 @@ const getInitialLanguage = (): SupportedLanguage => {
     return fallbackNavigator;
   }
 
-  return "en";
+  return defaultLanguage;
 };
 
 void i18n
@@ -353,7 +352,7 @@ void i18n
   .init({
     resources,
     lng: getInitialLanguage(),
-    fallbackLng: "en",
+    fallbackLng: defaultLanguage,
     interpolation: {
       escapeValue: false,
     },

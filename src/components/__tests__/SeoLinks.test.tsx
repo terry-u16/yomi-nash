@@ -72,7 +72,7 @@ describe("SeoLinks", () => {
       "http://localhost:3000/en/help"
     );
     expect(getLink("alternate", "x-default")?.href).toBe(
-      "http://localhost:3000/ja/help"
+      "http://localhost:3000/en/help"
     );
   });
 });

@@ -17,7 +17,11 @@ import {
 } from "react-icons/tb";
 import { ColorModeButton } from "./ui/color-mode";
 import { useTranslation } from "react-i18next";
-import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
+import {
+  defaultLanguage,
+  supportedLanguages,
+  type SupportedLanguage,
+} from "@/lib/i18n";
 
 const LANGUAGE_LABELS: Record<SupportedLanguage, string> = {
   ja: "日本語",
@@ -33,7 +37,7 @@ const Header: React.FC = () => {
   const currentLanguage: SupportedLanguage =
     lang && supportedLanguages.includes(lang as SupportedLanguage)
       ? (lang as SupportedLanguage)
-      : supportedLanguages[0];
+      : defaultLanguage;
 
   // 現在の言語セグメントを保ったままパスを生成する。
   const localizedPath = (segment?: string) => {

@@ -10,7 +10,11 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Help from "./pages/Help";
 import Theory from "./pages/Theory";
-import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
+import {
+  defaultLanguage,
+  supportedLanguages,
+  type SupportedLanguage,
+} from "@/lib/i18n";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import SeoLinks from "./components/SeoLinks";
@@ -42,7 +46,7 @@ const RedirectToPreferredLanguage: React.FC = () => {
   const fallback =
     resolved && supportedLanguages.includes(resolved)
       ? resolved
-      : supportedLanguages[0];
+      : defaultLanguage;
 
   // `/` アクセス時は保存済みまたは自動判定した言語へ誘導する。
   return <Navigate to={`/${fallback}`} replace />;
@@ -62,7 +66,7 @@ const LanguageGuard: React.FC = () => {
     if (!supportedLanguages.includes(lang as SupportedLanguage)) {
       // 未対応の言語セグメントは既定言語に置き換えてフォールバックする。
       const segments = location.pathname.split("/").filter(Boolean);
-      const fallbackSegments = [supportedLanguages[0], ...segments.slice(1)];
+      const fallbackSegments = [defaultLanguage, ...segments.slice(1)];
       const redirectPath = `/${fallbackSegments.join("/")}`;
       navigate(`${redirectPath}${location.search}${location.hash}`, {
         replace: true,
