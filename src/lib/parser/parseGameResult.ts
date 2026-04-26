@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { GameResult, GameInputUI } from "@/types/game";
 import type { Result } from "@/types/result";
-import { decodeShareObject, type ShareEnvelopeV1 } from "@/utils/shareCodec";
+import { decodeLegacyShareObject, decodeShareObject } from "@/utils/shareCodec";
 import {
   DATA_SCHEMA_VERSION,
   SHARE_SCHEMA_VERSION,
@@ -41,7 +41,7 @@ export function decodeGameResult(
   try {
     switch (version) {
       case DATA_SCHEMA_VERSION: {
-        const envelope = decodeShareObject<ShareEnvelopeV1<unknown>>(raw);
+        const envelope = decodeLegacyShareObject<unknown>(raw);
         if (!envelope || envelope.version !== DATA_SCHEMA_VERSION) {
           return {
             ok: false,
