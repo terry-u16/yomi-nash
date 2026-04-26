@@ -15,6 +15,7 @@ import {
   generateCsvFromGameInputUI,
   parseCsvInputFromBinary,
 } from "@/utils/parseCsvInput";
+import { createXShareIntent } from "@/utils/createXShareIntent";
 import { useTranslation } from "react-i18next";
 
 interface UseTableControlsParams {
@@ -143,10 +144,10 @@ export const useTableControls = ({
   const handleShare = useCallback(() => {
     try {
       const shareUrl = createShareUrl(inputUI, { result });
-      const text = encodeURIComponent(t("home.tableControls.shareTweet"));
-      const intent = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(
-        shareUrl
-      )}`;
+      const intent = createXShareIntent({
+        text: t("home.tableControls.shareTweet"),
+        url: shareUrl,
+      });
       window.open(intent, "_blank", "noopener,noreferrer");
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
