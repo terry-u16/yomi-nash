@@ -1,4 +1,4 @@
-# yomi-nash
+# Yomi Nash
 
 ※ English version is available [below](#overview).
 
@@ -102,7 +102,7 @@ MIT License
 
 ## Overview
 
-yomi-nash is a web application for calculating and visualizing mixed-strategy Nash equilibria from a payoff table for two-player games such as fighting game mixups, rock-paper-scissors, and other matchup situations.
+Yomi Nash is a web application for calculating and visualizing mixed-strategy Nash equilibria from a payoff table for two-player games such as fighting game mixups, rock-paper-scissors, and other matchup situations.
 
 In technical terms, it solves two-player zero-sum games. It helps you find a stable strategy that cannot be exploited even if the opponent knows your selection probabilities.
 

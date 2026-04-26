@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { supportedLanguages, type SupportedLanguage } from "@/lib/i18n";
+import {
+  defaultLanguage,
+  supportedLanguages,
+  type SupportedLanguage,
+} from "@/lib/i18n";
 
 const managedLinkAttribute = "data-yomi-seo-link";
 const managedMetaAttribute = "data-yomi-seo-meta";
@@ -13,6 +17,22 @@ const ogLocaleMap: Record<SupportedLanguage, string> = {
 interface SeoLinksProps {
   currentLanguage: SupportedLanguage;
 }
+
+const getSeoPathDetails = (pathname: string) => {
+  const segments = pathname.split("/").filter(Boolean);
+  const remainderSegments = supportedLanguages.includes(
+    segments[0] as SupportedLanguage
+  )
+    ? segments.slice(1)
+    : segments;
+
+  return {
+    pageKey: remainderSegments[0] ?? "",
+    remainderPath: remainderSegments.length
+      ? `/${remainderSegments.join("/")}`
+      : "",
+  };
+};
 
 const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
   const location = useLocation();
@@ -32,15 +52,9 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
         .forEach((node) => head.removeChild(node));
     };
 
-    const remainderPath = (() => {
-      const parts = location.pathname.split("/");
-      // parts[0] は常に ""、parts[1] は言語コード。
-      const remainder = parts.slice(2).join("/");
-      return remainder ? `/${remainder}` : "";
-    })();
-    const canonicalPath = `/${currentLanguage}${remainderPath}`;
-    const search = location.search ?? "";
+    const { remainderPath } = getSeoPathDetails(location.pathname);
     const origin = window.location.origin;
+    const canonicalUrl = `${origin}/${currentLanguage}${remainderPath}`;
 
     removeManagedLinks();
 
@@ -56,41 +70,38 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
       head.appendChild(link);
     };
 
-    const canonicalHref = `${origin}${canonicalPath}${search}`;
-    createLink("canonical", canonicalHref);
+    createLink("canonical", canonicalUrl);
 
     supportedLanguages.forEach((language) => {
-      const href = `${origin}/${language}${remainderPath}${search}`;
+      const href = `${origin}/${language}${remainderPath}`;
       createLink("alternate", href, language);
     });
 
-    const defaultHref = `${origin}/${supportedLanguages[0]}${remainderPath}${search}`;
+    const defaultHref = `${origin}/${defaultLanguage}${remainderPath}`;
     createLink("alternate", defaultHref, "x-default");
 
     return removeManagedLinks;
-  }, [currentLanguage, location.pathname, location.search]);
+  }, [currentLanguage, location.pathname]);
 
   useEffect(() => {
     // ページ固有タイトルや description を URL 依存で差し替え、OG ロケールも整える。
     // 既存タグを使い回すことで不要なノード増殖を防ぐ。
-    if (typeof document === "undefined") {
+    if (typeof window === "undefined" || typeof document === "undefined") {
       return;
     }
 
-    const remainderSegments = location.pathname
-      .split("/")
-      .filter(Boolean)
-      .slice(1);
-    const pageKey = remainderSegments[0] ?? "";
+    const { pageKey, remainderPath } = getSeoPathDetails(location.pathname);
     const pageTitleKeyMap: Record<string, string> = {
       "": "header.nav.home",
       help: "header.nav.help",
       theory: "header.nav.theory",
     };
     const appName = t("common.appName");
+    const seoTitle = t("common.seoTitle");
     const pageTitleKey = pageTitleKeyMap[pageKey] ?? "header.nav.home";
     const pageTitle = t(pageTitleKey);
-    const fullTitle = pageKey ? `${pageTitle} | ${appName}` : appName;
+    const fullTitle = pageKey ? `${appName} | ${pageTitle}` : seoTitle;
+    const canonicalUrl = `${window.location.origin}/${currentLanguage}${remainderPath}`;
     document.title = fullTitle;
 
     const ensureMeta = (
@@ -121,6 +132,46 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
         content: description,
       },
       "description"
+    );
+    ensureMeta(
+      `meta[property="og:title"][${managedMetaAttribute}]`,
+      {
+        property: "og:title",
+        content: fullTitle,
+      },
+      "og:title"
+    );
+    ensureMeta(
+      `meta[property="og:url"][${managedMetaAttribute}]`,
+      {
+        property: "og:url",
+        content: canonicalUrl,
+      },
+      "og:url"
+    );
+    ensureMeta(
+      `meta[property="og:description"][${managedMetaAttribute}]`,
+      {
+        property: "og:description",
+        content: description,
+      },
+      "og:description"
+    );
+    ensureMeta(
+      `meta[name="twitter:title"][${managedMetaAttribute}]`,
+      {
+        name: "twitter:title",
+        content: fullTitle,
+      },
+      "twitter:title"
+    );
+    ensureMeta(
+      `meta[name="twitter:description"][${managedMetaAttribute}]`,
+      {
+        name: "twitter:description",
+        content: description,
+      },
+      "twitter:description"
     );
 
     const activeOgLocale = ogLocaleMap[currentLanguage];

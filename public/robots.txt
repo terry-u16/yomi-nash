@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yomi-nash.terry-u16.net/sitemap.xml

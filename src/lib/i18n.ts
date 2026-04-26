@@ -2,10 +2,9 @@ import i18n, { type Resource } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 export const languageStorageKey = "yomi-nash.language";
-// The order of supportedLanguages determines the default language (supportedLanguages[0]).
-// Changing this order is a breaking change for default language selection.
 export const supportedLanguages = ["ja", "en"] as const;
 export type SupportedLanguage = (typeof supportedLanguages)[number];
+export const defaultLanguage: SupportedLanguage = "en";
 
 const isSupportedLanguage = (
   value: string | null | undefined
@@ -31,9 +30,10 @@ const resources = {
   ja: {
     translation: {
       common: {
-        appName: "読み合いナッシュ",
+        appName: "Yomi Nash",
         appDescription:
           "格闘ゲームをはじめとした2人対戦ゲームの読み合いにおいて、ゲーム理論を用いてどの選択肢をどのくらいの確率で選ぶのがおすすめかを計算するアプリです。",
+        seoTitle: "Yomi Nash | 格闘ゲームの読み合い分析アプリ",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "選択肢{{index}}",
@@ -148,8 +148,7 @@ const resources = {
           presetError: "プリセットの読み込みに失敗しました",
           presetApplied: "プリセット{{label}}を適用しました",
           shareError: "シェアURL生成に失敗しました",
-          shareTweet:
-            "読み合いナッシュ | 格闘ゲームの読み合い分析アプリ #yominash",
+          shareTweet: "Yomi Nash | 格闘ゲームの読み合い分析アプリ #yominash",
           resetSuccess: "リセットしました",
         },
         resultDisplay: {
@@ -174,9 +173,10 @@ const resources = {
   en: {
     translation: {
       common: {
-        appName: "yomi-nash",
+        appName: "Yomi Nash",
         appDescription:
           "Use game theory to calculate recommended option probabilities for fighting games and other two-player competitive mind games.",
+        seoTitle: "Yomi Nash | Fighting game mix-up analyzer app",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "Option {{index}}",
@@ -291,7 +291,7 @@ const resources = {
           presetError: "Failed to load the preset",
           presetApplied: "Applied preset {{label}}",
           shareError: "Failed to generate the share URL",
-          shareTweet: "yomi-nash | Fighting game mix-up analysis app #yominash",
+          shareTweet: "Yomi Nash | Fighting game mix-up analysis app #yominash",
           resetSuccess: "Reset completed",
         },
         resultDisplay: {
@@ -317,7 +317,7 @@ const resources = {
 
 const getInitialLanguage = (): SupportedLanguage => {
   if (typeof window === "undefined") {
-    return "en";
+    return defaultLanguage;
   }
 
   const languageFromPath = getLanguageFromPathname();
@@ -344,7 +344,7 @@ const getInitialLanguage = (): SupportedLanguage => {
     return fallbackNavigator;
   }
 
-  return "en";
+  return defaultLanguage;
 };
 
 void i18n
@@ -352,7 +352,7 @@ void i18n
   .init({
     resources,
     lng: getInitialLanguage(),
-    fallbackLng: "en",
+    fallbackLng: defaultLanguage,
     interpolation: {
       escapeValue: false,
     },

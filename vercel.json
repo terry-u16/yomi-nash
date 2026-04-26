@@ -1,0 +1,28 @@
+{
+  "rewrites": [
+    {
+      "source": "/ja",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ja/help",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/help",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ja/theory",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/theory",
+      "destination": "/index.html"
+    }
+  ]
+}
