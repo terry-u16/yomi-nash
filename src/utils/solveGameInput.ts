@@ -1,5 +1,5 @@
 import type { GameInput, MixedStrategy, PayoffMatrix } from "../types/game";
-import GLPK, { type LP } from "glpk.js";
+import type { LP } from "glpk.js";
 import type { GameResult } from "../types/game";
 
 interface Var {
@@ -26,6 +26,7 @@ interface Bound {
 
 export async function solveGame(input: GameInput): Promise<GameResult> {
   const A = input.payoffMatrix;
+  const { default: GLPK } = await import("glpk.js");
   const glpk = await GLPK();
 
   async function solveMinV(A: number[][]): Promise<{
