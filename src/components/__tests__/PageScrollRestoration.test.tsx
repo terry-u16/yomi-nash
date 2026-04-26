@@ -64,8 +64,9 @@ beforeEach(() => {
     rafCallbacks[id - 1] = () => undefined;
   });
   vi.spyOn(window, "scrollTo").mockImplementation(
-    (options?: ScrollToOptions) => {
-      scrollYValue = options?.top ?? 0;
+    (optionsOrX?: ScrollToOptions | number, y?: number) => {
+      scrollYValue =
+        typeof optionsOrX === "number" ? (y ?? 0) : (optionsOrX?.top ?? 0);
     }
   );
 });
