@@ -39,7 +39,6 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
       return remainder ? `/${remainder}` : "";
     })();
     const canonicalPath = `/${currentLanguage}${remainderPath}`;
-    const search = location.search ?? "";
     const origin = window.location.origin;
 
     removeManagedLinks();
@@ -56,19 +55,19 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
       head.appendChild(link);
     };
 
-    const canonicalHref = `${origin}${canonicalPath}${search}`;
+    const canonicalHref = `${origin}${canonicalPath}`;
     createLink("canonical", canonicalHref);
 
     supportedLanguages.forEach((language) => {
-      const href = `${origin}/${language}${remainderPath}${search}`;
+      const href = `${origin}/${language}${remainderPath}`;
       createLink("alternate", href, language);
     });
 
-    const defaultHref = `${origin}/${supportedLanguages[0]}${remainderPath}${search}`;
+    const defaultHref = `${origin}/${supportedLanguages[0]}${remainderPath}`;
     createLink("alternate", defaultHref, "x-default");
 
     return removeManagedLinks;
-  }, [currentLanguage, location.pathname, location.search]);
+  }, [currentLanguage, location.pathname]);
 
   useEffect(() => {
     // ページ固有タイトルや description を URL 依存で差し替え、OG ロケールも整える。
