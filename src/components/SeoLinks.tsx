@@ -88,9 +88,10 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
       theory: "header.nav.theory",
     };
     const appName = t("common.appName");
+    const seoTitle = t("common.seoTitle");
     const pageTitleKey = pageTitleKeyMap[pageKey] ?? "header.nav.home";
     const pageTitle = t(pageTitleKey);
-    const fullTitle = pageKey ? `${pageTitle} | ${appName}` : appName;
+    const fullTitle = pageKey ? `${pageTitle} | ${appName}` : seoTitle;
     document.title = fullTitle;
 
     const ensureMeta = (
@@ -121,6 +122,38 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
         content: description,
       },
       "description"
+    );
+    ensureMeta(
+      `meta[property="og:title"][${managedMetaAttribute}]`,
+      {
+        property: "og:title",
+        content: fullTitle,
+      },
+      "og:title"
+    );
+    ensureMeta(
+      `meta[property="og:description"][${managedMetaAttribute}]`,
+      {
+        property: "og:description",
+        content: description,
+      },
+      "og:description"
+    );
+    ensureMeta(
+      `meta[name="twitter:title"][${managedMetaAttribute}]`,
+      {
+        name: "twitter:title",
+        content: fullTitle,
+      },
+      "twitter:title"
+    );
+    ensureMeta(
+      `meta[name="twitter:description"][${managedMetaAttribute}]`,
+      {
+        name: "twitter:description",
+        content: description,
+      },
+      "twitter:description"
     );
 
     const activeOgLocale = ogLocaleMap[currentLanguage];
