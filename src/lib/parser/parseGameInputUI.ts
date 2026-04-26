@@ -17,7 +17,7 @@ export const GameInputUISchema = z.object({
 const SharedGameInputV2Schema = z.tuple([
   z.array(z.string()).min(1),
   z.array(z.string()).min(1),
-  z.array(z.number()),
+  z.array(z.number().finite()),
 ]);
 
 export function decodeGameInputUI(

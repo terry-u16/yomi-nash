@@ -1,5 +1,9 @@
-import { describe, expect, it } from "vitest";
-import { encodeLegacyShareObject, encodeShareObject } from "@/utils/shareCodec";
+import { describe, expect, it, vi } from "vitest";
+import {
+  decodeShareObject,
+  encodeLegacyShareObject,
+  encodeShareObject,
+} from "@/utils/shareCodec";
 import { decodeGameInputUI } from "@/lib/parser/parseGameInputUI";
 import { decodeGameResult } from "@/lib/parser/parseGameResult";
 import type { GameInputUI, GameResult } from "@/types/game";
@@ -47,6 +51,18 @@ describe("share encoding", () => {
     expect(parsed.data).toEqual(sampleInputUI);
   });
 
+  it("encodes and decodes compact data without browser base64 globals", () => {
+    vi.stubGlobal("btoa", undefined);
+    vi.stubGlobal("atob", undefined);
+
+    try {
+      const token = encodeShareObject(sampleInputV2);
+      expect(decodeShareObject(token)).toEqual(sampleInputV2);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("parses legacy input data", () => {
     const token = encodeLegacyShareObject(sampleInputUI);
     const parsed = decodeGameInputUI(token, DATA_SCHEMA_VERSION);
@@ -56,6 +72,17 @@ describe("share encoding", () => {
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
     expect(parsed.data).toEqual(sampleInputUI);
+  });
+
+  it("rejects malformed legacy input envelopes", () => {
+    const token = compressToEncodedURIComponent(JSON.stringify(sampleInputUI));
+    const parsed = decodeGameInputUI(token, DATA_SCHEMA_VERSION);
+
+    expect(parsed).not.toBeNull();
+    if (!parsed) return;
+    expect(parsed.ok).toBe(false);
+    if (parsed.ok) return;
+    expect(parsed.error).toBe("共有された入力データを復元できませんでした");
   });
 
   it("rejects mismatched schema version for input", () => {

@@ -41,7 +41,11 @@ export function decodeLegacyShareObject<T>(
   if (!json) return null;
 
   try {
-    return JSON.parse(json) as ShareEnvelopeV1<T>;
+    const parsed = JSON.parse(json) as unknown;
+    if (!isShareEnvelopeV1<T>(parsed)) {
+      return null;
+    }
+    return parsed;
   } catch {
     return null;
   }
@@ -63,15 +67,30 @@ function decodeLegacyJson(raw: string): string | null {
   }
 }
 
-function bytesToBase64Url(bytes: Uint8Array): string {
-  let binary = "";
-  for (const byte of bytes) {
-    binary += String.fromCharCode(byte);
+function isShareEnvelopeV1<T>(value: unknown): value is ShareEnvelopeV1<T> {
+  if (typeof value !== "object" || value === null) {
+    return false;
   }
-  return btoa(binary)
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
+
+  const record = value as Record<string, unknown>;
+  return (
+    record.version === DATA_SCHEMA_VERSION &&
+    Object.prototype.hasOwnProperty.call(record, "payload")
+  );
+}
+
+type RuntimeBuffer = {
+  from(data: Uint8Array): { toString(encoding: "base64"): string };
+  from(data: string, encoding: "base64"): Uint8Array;
+};
+
+function bytesToBase64Url(bytes: Uint8Array): string {
+  const runtimeBuffer = getRuntimeBuffer();
+  const base64 = runtimeBuffer
+    ? runtimeBuffer.from(bytes).toString("base64")
+    : bytesToBrowserBase64(bytes);
+
+  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 
 function base64UrlToBytes(value: string): Uint8Array {
@@ -80,6 +99,33 @@ function base64UrlToBytes(value: string): Uint8Array {
     base64.length + ((4 - (base64.length % 4)) % 4),
     "="
   );
+
+  const runtimeBuffer = getRuntimeBuffer();
+  if (runtimeBuffer) {
+    return Uint8Array.from(runtimeBuffer.from(padded, "base64"));
+  }
+
   const binary = atob(padded);
-  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return bytes;
+}
+
+function getRuntimeBuffer(): RuntimeBuffer | undefined {
+  return (globalThis as typeof globalThis & { Buffer?: RuntimeBuffer }).Buffer;
+}
+
+function bytesToBrowserBase64(bytes: Uint8Array): string {
+  const chunkSize = 0x8000;
+  const chunks: string[] = [];
+
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    chunks.push(
+      String.fromCharCode(...bytes.subarray(offset, offset + chunkSize))
+    );
+  }
+
+  return btoa(chunks.join(""));
 }

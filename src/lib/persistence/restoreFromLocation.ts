@@ -1,5 +1,6 @@
 import {
   DATA_SCHEMA_VERSION,
+  SHARE_SCHEMA_VERSION,
   SUPPORTED_SHARE_SCHEMA_VERSIONS,
 } from "@/constants/storage";
 import type { GameInputUI, GameResult } from "@/types/game";
@@ -35,7 +36,10 @@ export function restoreFromLocation(
     }
   }
 
-  const rawInput = searchParams.get("i") ?? searchParams.get("gameInput");
+  const rawInput =
+    version === SHARE_SCHEMA_VERSION
+      ? searchParams.get("i")
+      : searchParams.get("gameInput");
   if (!rawInput) {
     return { status: "none" };
   }
@@ -52,7 +56,10 @@ export function restoreFromLocation(
     };
   }
 
-  const rawResult = searchParams.get("r") ?? searchParams.get("gameResult");
+  const rawResult =
+    version === SHARE_SCHEMA_VERSION
+      ? searchParams.get("r")
+      : searchParams.get("gameResult");
   if (!rawResult) {
     return {
       status: "success",

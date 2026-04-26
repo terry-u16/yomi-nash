@@ -75,6 +75,20 @@ describe("restoreFromLocation", () => {
     });
   });
 
+  it("ignores short params when restoring a legacy share URL", () => {
+    const params = new URLSearchParams();
+    params.set("i", "not-v2-input");
+    params.set("r", "not-v2-result");
+    params.set("gameInput", encodeLegacyShareObject(validInput));
+    params.set("gameResult", encodeLegacyShareObject(validResult));
+
+    expect(restoreFromLocation(`?${params.toString()}`)).toEqual({
+      status: "success",
+      inputUI: validInput,
+      result: validResult,
+    });
+  });
+
   it("restores input and result when both are valid", () => {
     const params = new URLSearchParams();
     params.set("schemaVersion", String(SHARE_SCHEMA_VERSION));
