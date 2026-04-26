@@ -42,8 +42,8 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
       const remainder = parts.slice(2).join("/");
       return remainder ? `/${remainder}` : "";
     })();
-    const canonicalPath = `/${currentLanguage}${remainderPath}`;
     const origin = window.location.origin;
+    const canonicalUrl = `${origin}/${currentLanguage}${remainderPath}`;
 
     removeManagedLinks();
 
@@ -59,8 +59,7 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
       head.appendChild(link);
     };
 
-    const canonicalHref = `${origin}${canonicalPath}`;
-    createLink("canonical", canonicalHref);
+    createLink("canonical", canonicalUrl);
 
     supportedLanguages.forEach((language) => {
       const href = `${origin}/${language}${remainderPath}`;
@@ -76,7 +75,7 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
   useEffect(() => {
     // ページ固有タイトルや description を URL 依存で差し替え、OG ロケールも整える。
     // 既存タグを使い回すことで不要なノード増殖を防ぐ。
-    if (typeof document === "undefined") {
+    if (typeof window === "undefined" || typeof document === "undefined") {
       return;
     }
 
@@ -95,6 +94,9 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
     const pageTitleKey = pageTitleKeyMap[pageKey] ?? "header.nav.home";
     const pageTitle = t(pageTitleKey);
     const fullTitle = pageKey ? `${appName} | ${pageTitle}` : seoTitle;
+    const canonicalUrl = `${window.location.origin}/${currentLanguage}${
+      remainderSegments.length ? `/${remainderSegments.join("/")}` : ""
+    }`;
     document.title = fullTitle;
 
     const ensureMeta = (
@@ -133,6 +135,14 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
         content: fullTitle,
       },
       "og:title"
+    );
+    ensureMeta(
+      `meta[property="og:url"][${managedMetaAttribute}]`,
+      {
+        property: "og:url",
+        content: canonicalUrl,
+      },
+      "og:url"
     );
     ensureMeta(
       `meta[property="og:description"][${managedMetaAttribute}]`,

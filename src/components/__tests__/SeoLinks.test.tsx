@@ -40,6 +40,12 @@ const getLink = (rel: string, hreflang?: string) => {
   return document.head.querySelector(selector) as HTMLLinkElement | null;
 };
 
+const getMeta = (property: string) => {
+  return document.head.querySelector(
+    `meta[property="${property}"]`
+  ) as HTMLMetaElement | null;
+};
+
 beforeEach(() => {
   vi.resetModules();
   route.pathname = "/ja/help";
@@ -61,10 +67,11 @@ afterEach(() => {
 });
 
 describe("SeoLinks", () => {
-  it("omits share query parameters from canonical and alternate links", async () => {
+  it("omits share query parameters from canonical, alternate, and og:url links", async () => {
     await renderSeoLinks();
 
     expect(getLink("canonical")?.href).toBe("http://localhost:3000/ja/help");
+    expect(getMeta("og:url")?.content).toBe("http://localhost:3000/ja/help");
     expect(getLink("alternate", "ja")?.href).toBe(
       "http://localhost:3000/ja/help"
     );
