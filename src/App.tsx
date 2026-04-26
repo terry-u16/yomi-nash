@@ -7,33 +7,36 @@ import {
   useParams,
 } from "react-router-dom";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import Help from "./pages/Help";
-import Theory from "./pages/Theory";
 import {
   defaultLanguage,
   supportedLanguages,
   type SupportedLanguage,
 } from "@/lib/i18n";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import SeoLinks from "./components/SeoLinks";
 import FirstVisitHelpToast from "./components/FirstVisitHelpToast";
 import PageScrollRestoration from "./components/PageScrollRestoration";
 
+const Home = lazy(() => import("./pages/Home"));
+const Help = lazy(() => import("./pages/Help"));
+const Theory = lazy(() => import("./pages/Theory"));
+
 const App: React.FC = () => {
   return (
     <>
       <PageScrollRestoration />
-      <Routes>
-        <Route path="/" element={<RedirectToPreferredLanguage />} />
-        <Route path="/:lang/*" element={<LanguageGuard />}>
-          <Route index element={<Home />} />
-          <Route path="help" element={<Help />} />
-          <Route path="theory" element={<Theory />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<RedirectToPreferredLanguage />} />
+          <Route path="/:lang/*" element={<LanguageGuard />}>
+            <Route index element={<Home />} />
+            <Route path="help" element={<Help />} />
+            <Route path="theory" element={<Theory />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </>
   );
 };
