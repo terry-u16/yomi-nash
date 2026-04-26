@@ -82,23 +82,37 @@ export const useTableControls = ({
   );
 
   const handleDownload = useCallback(async () => {
-    const { generateCsvFromGameInputUI } = await import(
-      "@/utils/parseCsvInput"
-    );
-    const csv = generateCsvFromGameInputUI(inputUI);
-    const bom = "\uFEFF"; // UTF-8 BOM
-    const blob = new Blob([bom + csv], { type: "text/csv;charset=utf-8" });
+    let url: string | undefined;
 
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "yomi-nash.csv";
-    link.click();
-    URL.revokeObjectURL(url);
+    try {
+      const { generateCsvFromGameInputUI } = await import(
+        "@/utils/parseCsvInput"
+      );
+      const csv = generateCsvFromGameInputUI(inputUI);
+      const bom = "\uFEFF"; // UTF-8 BOM
+      const blob = new Blob([bom + csv], { type: "text/csv;charset=utf-8" });
 
-    toaster.create({
-      title: t("home.tableControls.csvDownloading"),
-    });
+      url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "yomi-nash.csv";
+      link.click();
+
+      toaster.create({
+        title: t("home.tableControls.csvDownloading"),
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      toaster.create({
+        title: t("home.tableControls.csvDownloadError"),
+        description: message,
+        type: "error",
+      });
+    } finally {
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
+    }
   }, [inputUI, t]);
 
   const handleCalculate = useCallback(() => {
