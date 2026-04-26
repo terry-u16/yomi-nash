@@ -20,10 +20,10 @@ export const GameResultSchema = z.object({
   payoffMatrix: z.array(z.array(z.number())),
 });
 
-const SharedGameResultV2Schema = z.object({
-  p: z.array(z.number().min(0).max(1)),
-  q: z.array(z.number().min(0).max(1)),
-});
+const SharedGameResultV2Schema = z.tuple([
+  z.array(z.number().min(0).max(1)),
+  z.array(z.number().min(0).max(1)),
+]);
 
 export function decodeGameResult(
   raw: string | null,
@@ -112,11 +112,12 @@ function decodeSharedGameResultV2(
   payload: unknown,
   inputUI: GameInputUI
 ): Result<GameResult> {
-  const probabilities = SharedGameResultV2Schema.parse(payload);
+  const [player1Probabilities, player2Probabilities] =
+    SharedGameResultV2Schema.parse(payload);
 
   if (
-    probabilities.p.length !== inputUI.strategyLabels1.length ||
-    probabilities.q.length !== inputUI.strategyLabels2.length
+    player1Probabilities.length !== inputUI.strategyLabels1.length ||
+    player2Probabilities.length !== inputUI.strategyLabels2.length
   ) {
     return {
       ok: false,
@@ -137,11 +138,11 @@ function decodeSharedGameResultV2(
     data: {
       player1Strategy: inputUI.strategyLabels1.map((label, index) => ({
         label,
-        probability: probabilities.p[index],
+        probability: player1Probabilities[index],
       })),
       player2Strategy: inputUI.strategyLabels2.map((label, index) => ({
         label,
-        probability: probabilities.q[index],
+        probability: player2Probabilities[index],
       })),
       payoffMatrix: inputResult.data.payoffMatrix,
     },

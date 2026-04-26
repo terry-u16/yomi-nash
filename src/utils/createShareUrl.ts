@@ -8,16 +8,9 @@ export interface CreateShareUrlOptions {
   result?: GameResult | null;
 }
 
-export interface SharedGameInputV2 {
-  r: string[];
-  c: string[];
-  m: number[];
-}
+export type SharedGameInputV2 = [string[], string[], number[]];
 
-export interface SharedGameResultV2 {
-  p: number[];
-  q: number[];
-}
+export type SharedGameResultV2 = [number[], number[]];
 
 const defaultBaseUrl = () => {
   if (typeof window === "undefined") {
@@ -48,16 +41,16 @@ function toSharedGameInputV2(inputUI: GameInputUI): SharedGameInputV2 {
     throw new Error("Cannot share a payoff matrix with invalid numbers");
   }
 
-  return {
-    r: inputUI.strategyLabels1,
-    c: inputUI.strategyLabels2,
-    m: parsed.data.payoffMatrix.flat(),
-  };
+  return [
+    inputUI.strategyLabels1,
+    inputUI.strategyLabels2,
+    parsed.data.payoffMatrix.flat(),
+  ];
 }
 
 function toSharedGameResultV2(result: GameResult): SharedGameResultV2 {
-  return {
-    p: result.player1Strategy.map(({ probability }) => probability),
-    q: result.player2Strategy.map(({ probability }) => probability),
-  };
+  return [
+    result.player1Strategy.map(({ probability }) => probability),
+    result.player2Strategy.map(({ probability }) => probability),
+  ];
 }

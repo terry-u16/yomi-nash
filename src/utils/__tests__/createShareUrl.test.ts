@@ -65,15 +65,15 @@ describe("createShareUrl", () => {
     expect(rawInput).toBeTruthy();
     expect(rawResult).toBeTruthy();
     if (!rawInput || !rawResult) return;
-    expect(decodeShareObject(rawInput)).toEqual({
-      r: ["A", "B"],
-      c: ["X", "Y"],
-      m: [1, 2, 3, 4],
-    });
-    expect(decodeShareObject(rawResult)).toEqual({
-      p: [0.5, 0.5],
-      q: [0.25, 0.75],
-    });
+    expect(decodeShareObject(rawInput)).toEqual([
+      ["A", "B"],
+      ["X", "Y"],
+      [1, 2, 3, 4],
+    ]);
+    expect(decodeShareObject(rawResult)).toEqual([
+      [0.5, 0.5],
+      [0.25, 0.75],
+    ]);
   });
 
   it("omits the game result when null is passed", () => {

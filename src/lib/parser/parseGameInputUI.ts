@@ -14,11 +14,11 @@ export const GameInputUISchema = z.object({
   payoffMatrix: z.array(z.array(z.string()).min(1)).min(1),
 });
 
-const SharedGameInputV2Schema = z.object({
-  r: z.array(z.string()).min(1),
-  c: z.array(z.string()).min(1),
-  m: z.array(z.number()),
-});
+const SharedGameInputV2Schema = z.tuple([
+  z.array(z.string()).min(1),
+  z.array(z.string()).min(1),
+  z.array(z.number()),
+]);
 
 export function decodeGameInputUI(
   raw: string | null,
@@ -87,19 +87,20 @@ function decodeVersionedGameInputUI(
 }
 
 function decodeSharedGameInputV2(payload: unknown): GameInputUI {
-  const input = SharedGameInputV2Schema.parse(payload);
-  const rowCount = input.r.length;
-  const colCount = input.c.length;
+  const [strategyLabels1, strategyLabels2, payoffMatrix] =
+    SharedGameInputV2Schema.parse(payload);
+  const rowCount = strategyLabels1.length;
+  const colCount = strategyLabels2.length;
 
-  if (input.m.length !== rowCount * colCount) {
+  if (payoffMatrix.length !== rowCount * colCount) {
     throw new Error("利得行列の要素数が行・列のラベル数と一致していません。");
   }
 
   return {
-    strategyLabels1: input.r,
-    strategyLabels2: input.c,
+    strategyLabels1,
+    strategyLabels2,
     payoffMatrix: Array.from({ length: rowCount }, (_, rowIndex) =>
-      input.m
+      payoffMatrix
         .slice(rowIndex * colCount, (rowIndex + 1) * colCount)
         .map((value) => String(value))
     ),

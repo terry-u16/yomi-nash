@@ -30,11 +30,11 @@ const sampleResult: GameResult = {
   ],
 };
 
-const sampleInputV2 = {
-  r: ["A", "B"],
-  c: ["X", "Y"],
-  m: [1, 2, 3, 4],
-};
+const sampleInputV2 = [
+  ["A", "B"],
+  ["X", "Y"],
+  [1, 2, 3, 4],
+] as const;
 
 describe("share encoding", () => {
   it("encodes compact input data with version envelope", () => {
@@ -85,10 +85,10 @@ describe("share encoding", () => {
   });
 
   it("parses a valid compact game result", () => {
-    const token = encodeShareObject({
-      p: [0.5, 0.5],
-      q: [0.25, 0.75],
-    });
+    const token = encodeShareObject([
+      [0.5, 0.5],
+      [0.25, 0.75],
+    ]);
     const parsed = decodeGameResult(token, sampleInputUI);
 
     expect(parsed).not.toBeNull();

@@ -28,11 +28,11 @@ const validResult: GameResult = {
   ],
 };
 
-const validInputV2 = {
-  r: ["A", "B"],
-  c: ["X", "Y"],
-  m: [1, 2, 3, 4],
-};
+const validInputV2 = [
+  ["A", "B"],
+  ["X", "Y"],
+  [1, 2, 3, 4],
+] as const;
 
 describe("restoreFromLocation", () => {
   it("returns none when no share data is present", () => {
@@ -52,14 +52,7 @@ describe("restoreFromLocation", () => {
   it("surfaces input decode errors", () => {
     const params = new URLSearchParams();
     params.set("schemaVersion", String(SHARE_SCHEMA_VERSION));
-    params.set(
-      "i",
-      encodeShareObject({
-        r: ["A"],
-        c: ["X"],
-        m: [1, 2],
-      })
-    );
+    params.set("i", encodeShareObject([["A"], ["X"], [1, 2]]));
 
     const outcome = restoreFromLocation(`?${params.toString()}`);
     expect(outcome.status).toBe("input-error");
@@ -88,10 +81,10 @@ describe("restoreFromLocation", () => {
     params.set("i", encodeShareObject(validInputV2));
     params.set(
       "r",
-      encodeShareObject({
-        p: [0.5, 0.5],
-        q: [0.25, 0.75],
-      })
+      encodeShareObject([
+        [0.5, 0.5],
+        [0.25, 0.75],
+      ])
     );
 
     expect(restoreFromLocation(`?${params.toString()}`)).toEqual({
