@@ -11,10 +11,6 @@ import {
 import { clampGameInputUI } from "@/utils/clampGameInput";
 import { createShareUrl } from "@/utils/createShareUrl";
 import { parseGameInputUI } from "@/utils/parseGameInput";
-import {
-  generateCsvFromGameInputUI,
-  parseCsvInputFromBinary,
-} from "@/utils/parseCsvInput";
 import { createXShareIntent } from "@/utils/createXShareIntent";
 import { useTranslation } from "react-i18next";
 
@@ -45,6 +41,9 @@ export const useTableControls = ({
       try {
         const arrayBuffer = await file.arrayBuffer();
         const binary = new Uint8Array(arrayBuffer);
+        const { parseCsvInputFromBinary } = await import(
+          "@/utils/parseCsvInput"
+        );
         const parseResult = parseCsvInputFromBinary(binary);
 
         if (parseResult.ok) {
@@ -82,7 +81,10 @@ export const useTableControls = ({
     [setInputUI, t]
   );
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
+    const { generateCsvFromGameInputUI } = await import(
+      "@/utils/parseCsvInput"
+    );
     const csv = generateCsvFromGameInputUI(inputUI);
     const bom = "\uFEFF"; // UTF-8 BOM
     const blob = new Blob([bom + csv], { type: "text/csv;charset=utf-8" });
