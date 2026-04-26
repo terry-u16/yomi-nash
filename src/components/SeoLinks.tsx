@@ -91,7 +91,7 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
     const seoTitle = t("common.seoTitle");
     const pageTitleKey = pageTitleKeyMap[pageKey] ?? "header.nav.home";
     const pageTitle = t(pageTitleKey);
-    const fullTitle = pageKey ? `${pageTitle} | ${appName}` : seoTitle;
+    const fullTitle = pageKey ? `${appName} | ${pageTitle}` : seoTitle;
     document.title = fullTitle;
 
     const ensureMeta = (

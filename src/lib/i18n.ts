@@ -34,7 +34,7 @@ const resources = {
         appName: "Yomi Nash",
         appDescription:
           "格闘ゲームをはじめとした2人対戦ゲームの読み合いにおいて、ゲーム理論を用いてどの選択肢をどのくらいの確率で選ぶのがおすすめかを計算するアプリです。",
-        seoTitle: "Yomi Nash｜格闘ゲームの読み合い分析アプリ",
+        seoTitle: "Yomi Nash | 格闘ゲームの読み合い分析アプリ",
         player1: "Player 1",
         player2: "Player 2",
         optionLabel: "選択肢{{index}}",
