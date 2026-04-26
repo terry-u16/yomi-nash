@@ -21,6 +21,11 @@ type LayoutContextGetter = () => LayoutContext;
 const mockOutletContext = vi.fn<LayoutContextGetter>(() => {
   throw new Error("mockOutletContext not configured");
 });
+let capturedPayoffTableProps:
+  | {
+      setInputUI: Dispatch<SetStateAction<GameInputUI>>;
+    }
+  | undefined;
 const toasterCreate = vi.fn();
 
 vi.mock("@chakra-ui/react", () => ({
@@ -28,7 +33,10 @@ vi.mock("@chakra-ui/react", () => ({
 }));
 
 vi.mock("@/pages/Home/PayoffTable/PayoffTable", () => ({
-  default: () => null,
+  default: (props: { setInputUI: Dispatch<SetStateAction<GameInputUI>> }) => {
+    capturedPayoffTableProps = props;
+    return null;
+  },
 }));
 
 vi.mock("@/pages/Home/ResultDisplay/ResultDisplay", () => ({
@@ -84,6 +92,7 @@ beforeEach(() => {
     throw new Error("mockOutletContext not configured");
   });
   toasterCreate.mockReset();
+  capturedPayoffTableProps = undefined;
   window.history.replaceState(null, "", "/");
 });
 
@@ -172,5 +181,60 @@ describe("Home localStorage persistence", () => {
       STORAGE_KEYS.result
     );
     expect(localStorageMock.store.has(STORAGE_KEYS.result)).toBe(false);
+  });
+
+  it("clears stale results and notifies when the input is edited", async () => {
+    const setInputUI = vi.fn();
+    const setResult = vi.fn();
+    mockOutletContext.mockReturnValue({
+      inputUI: sampleInputUI,
+      setInputUI,
+      result: sampleResult,
+      setResult,
+    });
+
+    await renderHome();
+
+    expect(capturedPayoffTableProps).toBeDefined();
+    act(() => {
+      capturedPayoffTableProps?.setInputUI((prev) => ({
+        ...prev,
+        payoffMatrix: [
+          ["9", "2"],
+          ["3", "4"],
+        ],
+      }));
+    });
+
+    expect(setInputUI).toHaveBeenCalledWith(expect.any(Function));
+    expect(setResult).toHaveBeenCalledWith(null);
+    expect(toasterCreate).toHaveBeenCalledWith({
+      title: "home.toasts.resultCleared",
+      type: "warning",
+    });
+  });
+
+  it("does not notify when editing input without a result", async () => {
+    const setInputUI = vi.fn();
+    const setResult = vi.fn();
+    mockOutletContext.mockReturnValue({
+      inputUI: sampleInputUI,
+      setInputUI,
+      result: null,
+      setResult,
+    });
+
+    await renderHome();
+
+    act(() => {
+      capturedPayoffTableProps?.setInputUI(sampleInputUI);
+    });
+
+    expect(setInputUI).toHaveBeenCalledWith(sampleInputUI);
+    expect(setResult).not.toHaveBeenCalled();
+    expect(toasterCreate).not.toHaveBeenCalledWith({
+      title: "home.toasts.resultCleared",
+      type: "warning",
+    });
   });
 });

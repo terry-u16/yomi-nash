@@ -118,6 +118,7 @@ const resources = {
         toasts: {
           calcSuccess: "計算が完了しました",
           calcError: "計算に失敗しました",
+          resultCleared: "入力が変更されたため計算結果をクリアしました",
           restore: {
             schemaMismatch: "共有データのバージョンが古いため読み込めません",
             inputError: "入力の復元に失敗しました",
@@ -268,6 +269,7 @@ const resources = {
         toasts: {
           calcSuccess: "Calculation completed",
           calcError: "Calculation failed",
+          resultCleared: "Cleared the result because the input changed",
           restore: {
             schemaMismatch: "The shared data version is too old to load",
             inputError: "Failed to restore the shared input",
