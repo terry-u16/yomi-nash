@@ -6,34 +6,106 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { Button, Heading, Stack, Text } from "@chakra-ui/react";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import Help from "./pages/Help";
-import Theory from "./pages/Theory";
 import {
   defaultLanguage,
   supportedLanguages,
   type SupportedLanguage,
 } from "@/lib/i18n";
-import { useEffect } from "react";
+import {
+  Component,
+  lazy,
+  Suspense,
+  useEffect,
+  type ErrorInfo,
+  type ReactNode,
+} from "react";
 import { useTranslation } from "react-i18next";
 import SeoLinks from "./components/SeoLinks";
 import FirstVisitHelpToast from "./components/FirstVisitHelpToast";
 import PageScrollRestoration from "./components/PageScrollRestoration";
 
+const Home = lazy(() => import("./pages/Home"));
+const Help = lazy(() => import("./pages/Help"));
+const Theory = lazy(() => import("./pages/Theory"));
+
+interface RouteLoadErrorBoundaryProps {
+  children: ReactNode;
+  fallback: ReactNode;
+}
+
+interface RouteLoadErrorBoundaryState {
+  hasError: boolean;
+}
+
+class RouteLoadErrorBoundary extends Component<
+  RouteLoadErrorBoundaryProps,
+  RouteLoadErrorBoundaryState
+> {
+  state: RouteLoadErrorBoundaryState = {
+    hasError: false,
+  };
+
+  static getDerivedStateFromError(): RouteLoadErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown, errorInfo: ErrorInfo) {
+    console.error("Failed to load route chunk", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+
+    return this.props.children;
+  }
+}
+
+const RouteLoadErrorFallback: React.FC = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Stack
+      align="center"
+      justify="center"
+      minH="100vh"
+      gap={4}
+      px={6}
+      textAlign="center"
+    >
+      <Heading size="lg" as="h1">
+        {t("common.routeLoadError.title")}
+      </Heading>
+      <Text color="fg.muted" maxW="md">
+        {t("common.routeLoadError.description")}
+      </Text>
+      <Button colorPalette="blue" onClick={() => window.location.reload()}>
+        {t("common.routeLoadError.reload")}
+      </Button>
+    </Stack>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <>
       <PageScrollRestoration />
-      <Routes>
-        <Route path="/" element={<RedirectToPreferredLanguage />} />
-        <Route path="/:lang/*" element={<LanguageGuard />}>
-          <Route index element={<Home />} />
-          <Route path="help" element={<Help />} />
-          <Route path="theory" element={<Theory />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <RouteLoadErrorBoundary fallback={<RouteLoadErrorFallback />}>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<RedirectToPreferredLanguage />} />
+            <Route path="/:lang/*" element={<LanguageGuard />}>
+              <Route index element={<Home />} />
+              <Route path="help" element={<Help />} />
+              <Route path="theory" element={<Theory />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </RouteLoadErrorBoundary>
     </>
   );
 };

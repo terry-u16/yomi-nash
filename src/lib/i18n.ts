@@ -39,6 +39,12 @@ const resources = {
         optionLabel: "選択肢{{index}}",
         total: "合計",
         cancel: "キャンセル",
+        routeLoadError: {
+          title: "ページの読み込みに失敗しました",
+          description:
+            "通信状況または更新直後のファイル切り替えにより、必要なファイルを取得できませんでした。再読み込みしてください。",
+          reload: "再読み込み",
+        },
       },
       header: {
         nav: {
@@ -143,6 +149,7 @@ const resources = {
           csvLoadSuccess: "CSVを読み込みました",
           csvLoadError: "CSVの読み込みに失敗しました",
           csvDownloading: "CSVをダウンロードしています...",
+          csvDownloadError: "CSVのダウンロードに失敗しました",
           inputError: "入力にエラーがあります",
           inputErrorPosition: "({{row}}行 {{col}}列)",
           presetError: "プリセットの読み込みに失敗しました",
@@ -182,6 +189,12 @@ const resources = {
         optionLabel: "Option {{index}}",
         total: "Total",
         cancel: "Cancel",
+        routeLoadError: {
+          title: "Failed to load the page",
+          description:
+            "The required files could not be loaded because of the network connection or a recent app update. Please reload the page.",
+          reload: "Reload",
+        },
       },
       header: {
         nav: {
@@ -286,6 +299,7 @@ const resources = {
           csvLoadSuccess: "CSV loaded",
           csvLoadError: "Failed to load the CSV",
           csvDownloading: "Preparing CSV download...",
+          csvDownloadError: "Failed to download the CSV",
           inputError: "There are errors in the input",
           inputErrorPosition: "(Row {{row}}, Column {{col}})",
           presetError: "Failed to load the preset",
