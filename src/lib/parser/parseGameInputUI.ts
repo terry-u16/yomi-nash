@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { GameInputUI } from "@/types/game";
 import type { Result } from "@/types/result";
 import { decodeShareObject } from "@/utils/shareCodec";
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import { SUPPORTED_SHARE_SCHEMA_VERSIONS } from "@/constants/storage";
 
 export const GameInputUISchema = z.object({
   strategyLabels1: z.array(z.string()).min(1),
@@ -20,7 +20,7 @@ export function decodeGameInputUI(
     return { ok: false, error: "共有された入力データを復元できませんでした" };
   }
 
-  if (envelope.version !== DATA_SCHEMA_VERSION) {
+  if (!SUPPORTED_SHARE_SCHEMA_VERSIONS.includes(envelope.version)) {
     return {
       ok: false,
       error: "共有データのバージョンが現在のアプリと一致していません",

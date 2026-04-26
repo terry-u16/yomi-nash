@@ -2,7 +2,11 @@ import { z } from "zod";
 import type { GameResult, GameInputUI } from "@/types/game";
 import type { Result } from "@/types/result";
 import { decodeShareObject } from "@/utils/shareCodec";
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import {
+  SHARE_SCHEMA_VERSION,
+  SUPPORTED_SHARE_SCHEMA_VERSIONS,
+} from "@/constants/storage";
+import { parseGameInputUI } from "@/utils/parseGameInput";
 
 const MixedStrategyEntrySchema = z.object({
   label: z.string(),
@@ -15,18 +19,23 @@ export const GameResultSchema = z.object({
   payoffMatrix: z.array(z.array(z.number())),
 });
 
+const SharedGameResultV2Schema = z.object({
+  player1Probabilities: z.array(z.number().min(0).max(1)),
+  player2Probabilities: z.array(z.number().min(0).max(1)),
+});
+
 export function decodeGameResult(
   raw: string | null,
   inputUI: GameInputUI
 ): Result<GameResult> | null {
   if (!raw) return null;
 
-  const envelope = decodeShareObject<GameResult>(raw);
+  const envelope = decodeShareObject<unknown>(raw);
   if (!envelope) {
     return { ok: false, error: "共有された結果データを復元できませんでした" };
   }
 
-  if (envelope.version !== DATA_SCHEMA_VERSION) {
+  if (!SUPPORTED_SHARE_SCHEMA_VERSIONS.includes(envelope.version)) {
     return {
       ok: false,
       error: "共有データのバージョンが現在のアプリと一致していません",
@@ -34,6 +43,10 @@ export function decodeGameResult(
   }
 
   try {
+    if (envelope.version >= SHARE_SCHEMA_VERSION) {
+      return decodeSharedGameResultV2(envelope.payload, inputUI);
+    }
+
     const result = GameResultSchema.parse(envelope.payload);
 
     // バリデーション：ラベルの一致
@@ -68,4 +81,45 @@ export function decodeGameResult(
     const message = e instanceof Error ? e.message : String(e);
     return { ok: false, error: message };
   }
+}
+
+function decodeSharedGameResultV2(
+  payload: unknown,
+  inputUI: GameInputUI
+): Result<GameResult> {
+  const probabilities = SharedGameResultV2Schema.parse(payload);
+
+  if (
+    probabilities.player1Probabilities.length !==
+      inputUI.strategyLabels1.length ||
+    probabilities.player2Probabilities.length !== inputUI.strategyLabels2.length
+  ) {
+    return {
+      ok: false,
+      error: "共有された確率の数が行・列のラベル数と一致していません",
+    };
+  }
+
+  const inputResult = parseGameInputUI(inputUI);
+  if (!inputResult.ok) {
+    return {
+      ok: false,
+      error: "共有された入力データから利得行列を復元できませんでした",
+    };
+  }
+
+  return {
+    ok: true,
+    data: {
+      player1Strategy: inputUI.strategyLabels1.map((label, index) => ({
+        label,
+        probability: probabilities.player1Probabilities[index],
+      })),
+      player2Strategy: inputUI.strategyLabels2.map((label, index) => ({
+        label,
+        probability: probabilities.player2Probabilities[index],
+      })),
+      payoffMatrix: inputResult.data.payoffMatrix,
+    },
+  };
 }

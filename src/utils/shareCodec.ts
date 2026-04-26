@@ -2,7 +2,7 @@ import {
   compressToEncodedURIComponent,
   decompressFromEncodedURIComponent,
 } from "lz-string";
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import { SHARE_SCHEMA_VERSION } from "@/constants/storage";
 
 export interface ShareEnvelope<T> {
   version: number;
@@ -10,9 +10,12 @@ export interface ShareEnvelope<T> {
 }
 
 // 型安全のためジェネリック
-export function encodeShareObject<T>(obj: T): string {
+export function encodeShareObject<T>(
+  obj: T,
+  version: number = SHARE_SCHEMA_VERSION
+): string {
   const envelope: ShareEnvelope<T> = {
-    version: DATA_SCHEMA_VERSION,
+    version,
     payload: obj,
   };
   return compressToEncodedURIComponent(JSON.stringify(envelope));

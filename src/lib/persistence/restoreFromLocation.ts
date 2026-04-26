@@ -1,4 +1,4 @@
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import { SUPPORTED_SHARE_SCHEMA_VERSIONS } from "@/constants/storage";
 import type { GameInputUI, GameResult } from "@/types/game";
 import type { Result } from "@/types/result";
 import { decodeGameInputUI } from "@/lib/parser/parseGameInputUI";
@@ -24,11 +24,11 @@ export function restoreFromLocation(
   const searchParams = new URLSearchParams(search);
   const versionParam = searchParams.get("schemaVersion");
 
-  if (
-    versionParam !== null &&
-    Number.parseInt(versionParam, 10) !== DATA_SCHEMA_VERSION
-  ) {
-    return { status: "schema-version-mismatch" };
+  if (versionParam !== null) {
+    const version = Number.parseInt(versionParam, 10);
+    if (!SUPPORTED_SHARE_SCHEMA_VERSIONS.includes(version)) {
+      return { status: "schema-version-mismatch" };
+    }
   }
 
   const rawInput = searchParams.get("gameInput");

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { restoreFromLocation } from "@/lib/persistence/restoreFromLocation";
 import { encodeShareObject } from "@/utils/shareCodec";
 import type { GameInputUI, GameResult } from "@/types/game";
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import { DATA_SCHEMA_VERSION, SHARE_SCHEMA_VERSION } from "@/constants/storage";
 
 const validInput: GameInputUI = {
   strategyLabels1: ["A", "B"],
@@ -35,7 +35,7 @@ describe("restoreFromLocation", () => {
 
   it("detects schema version mismatches", () => {
     const params = new URLSearchParams();
-    params.set("schemaVersion", String(DATA_SCHEMA_VERSION + 1));
+    params.set("schemaVersion", String(SHARE_SCHEMA_VERSION + 1));
     params.set("gameInput", encodeShareObject(validInput));
 
     expect(restoreFromLocation(`?${params.toString()}`)).toEqual({
@@ -51,7 +51,7 @@ describe("restoreFromLocation", () => {
     } satisfies GameInputUI;
 
     const params = new URLSearchParams();
-    params.set("schemaVersion", String(DATA_SCHEMA_VERSION));
+    params.set("schemaVersion", String(SHARE_SCHEMA_VERSION));
     params.set("gameInput", encodeShareObject(invalidInput));
 
     const outcome = restoreFromLocation(`?${params.toString()}`);
@@ -65,7 +65,7 @@ describe("restoreFromLocation", () => {
 
   it("restores input when result is absent", () => {
     const params = new URLSearchParams();
-    params.set("schemaVersion", String(DATA_SCHEMA_VERSION));
+    params.set("schemaVersion", String(SHARE_SCHEMA_VERSION));
     params.set("gameInput", encodeShareObject(validInput));
 
     expect(restoreFromLocation(`?${params.toString()}`)).toEqual({
@@ -77,9 +77,15 @@ describe("restoreFromLocation", () => {
 
   it("restores input and result when both are valid", () => {
     const params = new URLSearchParams();
-    params.set("schemaVersion", String(DATA_SCHEMA_VERSION));
+    params.set("schemaVersion", String(SHARE_SCHEMA_VERSION));
     params.set("gameInput", encodeShareObject(validInput));
-    params.set("gameResult", encodeShareObject(validResult));
+    params.set(
+      "gameResult",
+      encodeShareObject({
+        player1Probabilities: [0.5, 0.5],
+        player2Probabilities: [0.25, 0.75],
+      })
+    );
 
     expect(restoreFromLocation(`?${params.toString()}`)).toEqual({
       status: "success",
@@ -96,8 +102,11 @@ describe("restoreFromLocation", () => {
 
     const params = new URLSearchParams();
     params.set("schemaVersion", String(DATA_SCHEMA_VERSION));
-    params.set("gameInput", encodeShareObject(validInput));
-    params.set("gameResult", encodeShareObject(invalidResult));
+    params.set("gameInput", encodeShareObject(validInput, DATA_SCHEMA_VERSION));
+    params.set(
+      "gameResult",
+      encodeShareObject(invalidResult, DATA_SCHEMA_VERSION)
+    );
 
     const outcome = restoreFromLocation(`?${params.toString()}`);
     expect(outcome.status).toBe("success");

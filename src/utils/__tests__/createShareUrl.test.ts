@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createShareUrl } from "@/utils/createShareUrl";
 import type { GameInputUI, GameResult } from "@/types/game";
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import { SHARE_SCHEMA_VERSION } from "@/constants/storage";
+import { decodeShareObject } from "@/utils/shareCodec";
 
 const sampleInput: GameInputUI = {
   strategyLabels1: ["A", "B"],
@@ -37,7 +38,7 @@ describe("createShareUrl", () => {
     expect(parsedUrl.origin).toBe(window.location.origin);
     expect(parsedUrl.pathname).toBe("/");
     expect(parsedUrl.searchParams.get("schemaVersion")).toBe(
-      String(DATA_SCHEMA_VERSION)
+      String(SHARE_SCHEMA_VERSION)
     );
     expect(parsedUrl.searchParams.get("gameInput")).toBeTruthy();
   });
@@ -46,19 +47,28 @@ describe("createShareUrl", () => {
     const url = createShareUrl(sampleInput, { baseUrl: "https://example.com" });
     const params = new URL(url).searchParams;
 
-    expect(params.get("schemaVersion")).toBe(String(DATA_SCHEMA_VERSION));
+    expect(params.get("schemaVersion")).toBe(String(SHARE_SCHEMA_VERSION));
     expect(params.get("gameInput")).toBeTruthy();
     expect(params.get("gameResult")).toBeNull();
   });
 
-  it("includes the encoded game result when provided", () => {
+  it("includes only result probabilities when provided", () => {
     const url = createShareUrl(sampleInput, {
       baseUrl: "https://example.com/app",
       result: sampleResult,
     });
     const params = new URL(url).searchParams;
+    const rawResult = params.get("gameResult");
 
-    expect(params.get("gameResult")).toBeTruthy();
+    expect(rawResult).toBeTruthy();
+    if (!rawResult) return;
+    expect(decodeShareObject(rawResult)).toEqual({
+      version: SHARE_SCHEMA_VERSION,
+      payload: {
+        player1Probabilities: [0.5, 0.5],
+        player2Probabilities: [0.25, 0.75],
+      },
+    });
   });
 
   it("omits the game result when null is passed", () => {

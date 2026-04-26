@@ -3,7 +3,7 @@ import { encodeShareObject } from "@/utils/shareCodec";
 import { decodeGameInputUI } from "@/lib/parser/parseGameInputUI";
 import { decodeGameResult } from "@/lib/parser/parseGameResult";
 import type { GameInputUI, GameResult } from "@/types/game";
-import { DATA_SCHEMA_VERSION } from "@/constants/storage";
+import { DATA_SCHEMA_VERSION, SHARE_SCHEMA_VERSION } from "@/constants/storage";
 import { compressToEncodedURIComponent } from "lz-string";
 
 const sampleInputUI: GameInputUI = {
@@ -43,7 +43,7 @@ describe("share encoding", () => {
 
   it("rejects mismatched schema version for input", () => {
     const envelope = {
-      version: DATA_SCHEMA_VERSION + 1,
+      version: SHARE_SCHEMA_VERSION + 1,
       payload: sampleInputUI,
     } as const;
     const token = compressToEncodedURIComponent(JSON.stringify(envelope));
@@ -56,8 +56,22 @@ describe("share encoding", () => {
     expect(parsed.error).toContain("バージョン");
   });
 
-  it("parses a valid game result", () => {
-    const token = encodeShareObject(sampleResult);
+  it("parses a legacy valid game result", () => {
+    const token = encodeShareObject(sampleResult, DATA_SCHEMA_VERSION);
+    const parsed = decodeGameResult(token, sampleInputUI);
+
+    expect(parsed).not.toBeNull();
+    if (!parsed) return;
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(parsed.data).toEqual(sampleResult);
+  });
+
+  it("parses a valid compact game result", () => {
+    const token = encodeShareObject({
+      player1Probabilities: [0.5, 0.5],
+      player2Probabilities: [0.25, 0.75],
+    });
     const parsed = decodeGameResult(token, sampleInputUI);
 
     expect(parsed).not.toBeNull();
