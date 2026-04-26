@@ -6,11 +6,17 @@ import {
   TutorialPresetFlowPreview,
   TutorialStepCard,
 } from "../shared";
+import { HELP_TUTORIAL_SECTION_ID } from "@/constants/help";
 
 const HelpJaTutorialSection: React.FC = () => {
   return (
     <Stack gap={4}>
-      <Heading size="xl" as="h2">
+      <Heading
+        id={HELP_TUTORIAL_SECTION_ID}
+        scrollMarginTop="6rem"
+        size="xl"
+        as="h2"
+      >
         チュートリアル
       </Heading>
       <Stack gap={4}>
