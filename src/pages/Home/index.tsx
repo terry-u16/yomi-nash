@@ -1,15 +1,18 @@
 import PayoffTable from "@/pages/Home/PayoffTable/PayoffTable";
-import ResultDisplay from "@/pages/Home/ResultDisplay/ResultDisplay";
 import TableControls from "@/pages/Home/TableControls/TableControls";
 import { toaster } from "@/components/ui/toaster";
 import type { GameInput, GameInputUI, GameResult } from "@/types/game";
 import { solveGame } from "@/utils/solveGameInput";
 import { Stack } from "@chakra-ui/react";
-import { useCallback, useEffect, useRef } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 import { restoreFromLocation } from "@/lib/persistence/restoreFromLocation";
 import { persistToStorage } from "@/lib/persistence/persistToStorage";
 import { useOutletContext } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
+const ResultDisplay = lazy(
+  () => import("@/pages/Home/ResultDisplay/ResultDisplay")
+);
 
 interface LayoutContext {
   inputUI: GameInputUI;
@@ -113,7 +116,9 @@ const Home: React.FC = () => {
         onReset={() => setResult(null)}
       />
       {result === null || (
-        <ResultDisplay result={result} setResult={setResult} />
+        <Suspense fallback={null}>
+          <ResultDisplay result={result} setResult={setResult} />
+        </Suspense>
       )}
     </Stack>
   );
