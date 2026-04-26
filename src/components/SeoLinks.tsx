@@ -18,6 +18,22 @@ interface SeoLinksProps {
   currentLanguage: SupportedLanguage;
 }
 
+const getSeoPathDetails = (pathname: string) => {
+  const segments = pathname.split("/").filter(Boolean);
+  const remainderSegments = supportedLanguages.includes(
+    segments[0] as SupportedLanguage
+  )
+    ? segments.slice(1)
+    : segments;
+
+  return {
+    pageKey: remainderSegments[0] ?? "",
+    remainderPath: remainderSegments.length
+      ? `/${remainderSegments.join("/")}`
+      : "",
+  };
+};
+
 const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
   const location = useLocation();
   const { t } = useTranslation();
@@ -36,12 +52,7 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
         .forEach((node) => head.removeChild(node));
     };
 
-    const remainderPath = (() => {
-      const parts = location.pathname.split("/");
-      // parts[0] は常に ""、parts[1] は言語コード。
-      const remainder = parts.slice(2).join("/");
-      return remainder ? `/${remainder}` : "";
-    })();
+    const { remainderPath } = getSeoPathDetails(location.pathname);
     const origin = window.location.origin;
     const canonicalUrl = `${origin}/${currentLanguage}${remainderPath}`;
 
@@ -79,11 +90,7 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
       return;
     }
 
-    const remainderSegments = location.pathname
-      .split("/")
-      .filter(Boolean)
-      .slice(1);
-    const pageKey = remainderSegments[0] ?? "";
+    const { pageKey, remainderPath } = getSeoPathDetails(location.pathname);
     const pageTitleKeyMap: Record<string, string> = {
       "": "header.nav.home",
       help: "header.nav.help",
@@ -94,9 +101,7 @@ const SeoLinks: React.FC<SeoLinksProps> = ({ currentLanguage }) => {
     const pageTitleKey = pageTitleKeyMap[pageKey] ?? "header.nav.home";
     const pageTitle = t(pageTitleKey);
     const fullTitle = pageKey ? `${appName} | ${pageTitle}` : seoTitle;
-    const canonicalUrl = `${window.location.origin}/${currentLanguage}${
-      remainderSegments.length ? `/${remainderSegments.join("/")}` : ""
-    }`;
+    const canonicalUrl = `${window.location.origin}/${currentLanguage}${remainderPath}`;
     document.title = fullTitle;
 
     const ensureMeta = (

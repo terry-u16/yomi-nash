@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { languageStorageKey, type SupportedLanguage } from "@/lib/i18n";
 import { createMockLocalStorage } from "@/test/utils/createMockLocalStorage";
-
-type SupportedLanguage = "ja" | "en";
-
-const languageStorageKey = "yomi-nash.language";
 
 let localStorageMock = createMockLocalStorage();
 
