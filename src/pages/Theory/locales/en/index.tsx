@@ -9,7 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { TbExternalLink } from "react-icons/tb";
-import { BlockMath, InlineMath } from "react-katex";
+import { BlockMath, InlineMath } from "@/components/Math";
 
 const TheoryEn: React.FC = () => {
   return (
