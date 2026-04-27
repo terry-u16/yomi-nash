@@ -1,8 +1,18 @@
 import type { GameInputUI } from "@/types/game";
+import { Tooltip } from "@/components/ui/tooltip";
 import { PAYOFF_MAX, PAYOFF_MIN } from "@/utils/clampGameInput";
 import { isValidNumber } from "@/utils/validators/number";
-import { Field, NumberInput, Table } from "@chakra-ui/react";
+import {
+  Field,
+  IconButton,
+  InputGroup,
+  NumberInput,
+  Table,
+} from "@chakra-ui/react";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import { togglePayoffSign } from "./togglePayoffSign";
+import { TbPlusMinus } from "react-icons/tb";
 
 interface Props {
   value: string;
@@ -13,6 +23,9 @@ interface Props {
 
 const ValueCell: React.FC<Props> = React.memo(
   ({ value, row, col, setInputUI }: Props) => {
+    const { t } = useTranslation();
+    const toggleSignLabel = t("home.payoffTable.toggleSign");
+
     const changeCell = (row: number, col: number, value: string) => {
       setInputUI((prev) => {
         const newMatrix = [...prev.payoffMatrix.map((r) => [...r])]; // deep copy
@@ -22,6 +35,10 @@ const ValueCell: React.FC<Props> = React.memo(
         // const clamped = clampGameInputUI(newInput);
         return newInput;
       });
+    };
+
+    const handleToggleSign = () => {
+      changeCell(row, col, togglePayoffSign(value));
     };
 
     return (
@@ -37,7 +54,28 @@ const ValueCell: React.FC<Props> = React.memo(
               changeCell(row, col, e.value);
             }}
           >
-            <NumberInput.Input />
+            <InputGroup
+              startElement={
+                <Tooltip content={toggleSignLabel}>
+                  <IconButton
+                    aria-label={toggleSignLabel}
+                    size="2xs"
+                    variant="subtle"
+                    color="fg.subtle"
+                    tabIndex={-1}
+                    onClick={handleToggleSign}
+                  >
+                    <TbPlusMinus />
+                  </IconButton>
+                </Tooltip>
+              }
+              startElementProps={{
+                insetInlineStart: "-1",
+                pointerEvents: "auto",
+              }}
+            >
+              <NumberInput.Input textAlign="right" />
+            </InputGroup>
           </NumberInput.Root>
         </Field.Root>
       </Table.Cell>

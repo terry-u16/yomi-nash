@@ -135,6 +135,7 @@ const resources = {
           addCol: "列追加",
           deleteRow: "行削除",
           deleteCol: "列削除",
+          toggleSign: "符号反転",
         },
         tableControls: {
           heading: "操作パネル",
@@ -286,6 +287,7 @@ const resources = {
           addCol: "Add Column",
           deleteRow: "Remove Row",
           deleteCol: "Remove Column",
+          toggleSign: "Toggle Sign",
         },
         tableControls: {
           heading: "Controls",
