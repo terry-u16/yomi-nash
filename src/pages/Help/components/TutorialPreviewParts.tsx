@@ -295,7 +295,7 @@ const TutorialExpectedChartPreview: React.FC<{
       py={3}
     >
       <Chart.Root chart={chart} maxH="2xs">
-        <BarChart data={chart.data}>
+        <BarChart data={chart.data} responsive>
           <CartesianGrid
             horizontal={false}
             vertical={false}

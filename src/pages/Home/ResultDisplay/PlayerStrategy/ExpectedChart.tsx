@@ -100,7 +100,7 @@ const ExpectedChart: React.FC<Props> = React.memo(
           {t("home.resultDisplay.expectedHeading")}
         </Heading>
         <Chart.Root maxH="3xs" chart={chart}>
-          <BarChart data={chart.data}>
+          <BarChart data={chart.data} responsive>
             <CartesianGrid
               vertical={false}
               stroke={chart.color("border.muted")}
