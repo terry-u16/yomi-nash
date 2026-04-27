@@ -54,6 +54,9 @@ const HelpJaPayoffTableSection: React.FC = () => {
             が損をする」という設定のゲームを扱います。 Player 1 の利得が x
             の場合、 Player 2 の利得は -x として解釈されます。
           </Text>
+          <Text>
+            お使いのスマートフォンのキーボードによってはマイナス記号を入力しづらい場合があります。その場合、セル左側の±ボタンで符号を切り替えられます。
+          </Text>
           <Alert.Root status="info" mt={2}>
             <Alert.Indicator />
             <Alert.Description>
