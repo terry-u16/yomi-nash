@@ -63,6 +63,9 @@ const ValueCell: React.FC<Props> = React.memo(
                     variant="subtle"
                     color="fg.subtle"
                     tabIndex={-1}
+                    onPointerDown={(e) => {
+                      e.preventDefault();
+                    }}
                     onClick={handleToggleSign}
                   >
                     <TbPlusMinus />
