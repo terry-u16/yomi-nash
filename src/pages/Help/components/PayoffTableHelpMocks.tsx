@@ -1,10 +1,19 @@
-import { Box, Button, Grid, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Input,
+  InputGroup,
+  Text,
+} from "@chakra-ui/react";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import {
   TbArrowsUpLeft,
   TbColumnInsertRight,
   TbColumnRemove,
+  TbPlusMinus,
   TbRowInsertBottom,
   TbRowRemove,
 } from "react-icons/tb";
@@ -89,7 +98,36 @@ const ValueCell: React.FC<{ value: string; active?: boolean }> = ({
   value,
   active = false,
 }) => {
-  return <StaticInput value={value} activeColor="blue" active={active} />;
+  const { t } = useTranslation();
+
+  return (
+    <InputGroup
+      startElement={
+        <IconButton
+          aria-label={t("home.payoffTable.toggleSign")}
+          size="2xs"
+          variant="subtle"
+          color="fg.subtle"
+          tabIndex={-1}
+          aria-hidden="true"
+          pointerEvents="none"
+        >
+          <TbPlusMinus />
+        </IconButton>
+      }
+      startElementProps={{
+        insetInlineStart: "-1",
+        pointerEvents: "none",
+      }}
+    >
+      <StaticInput
+        value={value}
+        activeColor="blue"
+        active={active}
+        textAlign="end"
+      />
+    </InputGroup>
+  );
 };
 
 const SmallButton: React.FC<{

@@ -58,6 +58,11 @@ const HelpEnPayoffTableSection: React.FC = () => {
             The app assumes Player 1's gain is exactly Player 2's loss. If
             Player 1 earns x, Player 2 is treated as losing -x.
           </Text>
+          <Text>
+            Depending on your smartphone keyboard, entering a minus sign may be
+            difficult. In that case, use the ± button on the left side of the
+            cell to toggle the sign.
+          </Text>
           <Alert.Root status="info" mt={2}>
             <Alert.Indicator />
             <Alert.Description>
