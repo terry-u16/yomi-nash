@@ -87,7 +87,7 @@ describe("App routing", () => {
   it("preserves share query parameters when redirecting root links to Japanese", async () => {
     await renderApp("/?schemaVersion=1&gameInput=shared#result");
 
-    expect(visitedLocations.at(-1)).toBe(
+    expect(visitedLocations[visitedLocations.length - 1]).toBe(
       "/ja?schemaVersion=1&gameInput=shared#result"
     );
   });
@@ -97,7 +97,7 @@ describe("App routing", () => {
 
     await renderApp("/?schemaVersion=1&gameInput=shared#result");
 
-    expect(visitedLocations.at(-1)).toBe(
+    expect(visitedLocations[visitedLocations.length - 1]).toBe(
       "/en?schemaVersion=1&gameInput=shared#result"
     );
   });

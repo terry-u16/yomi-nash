@@ -41,9 +41,8 @@ export const useTableControls = ({
       try {
         const arrayBuffer = await file.arrayBuffer();
         const binary = new Uint8Array(arrayBuffer);
-        const { parseCsvInputFromBinary } = await import(
-          "@/utils/parseCsvInput"
-        );
+        const { parseCsvInputFromBinary } =
+          await import("@/utils/parseCsvInput");
         const parseResult = parseCsvInputFromBinary(binary);
 
         if (parseResult.ok) {
@@ -85,9 +84,8 @@ export const useTableControls = ({
     let url: string | undefined;
 
     try {
-      const { generateCsvFromGameInputUI } = await import(
-        "@/utils/parseCsvInput"
-      );
+      const { generateCsvFromGameInputUI } =
+        await import("@/utils/parseCsvInput");
       const csv = generateCsvFromGameInputUI(inputUI);
       const bom = "\uFEFF"; // UTF-8 BOM
       const blob = new Blob([bom + csv], { type: "text/csv;charset=utf-8" });

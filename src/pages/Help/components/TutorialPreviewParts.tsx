@@ -44,6 +44,65 @@ export interface TutorialChartDatum {
   color: string;
 }
 
+const payoffToColor = (
+  payoff: number,
+  maxAbs: number,
+  colors: [string, string, string]
+): string => {
+  const normalized = Math.max(-1, Math.min(1, payoff / maxAbs));
+  const scale = chroma.scale(colors).domain([-1, 0, 1]);
+  return scale(normalized).hex();
+};
+
+const ResultBarCell: React.FC<{
+  payoff: number;
+  prob: number;
+  maxAbsPayoff: number;
+  colors: [string, string, string];
+}> = ({ payoff, prob, maxAbsPayoff, colors }) => (
+  <Table.Cell position="relative" p={0}>
+    <Box>
+      <Box
+        position="absolute"
+        top={0}
+        bottom={0}
+        right={0}
+        width={`${(prob * 100).toFixed(2)}%`}
+        bg={payoffToColor(payoff, maxAbsPayoff, colors)}
+        zIndex="base"
+        rounded="none"
+        my={1}
+      />
+      <Box
+        position="relative"
+        zIndex="docked"
+        px={2}
+        minH="36px"
+        fontSize="sm"
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Text textAlign="left">
+          <FormatNumber
+            value={payoff}
+            maximumFractionDigits={2}
+            minimumFractionDigits={0}
+          />
+        </Text>
+        <Text textAlign="right">
+          <FormatNumber
+            value={prob}
+            style="percent"
+            maximumFractionDigits={2}
+            minimumFractionDigits={2}
+          />
+        </Text>
+      </Box>
+    </Box>
+  </Table.Cell>
+);
+
 const ExpectedValueStatMock: React.FC<{
   playerLabel: string;
   value: number;
@@ -236,7 +295,7 @@ const TutorialExpectedChartPreview: React.FC<{
       py={3}
     >
       <Chart.Root chart={chart} maxH="2xs">
-        <BarChart data={chart.data}>
+        <BarChart data={chart.data} responsive>
           <CartesianGrid
             horizontal={false}
             vertical={false}
@@ -493,60 +552,8 @@ export const ResultTableOverviewMock: React.FC = () => {
     colorMode === "light"
       ? [lightGray, lightRed, lightBlue]
       : [darkGray, darkRed, darkBlue];
+  const payoffColors: [string, string, string] = [blue, gray, red];
   const maxAbsPayoff = 5000;
-
-  const payoffToColor = (payoff: number, maxAbs: number): string => {
-    const normalized = Math.max(-1, Math.min(1, payoff / maxAbs));
-    const scale = chroma.scale([blue, gray, red]).domain([-1, 0, 1]);
-    return scale(normalized).hex();
-  };
-
-  const ResultBarCell: React.FC<{
-    payoff: number;
-    prob: number;
-  }> = ({ payoff, prob }) => (
-    <Table.Cell position="relative" p={0}>
-      <Box>
-        <Box
-          position="absolute"
-          top={0}
-          bottom={0}
-          right={0}
-          width={`${(prob * 100).toFixed(2)}%`}
-          bg={payoffToColor(payoff, maxAbsPayoff)}
-          zIndex="base"
-          rounded="none"
-          my={1}
-        />
-        <Box
-          position="relative"
-          zIndex="docked"
-          px={2}
-          minH="36px"
-          fontSize="sm"
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Text textAlign="left">
-            <FormatNumber
-              value={payoff}
-              maximumFractionDigits={2}
-              minimumFractionDigits={0}
-            />
-          </Text>
-          <Text textAlign="right">
-            <FormatNumber
-              value={prob}
-              style="percent"
-              maximumFractionDigits={2}
-              minimumFractionDigits={2}
-            />
-          </Text>
-        </Box>
-      </Box>
-    </Table.Cell>
-  );
 
   return (
     <Box
@@ -592,23 +599,68 @@ export const ResultTableOverviewMock: React.FC = () => {
               <Table.Cell>
                 {t("presets.okizeme.strategyLabels1.meaty")}
               </Table.Cell>
-              <ResultBarCell payoff={1000} prob={0.5778} />
-              <ResultBarCell payoff={-1500} prob={0.0889} />
-              <ResultBarCell payoff={666.67} prob={0.6667} />
+              <ResultBarCell
+                payoff={1000}
+                prob={0.5778}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
+              <ResultBarCell
+                payoff={-1500}
+                prob={0.0889}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
+              <ResultBarCell
+                payoff={666.67}
+                prob={0.6667}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
             </Table.Row>
             <Table.Row>
               <Table.Cell>
                 {t("presets.okizeme.strategyLabels1.wait")}
               </Table.Cell>
-              <ResultBarCell payoff={0} prob={0.2889} />
-              <ResultBarCell payoff={5000} prob={0.0444} />
-              <ResultBarCell payoff={666.67} prob={0.3333} />
+              <ResultBarCell
+                payoff={0}
+                prob={0.2889}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
+              <ResultBarCell
+                payoff={5000}
+                prob={0.0444}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
+              <ResultBarCell
+                payoff={666.67}
+                prob={0.3333}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
             </Table.Row>
             <Table.Row>
               <Table.Cell>{t("common.total")}</Table.Cell>
-              <ResultBarCell payoff={666.67} prob={0.8667} />
-              <ResultBarCell payoff={666.67} prob={0.1333} />
-              <ResultBarCell payoff={666.67} prob={1} />
+              <ResultBarCell
+                payoff={666.67}
+                prob={0.8667}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
+              <ResultBarCell
+                payoff={666.67}
+                prob={0.1333}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
+              <ResultBarCell
+                payoff={666.67}
+                prob={1}
+                maxAbsPayoff={maxAbsPayoff}
+                colors={payoffColors}
+              />
             </Table.Row>
           </Table.Body>
         </Table.Root>
